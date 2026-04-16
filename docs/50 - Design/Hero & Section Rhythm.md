@@ -32,7 +32,8 @@ updated: 2026-04-17
 │  [Eyebrow: «Минское море»]      │
 │                                 │
 │  H1: Яхты, на которых           │  ← --text-6xl, weight 700, tracking-tightest
-│  возвращаются                   │     leading-tight
+│  *возвращаются*                 │     leading-tight; «возвращаются» — <Accent>
+│                                 │     (Lora italic 400) — единственный accent в hero
 │                                 │
 │  Lead: Прозрачные цены,         │  ← --text-lg, weight 400, leading-relaxed
 │  онлайн-бронирование, видео     │     color --color-foreground-muted

@@ -127,14 +127,16 @@ updated: 2026-04-17
 │    с 4 thumbnails внизу]        │     первое фото = aspect-ratio 16/9
 │                                 │
 ├─────────────────────────────────┤
-│  Яхта EVA          [● свободна] │  ← H3, accent badge справа
-│  Парусная · 6 чел · 8м          │  ← --text-sm, muted
+│  Яхта EVA          [● свободна] │  ← H3, имя яхты в <Accent weight={500}>
+│  Парусная · 6 чел · 8м          │  ← --text-sm, muted, Manrope
 │                                 │
-│  150 BYN/час                    │  ← --text-2xl, weight 700, .tabular
+│  150 BYN/час                    │  ← --text-2xl, weight 700, .tabular, Manrope
 │                                 │
 │  [Подробнее]    [Забронировать] │  ← ghost + accent, размер md
 └─────────────────────────────────┘
 ```
+
+**Имя яхты — единственное место accent-шрифта в карточке.** Всё остальное Manrope.
 
 **CSS-структура:**
 ```scss
@@ -163,17 +165,18 @@ updated: 2026-04-17
 │ │ A │ 15 марта 2026             │     date small muted
 │ └───┘                           │
 │                                 │
-│ «Отметили день рождения на ALFA│  ← --text-base, leading-relaxed
-│  всё было супер: капитан помог,│
-│  закат поймали, дети в восторге»│
+│ « Отметили день рождения на     │  ← кавычки в <Accent italic={false}>
+│   ALFA, всё было супер... »     │     текст внутри — Manrope --text-base
 │                                 │
 │ ┌─────────┐ ┌─────────┐         │  ← теги — capsule pills, --text-xs
-│ │ Д.Р.    │ │ ALFA    │         │     bg surface-alt, weight 600
+│ │ Д.Р.    │ │ ALFA    │         │     bg surface-alt, weight 600, Manrope
 │ └─────────┘ └─────────┘         │
 │                                 │
 │ Источник: [Instagram ↗]         │  ← --text-xs, link
 └─────────────────────────────────┘
 ```
+
+**Lora-применение:** только французские кавычки `« »` (через `<Accent italic={false}>`). Сам текст отзыва — Manrope.
 
 ## Input / Textarea
 
@@ -278,16 +281,24 @@ updated: 2026-04-17
 
 — добавляется `<span class="badge__dot">` (6×6px circle, currentColor) с `@keyframes pulse` (opacity 0.4 ↔ 1, 1.5s ease-in-out infinite).
 
-## Heading / Text
+## Heading / Text / Accent
 
-Реализация — два компонента, оборачивают семантический tag и применяют токены.
+Реализация — три компонента, оборачивают семантический tag и применяют токены.
 
 ```tsx
-<Heading level={1} size="hero">Заголовок</Heading>
+<Heading level={1} size="hero">
+  Яхты, на которых <Accent>возвращаются</Accent>
+</Heading>
+
 <Heading level={2}>Подзаголовок</Heading>     // дефолтный size = level
 
 <Text size="lg" weight="medium" color="muted">Lead</Text>
 <Text size="xs" weight="bold" tracking="caps" color="primary">EYEBROW</Text>
+
+// Accent — только для декоративных слов, см. ADR-008 §«Lora — правила»
+<Accent>EVA</Accent>                          // italic 400 default
+<Accent weight={500}>ALFA</Accent>            // italic 500 для названий яхт
+<Accent italic={false}>« текст отзыва »</Accent>  // upright Lora для кавычек
 ```
 
 ### Heading prop API

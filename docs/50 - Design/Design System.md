@@ -166,9 +166,19 @@ updated: 2026-04-17
 
 ## Типографика (финализирована — ADR-008)
 
-> Полная спецификация (token + семантический mapping) — в [[../40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]].
+> Полная спецификация (token + семантический mapping + правила Lora) — в [[../40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]].
 
-**Шрифт:** **Manrope Variable**, один на всё (`--font-manrope`). Подключаем через `next/font/google` с subset `latin + cyrillic` и weights 300/400/500/600/700.
+**Два шрифта** через `next/font/google`:
+- **Manrope Variable** (`--font-manrope`) — основной (UI, body, headings, всё функциональное). Subset `latin + cyrillic`, weights 300/400/500/600/700.
+- **Lora Variable** (`--font-lora`) — accent-only (italic-первый). Subset `latin + cyrillic`, weights 400/500, style normal+italic. **Только** через компонент `<Accent>` или класс `.accent`. Никогда — на UI-controls.
+
+**Family tokens:**
+```scss
+--font-family-base:   var(--font-manrope), system-ui, -apple-system, sans-serif;
+--font-family-accent: var(--font-lora), Georgia, 'Times New Roman', serif;
+```
+
+**Lora — где можно:** названия яхт (*EVA*, *ALFA*), 1 accent-слово в Hero H1, кавычки `« »` в отзывах, eyebrow ключевой секции, citation source. **Max 5 instances на страницу, max 2 в одном вьюпорте.**
 
 **Type scale — fluid `clamp()` (mobile 360px → desktop 1440px):**
 

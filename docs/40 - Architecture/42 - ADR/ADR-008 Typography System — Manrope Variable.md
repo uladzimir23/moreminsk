@@ -20,13 +20,17 @@ tags: [adr, typography, design-system, performance]
 
 ## Решение
 
-**Один шрифт на весь проект — Manrope Variable** через `next/font/google`. Без отдельного display-шрифта в MVP.
+**Два шрифта** через `next/font/google`:
+1. **Manrope Variable** — основной (UI, body, headings, всё функциональное)
+2. **Lora Variable** — accent (только для декоративных слов, italic-первый)
+
+> **Update 2026-04-17:** изначально планировали single-family, но передумали — добавили Lora как accent. Причина: Manrope один даёт «честно, но без характера»; небольшое вкрапление serif italic создаёт ownable visual quirk без шрифта на каждой кнопке. **Использование строго селективное** (см. раздел «Lora — правила»).
 
 ### Конфигурация загрузки
 
 ```tsx
 // src/app/fonts.ts
-import { Manrope } from 'next/font/google'
+import { Manrope, Lora } from 'next/font/google'
 
 export const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -36,9 +40,19 @@ export const manrope = Manrope({
   preload: true,
   fallback: ['system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
 })
+
+export const lora = Lora({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-lora',
+  display: 'swap',
+  preload: false,                    // accent-only, не критичен для LCP
+  fallback: ['Georgia', 'Times New Roman', 'serif'],
+})
 ```
 
-`<body className={manrope.variable}>` в `app/[locale]/layout.tsx`.
+`<body className={`${manrope.variable} ${lora.variable}`}>` в `app/[locale]/layout.tsx`.
 
 ### Token spec
 
@@ -46,7 +60,8 @@ export const manrope = Manrope({
 // tokens/_typography.scss
 
 // Family
---font-family-base: var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
+--font-family-base:   var(--font-manrope), system-ui, -apple-system, 'Segoe UI', sans-serif;
+--font-family-accent: var(--font-lora), Georgia, 'Times New Roman', serif;
 
 // Weights
 --font-weight-light:    300;   // muted captions, disclaimers
@@ -110,7 +125,64 @@ export const manrope = Manrope({
 
 Реализуется через `<Heading level={1..6}>` + `<Text variant="...">` компоненты в `src/shared/ui/`.
 
-### Глобальные правила
+## Lora — правила использования (accent-only)
+
+> **Жёсткое правило:** Lora применяется **только** через компонент `<Accent>...</Accent>` или класс `.accent`. Никаких `font-family: var(--font-family-accent)` напрямую в стилях компонентов. Это защита от расползания шрифта по UI.
+
+### Реализация
+
+```tsx
+// src/shared/ui/text/Accent.tsx
+type AccentProps = {
+  children: React.ReactNode
+  italic?: boolean      // default true (italic — основной режим Lora у нас)
+  weight?: 400 | 500    // default 400
+  as?: 'span' | 'em'    // default 'em' (semantic emphasis)
+}
+```
+
+```scss
+.accent {
+  font-family: var(--font-family-accent);
+  font-style: italic;             // default — italic
+  font-weight: 400;
+  // Lora чуть «играет» с baseline — поджимаем к Manrope
+  letter-spacing: -0.005em;
+}
+
+.accent--upright { font-style: normal; }
+.accent--medium  { font-weight: 500; }
+```
+
+### Где использовать
+
+| Кейс | Пример | Стиль |
+|---|---|---|
+| Названия яхт в карточках | *EVA*, *ALFA*, *MARIO*, *BRAVO* | italic 500 |
+| Одно accent-слово в Hero H1 | «Яхты, на которых *возвращаются*» | italic 400 |
+| Кавычки в отзывах | *« »* (open + close), оборачивает quoted-text | regular 400 |
+| Eyebrow к ключевой секции (1 на странице max) | *Минское море* | italic 400, --text-sm |
+| Citation source | — *Анна К., июль 2025* | italic 400 |
+
+### Где НЕ использовать (строгий запрет)
+
+- ❌ Любые UI-controls (кнопки, чипы, input, фильтры, dropdown)
+- ❌ Body text, captions, microcopy
+- ❌ Section titles (H2/H3) — остаются Manrope
+- ❌ Цены и числа (всегда Manrope tabular)
+- ❌ Empty states, errors, loading-text
+- ❌ Footer, нав, breadcrumb
+
+### Объём на странице
+
+- **Max 5 instances** на одной странице. Чаще — теряется эффект акцента, превращается в «новостной портал».
+- **Max 2 instances** в одном вьюпорте — не должны конкурировать друг с другом за внимание.
+
+### Stylelint enforcement
+
+В `.stylelintrc` добавить кастомное правило, запрещающее `font-family: var(--font-family-accent)` вне файлов `accent.module.scss` / `text/Accent*` (через `selector-disallowed-list` + `comment-disable-allowed`).
+
+## Глобальные правила
 
 1. **`font-family-base` на `<html>`**, не на `<body>` — наследование чистое
 2. **`font-feature-settings: var(--font-feature-default)` на `<html>`** — kerning + лиги по дефолту
@@ -121,32 +193,37 @@ export const manrope = Manrope({
 
 ### Что НЕ делаем
 
-- ❌ Не подключаем второй шрифт «для display» в MVP — DRY, экономия 30+ kb
-- ❌ Не используем `font-weight: 800/900` — Manrope теряет читаемость, для emphasis достаточно 700
+- ❌ Не подключаем третий шрифт (display sans, script, mono) — двух хватит
+- ❌ Не используем `font-weight: 800/900` Manrope — теряет читаемость, для emphasis достаточно 700
 - ❌ Не делаем letter-spacing > 0 на body (только на eyebrows/labels)
 - ❌ Не используем `text-transform: uppercase` на длинных строках — только на коротких eyebrows
-- ❌ Не подключаем больше 5 weight'ов (300/400/500/600/700) — больше = больше байт без выгоды
+- ❌ Не подключаем больше 5 weight'ов Manrope (300/400/500/600/700) — больше = больше байт без выгоды
+- ❌ Не используем Lora для weight > 500 (heavy serif выглядит editorial / wedding-magazine)
+- ❌ Не миксуем Lora + Manrope в одном слове / название (только целое слово italic)
 
 ## Последствия
 
 ### Позитивные
-- **Один шрифт-файл = ~28kb gzip** (с subset latin+cyrillic, 5 weight, variable axis). Против ~80kb если подключать display+body отдельно
+- **Manrope: ~28kb gzip + Lora: ~25kb gzip = ~53kb total** (variable, subset latin+cyrillic). Lora с `preload: false` не блокирует LCP
 - **Tabular nums встроены** — цены автоматически выравниваются вертикально (важно для прайс-таблиц)
 - **`next/font` self-hosting** — нет внешних запросов к Google Fonts → нет CLS, нет GDPR-проблем, ноль третьих доменов
-- **Полная кириллица** — ru+en MVP закрыт без warparound
+- **Полная кириллица в обоих** — ru+en MVP закрыт без warparound
 - **Fluid type scale** — нет «прыжков» между breakpoint'ами, выглядит ровно на всех устройствах
-- **Семантический mapping** — компоненты `<Heading>` и `<Text>` пишутся один раз, в дизайне и коде договорённость
+- **Семантический mapping** — компоненты `<Heading>` / `<Text>` / `<Accent>` пишутся один раз, в дизайне и коде договорённость
+- **Accent через `<Accent>` обёртку** — невозможно случайно расползание Lora по UI (защищено stylelint-правилом)
 
 ### Негативные
-- **Manrope менее «характерный» чем display-шрифты** — если на этапе визуала захочется wow-эффекта на названиях яхт, придётся добавлять второй шрифт (но это пост-MVP fix)
+- **+25kb байт на Lora** — оправдано визуальным character'ом, не блокирует LCP (`preload: false`)
 - **Кириллица в Manrope чуть слабее латиницы** — i, ы, я могут смотреться неровно в очень крупных размерах. Решение: tracking-tightest на Hero убирает большую часть проблем
 - **Рендеринг variable font в Safari < 14** — fallback на system-ui без variable axis. Приемлемо
+- **Lora требует дисциплины применения** — без правил легко превратить сайт в editorial-журнал. Решение: жёсткое ограничение «5 instances на странице max» + обёртка-компонент
 
 ### Нейтральные
 - Весь type scale — fluid `clamp()`, без attached breakpoint-overrides → если захотим резкий jump на десктопе, придётся переписывать (но это анти-паттерн mobile-first)
 
 ## Альтернативы (отвергнутые)
 
+### Для основного шрифта
 1. **Inter** — безопасно, нейтрально, но «Vercel/SaaS-default». Нет тёплости, плохо рифмуется с sand neutrals + sunset coral палитрой. Конкуренты узнают паттерн «как Linear/Stripe».
 2. **Unbounded + Manrope** (черновой вариант) — Unbounded слишком display-ный, кириллица слабая, +30kb за второй шрифт. Эффект «модно» не оправдан.
 3. **Playfair Display + Inter** — Playfair = «свадебный фотограф», конфликт с premium-modern iOS-feel. Морская тема ≠ wedding.
@@ -154,10 +231,19 @@ export const manrope = Manrope({
 5. **Только system-ui** — самый быстрый вариант, но визуал отличается между OS (San Francisco на macOS, Segoe UI на Windows, Roboto на Android). Brand-консистентность теряется.
 6. **Geist (Vercel)** — отличный шрифт, но узнаваемая Vercel-эстетика. Те же причины что Inter.
 
+### Для accent-шрифта (Lora vs alternatives)
+7. **Fraunces** — превосходный variable serif, но **нет кириллицы** в Google Fonts. Disqualified для ru+en MVP.
+8. **Cormorant Garamond** — есть кириллица, элегантный, но **не variable** (нужно подключать 2-3 weight'а × 2 style'а отдельно = +60kb). Дороже Lora за тот же эффект.
+9. **Spectral (Adobe)** — есть кириллица, но editorial / news-magazine feel, не «морской premium». Не variable.
+10. **Playfair Display (как accent only)** — есть кириллица, variable axis, но всё та же «wedding» ассоциация — даже в малых дозах прочитывается как «глянец».
+11. **PT Serif** — full Cyrillic, но без характера; serif-аналог Inter — безопасно и пресно.
+12. **Lora SC (small caps)** — добавить отдельный subfont только для small-caps efficient: но Lora regular + `font-variant-caps: small-caps` решает то же без +файла.
+
 ## Связанные
 
 - [[ADR-005 iOS-style Design Language]] — пропорции и feel шрифта
 - [[ADR-006 Color Palette + Theme System + Animation Tokens]] — палитра, к которой подбирается шрифт
 - [[../../50 - Design/Design System]] — type scale, mapping
 - Manrope: <https://github.com/sharanda/manrope>, демо <https://www.manropefont.com/>
+- Lora: <https://fonts.google.com/specimen/Lora> (designer Cyreal, full Cyrillic)
 - Reference: `~/Documents/neuro-center` — рабочий пример Manrope в продакшне
