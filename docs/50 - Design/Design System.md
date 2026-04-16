@@ -145,34 +145,24 @@ updated: 2026-04-17
 - **Mobile-first.** Все токены масштабируются от mobile вверх.
 - **Морская палитра с тёплыми акцентами** — не стереотипный «бирюзовый».
 
-## Палитра (черновая)
+## Палитра (финализирована — ADR-006)
 
-```scss
-// tokens/_colors.scss
+> Полная спецификация (primitive + semantic, light + dark) — в [[../40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens]].
 
-// Нейтральные (серый с тёплым подтоном)
-$color-bg:            #FAF7F2;   // песочный свет
-$color-surface:       #FFFFFF;   // карточки
-$color-surface-alt:   #F1ECE3;   // секции-разделители
-$color-border:        #E4DFD5;
-$color-text:          #1B2230;   // глубокий ночной
-$color-text-muted:    #5C6270;
-$color-text-inverse:  #FFFFFF;
+**Mental model:**
 
-// Бренд (морской глубокий + закатный)
-$color-primary:       #1E3A5F;   // глубокий синий
-$color-primary-dark:  #12253F;
-$color-primary-soft:  #E6EDF5;
+| Slot | Назначение | Light | Dark |
+|---|---|---|---|
+| `--color-primary` | Навигация, ссылки, основные кнопки | `#0A4D7A` deep sea-navy | `#5BA8D6` sea blue |
+| `--color-accent` | **CTA «Заказать»**, badges «свободно» | `#E2956A` sunset coral | `#EBA77E` |
+| `--color-background` | Холст | `#FAF7F2` warm off-white | `#0E1620` deep navy |
+| `--color-surface` | Карточки | `#FFFFFF` | `#16202E` |
 
-// Акцент (закат / тёплая медь)
-$color-accent:        #E2956A;   // закатная медь
-$color-accent-dark:   #C47A51;
-
-// Сервисные
-$color-success:       #4A7C59;
-$color-warning:       #D4A84B;
-$color-error:         #B24C4C;
-```
+**Принципы:**
+- Cool-доминанта (морской navy) + единственный warm-акцент (закатный коралл) → CTA визуально «выпрыгивает»
+- Не sync-blue (`#0C8CE9`) — отстройка от диджитал-агентств
+- Не бирюзовый — отстройка от конкурентов (yachtminsk/arenda-yacht)
+- Тёплые песочные нейтральные вместо безжизненного серого
 
 ## Типографика
 
@@ -268,17 +258,58 @@ $shadow-lg: 0 12px 32px rgba(27, 34, 48, 0.12);
 
 Lucide React. Размеры: 16 / 20 / 24 / 32px. Заполнять `currentColor`, не фиксированный цвет.
 
-## Анимации
+## Анимации (motion tokens)
 
-- Hover: 150ms ease
-- Enter/Leave: 300ms ease-out
-- Framer Motion — **только** для Hero (parallax сдержанный), галереи (lightbox), аккордеона (если стандартного Radix мало). Остальное — CSS transitions.
-- `prefers-reduced-motion` — уважаем, отключаем анимации.
+> Финализировано в ADR-006. Имена и значения тут — источник правды.
 
-## Dark mode
+```scss
+// tokens/_motion.scss
+--ease-linear:  linear;                                 // skeleton pulse only
+--ease-out:     cubic-bezier(0.4, 0, 0.2, 1);
+--ease-spring:  cubic-bezier(0.22, 1, 0.36, 1);         // ★ default
+--ease-sheet:   cubic-bezier(0.32, 0.72, 0, 1);         // Apple bottom-sheet
+--ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);      // attention only
 
-- MVP: только light mode.
-- Post-MVP: через CSS custom properties с `[data-theme="dark"]`.
+--duration-instant: 50ms;
+--duration-fast:    150ms;       // tap-scale
+--duration-base:    200ms;       // ★ default
+--duration-medium:  300ms;       // page transition, modal fade
+--duration-slow:    500ms;       // sheet open
+--duration-slower:  800ms;       // hero parallax
+```
+
+**Готовая таблица «Кейс → Duration+Easing»:**
+
+| Кейс | Сочетание |
+|---|---|
+| Tap (button/card scale 0.97) | `var(--duration-fast) var(--ease-spring)` |
+| Hover (desktop) | `var(--duration-base) var(--ease-out)` |
+| Sheet open | `var(--duration-slow) var(--ease-sheet)` |
+| Sheet close | `var(--duration-medium) var(--ease-sheet)` |
+| Modal/backdrop fade | `var(--duration-medium) var(--ease-out)` |
+| Theme switch | `var(--duration-medium) var(--ease-spring)` |
+| Page transition (mobile) | `var(--duration-medium) var(--ease-out)` |
+| Skeleton pulse | `1400ms var(--ease-linear) infinite` |
+
+**Библиотеки:**
+- **Framer Motion only** (~30kb). Для: Hero (fade-up + stagger), AppPanel (slide), Accordion, Lightbox.
+- **GSAP / Lottie не устанавливаем.** Если потребуются сложные scroll-эффекты — отдельный ADR.
+- Простые hover/tap/transition — чистый CSS через токены.
+
+`prefers-reduced-motion: reduce` — `transform: scale/translate` → opacity-only, длительности → 0. Через миксин `mx.reduced-motion`.
+
+## Theme System (light + dark) — в MVP
+
+> Архитектура из sync-brand-site-v2, адаптирована. Полностью описано в ADR-006.
+
+- Классы `light-theme` / `dark-theme` на `<html>` И `<body>` (для портал-компонентов)
+- localStorage ключ: `moreminsk-theme` со значениями `'light' | 'dark' | 'system'`
+- Default: `'system'` — читаем `prefers-color-scheme`
+- Anti-FOUC inline-script в `<head>` выставляет класс до hydration
+- Sync между вкладками через `StorageEvent`
+- Хук: `useTheme()` в `src/shared/lib/theme/`
+- Provider: `<ThemeProvider />` в `src/app/providers/`
+- Каждый компонент **обязательно проверяется в обоих темах** перед merge
 
 ## Доступность (a11y)
 

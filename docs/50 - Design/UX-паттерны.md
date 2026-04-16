@@ -95,13 +95,30 @@ updated: 2026-04-17
 | 4 | `Sparkles` | Услуги | `/services` |
 | 5 | `Menu` | Ещё | открывает `<MoreSheet />` |
 
-### Sheets (iOS UISheetPresentationController)
-Bottom-sheet для всех модальных взаимодействий:
-- Drag-handle сверху (4×40px серая капля).
-- Снапы: `medium` (50vh), `large` (90vh), draggable.
-- Закрытие свайпом вниз или тапом вне.
-- Backdrop: blur + затемнение `rgba(0,0,0,0.4)`.
-- Используется для: `OrderSheet` (3 кнопки контактов), `MoreSheet` (вторичные ссылки), фильтры флота, lightbox-галерея, форма заявки.
+### Adaptive Panel — `<AppPanel />` (ADR-007)
+
+Один компонент для **всех** модальных взаимодействий. Морфит геометрию по breakpoint:
+
+- **Mobile (`< md`):** bottom-sheet, drag-to-dismiss с handle (4×40px), max-height `92dvh`, backdrop `rgba(0,0,0,0.4)` + blur 8px
+- **Tablet+/Desktop (`≥ md`):** floating side-drawer справа, ширина `27rem` (~430px), top начинается под appbar, backdrop приглушённый `rgba(0,0,0,0.05)` + blur 3px
+- Easing — `var(--ease-sheet)` (Apple `cubic-bezier(0.32, 0.72, 0, 1)`), open `var(--duration-slow)`, close `var(--duration-medium)`
+- Закрытие: ESC / тап backdrop / drag вниз 120px+ / кнопка X в header
+
+**Глобальный API через контекст:**
+
+```tsx
+const { open, close } = usePanel()
+<button onClick={() => open('order')}>Заказать</button>
+```
+
+**Режимы (`PanelMode`):**
+
+| Режим | Контент | Триггер |
+|---|---|---|
+| `'order'` | Форма брони (Telegram / Звонок / Форма) | Bottom-nav центральная кнопка, hero CTA, карточка яхты «Забронировать» |
+| `'fleet-filter'` | Фильтры (тип, вместимость, дата) | Кнопка фильтров на `/fleet` |
+| `'more'` | Вторичная нав (FAQ / Отзывы / Цены / О нас / Блог / Контакты) | Bottom-nav 5-я кнопка (mobile only) |
+| `'gallery'` | Lightbox со swipe | Тап на фото в галерее яхты |
 
 ### Clickable контакты
 Телефон, адрес, email — кликабельные (`tel:`, `mailto:`, `https://maps...`).

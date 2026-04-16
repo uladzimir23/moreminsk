@@ -71,6 +71,8 @@ app → widgets → features → entities → shared
 - `docs/40 - Architecture/42 - ADR/ADR-003 FSD-lite архитектура.md`
 - `docs/40 - Architecture/42 - ADR/ADR-004 Mobile App-style Navigation (Appbar + Bottom Nav).md`
 - `docs/40 - Architecture/42 - ADR/ADR-005 iOS-style Design Language.md`
+- `docs/40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens.md`
+- `docs/40 - Architecture/42 - ADR/ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop.md`
 
 ## Базовые правила
 
@@ -86,6 +88,9 @@ app → widgets → features → entities → shared
 10. **Локализация — ru/en (MVP).** `be` — post-MVP. Все страницы внутри `app/[locale]/...`, переводы в `messages/{locale}.po`.
 11. **App-like навигация (ADR-004).** На mobile — `<Appbar />` (top, frosted glass) + `<BottomNav />` (5 пунктов: Главная / Флот / **Заказать** / Услуги / Ещё). Sticky CTA-bar отменён. На desktop bottom-nav скрыт, appbar с horizontal nav.
 12. **iOS-style визуальный язык (ADR-005).** Liquid Glass / capsule buttons / hairline borders / multi-layer soft shadows / spring-easing. См. skill `ios-style` для конкретных паттернов и токенов.
+13. **Палитра + темы — морская navy + sunset coral, light+dark в MVP (ADR-006).** Primary `#0A4D7A` (light) / `#5BA8D6` (dark). Accent / CTA `#E2956A`. Классы `.light-theme` / `.dark-theme` на `<html>` и `<body>` (sync-pattern). Каждый компонент проверяем в обоих темах. Anti-FOUC inline-script в `<head>` обязателен. Цвета только через `var(--color-*)` — никаких хардкод-гексов в компонентах.
+14. **Анимации — только Framer Motion (ADR-006).** Не GSAP, не Lottie. Easings и durations — из `tokens/_motion.scss` (`--ease-spring/sheet/bounce/out`, `--duration-fast/base/medium/slow`). Простые hover/tap — чистый CSS через токены. См. таблицу «Кейс → Duration+Easing» в Design System.
+15. **Adaptive Panel вместо отдельных модалок (ADR-007).** Один компонент `<AppPanel />` с глобальным контекстом `usePanel()`. На mobile — bottom-sheet с drag-to-dismiss. На desktop — floating side-drawer справа (430px). Режимы: `'order' | 'fleet-filter' | 'more' | 'gallery'`. Заменяет `<OrderSheet />` / `<MoreSheet />` из ADR-004.
 
 ## Что НЕ делать
 

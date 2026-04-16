@@ -31,14 +31,37 @@ description: iOS-style визуальный язык — Liquid Glass, capsule, 
 }
 ```
 
-### 3. Sheets → bottom sheet с drag-handle
+### 3. Sheets / Drawers → `<AppPanel />` (ADR-007)
+
+> Не пишем отдельный `<BottomSheet />` или `<Drawer />`. Используем единый адаптивный `<AppPanel />` через хук `usePanel()`:
+>
+> ```tsx
+> const { open } = usePanel()
+> <button onClick={() => open('order')}>Заказать</button>
+> ```
+>
+> На mobile (`< md`) морфит в bottom-sheet с drag-handle, на desktop — в floating side-drawer справа. Полная спецификация — ADR-007.
+
+**Базовые стили (только если делаешь кастомный sheet вне AppPanel — редкий случай):**
+
 ```scss
 .sheet {
   border-radius: var(--sheet-radius) var(--sheet-radius) 0 0;
   @include mx.material('regular');
   box-shadow: var(--shadow-sheet);
-  padding-block-end: env(safe-area-inset-bottom);
+  padding-block-end: max(var(--space-lg), env(safe-area-inset-bottom));
+  transition: transform var(--duration-slow) var(--ease-sheet);
+
+  // Desktop morph
+  @include mx.respond-to('md') {
+    border-radius: var(--radius-3xl);
+    inline-size: 27rem;
+    inset-block-start: calc(var(--appbar-height) + var(--space-lg));
+    inset-inline-end: var(--space-md);
+    inset-block-end: var(--space-md);
+  }
 }
+
 .handle {
   inline-size: var(--sheet-handle-w);
   block-size: var(--sheet-handle-h);
@@ -46,8 +69,16 @@ description: iOS-style визуальный язык — Liquid Glass, capsule, 
   border-radius: var(--radius-capsule);
   margin-inline: auto;
   margin-block-start: var(--space-sm);
+
+  @include mx.respond-to('md') {
+    display: none;
+  }
 }
 ```
+
+**Важно:**
+- Easing для sheet — `var(--ease-sheet)` (`cubic-bezier(0.32, 0.72, 0, 1)`), не `--ease-spring`. Это специфический Apple feel — «весомый», без overshoot.
+- Drag-to-dismiss порог — 120px (выверено в sync-brand-site-v2).
 
 ### 4. Appbar / Bottom-nav → frosted glass
 ```scss
@@ -106,10 +137,14 @@ description: iOS-style визуальный язык — Liquid Glass, capsule, 
 ### 7. Tap-scale на всех интерактивах
 Любая кнопка/ссылка/кликабельная карточка — `@include mx.tap-scale;`. Скейл `0.97`, easing `spring`, 150ms.
 
-### 8. Spring easing — единый
-- `--ease-spring: cubic-bezier(0.22, 1, 0.36, 1)` — для всех state-переходов
-- `--ease-out` — для одиночных fade-in
-- Никаких `linear`, никаких `ease-in-out` для UI (только для loading-pulse)
+### 8. Easings — три варианта, не путать (ADR-006)
+- `--ease-spring: cubic-bezier(0.22, 1, 0.36, 1)` — **default** для UI state-переходов (no overshoot)
+- `--ease-sheet: cubic-bezier(0.32, 0.72, 0, 1)` — Apple bottom-sheet/drawer (heavy-feel)
+- `--ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1)` — overshoot, **только** для attention/celebration (badge «свободно», success-state)
+- `--ease-out` — одиночные fade-in
+- Никаких `linear` (только skeleton pulse), никаких `ease-in-out` для UI
+
+Для duration используем токены `--duration-fast/base/medium/slow`. Готовая таблица «Кейс → Duration+Easing» — в Design System.md.
 
 ### 9. Tabular nums на ценах
 ```scss
@@ -159,8 +194,9 @@ description: iOS-style визуальный язык — Liquid Glass, capsule, 
 |---|---|---|
 | Tap (кнопка/карточка) | `scale(0.97)` + spring | 150ms |
 | Hover (desktop only) | `box-shadow` rest → md | 250ms spring |
-| Sheet open | `translateY(100%) → 0` + backdrop fade-in | 350ms spring |
-| Sheet close | reverse | 250ms spring |
+| Sheet open | `translateY(105%) → 0` + backdrop fade-in | 500ms `ease-sheet` |
+| Sheet close | reverse | 300ms `ease-sheet` |
+| Drawer open (desktop) | `translateX(100%) → 0` + backdrop fade-in | 500ms `ease-sheet` |
 | Modal fade | `opacity 0 → 1` | 200ms ease-out |
 | Page transition (mobile) | fade 200ms | — |
 | Skeleton pulse | `opacity 0.6 → 1` infinite | 1400ms ease-in-out |

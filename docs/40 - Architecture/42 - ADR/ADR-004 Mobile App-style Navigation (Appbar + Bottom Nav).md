@@ -29,9 +29,9 @@ tags: [adr, mobile, ux, navigation]
 |---|---|---|---|
 | 1 | `Home` | Главная | `<Link href="/">` |
 | 2 | `Sailboat` | Флот | `<Link href="/fleet">` |
-| 3 | **`Plus`** | **Заказать** | Открывает `<OrderSheet />` (bottom sheet с 3 кнопками: Telegram / Звонок / Форма) — accent-цвет, чуть приподнята (-8px translateY), круглая (capsule) |
+| 3 | **`Plus`** | **Заказать** | `open('order')` — открывает `<AppPanel />` в режиме формы брони (см. ADR-007). На mobile = bottom-sheet, на desktop = side-drawer. Кнопка: accent-цвет, чуть приподнята (-8px translateY), capsule |
 | 4 | `Sparkles` | Услуги | `<Link href="/services">` |
-| 5 | `Menu` | Ещё | Открывает `<MoreSheet />` (FAQ, Отзывы, Цены, О нас, Контакты, Блог) |
+| 5 | `Menu` | Ещё | `open('more')` — открывает `<AppPanel mode='more' />` (FAQ, Отзывы, Цены, О нас, Контакты, Блог) |
 
 Активный пункт: цвет `--color-primary` + индикатор-точка под иконкой.
 
@@ -60,7 +60,7 @@ tags: [adr, mobile, ux, navigation]
 - Сложнее SEO crawling вторичных страниц (FAQ/о нас) — они не в primary nav. Решение: ссылки в `<Footer />` + sitemap.xml + внутренняя перелинковка из контента.
 
 ### Нейтральные
-- Требуется 3 новых компонента: `<Appbar />`, `<BottomNav />`, `<OrderSheet />`, `<MoreSheet />` — всё в `src/shared/ui/`.
+- Требуется 3 новых компонента: `<Appbar />` и `<BottomNav />` в `src/widgets/`, `<AppPanel />` в `src/widgets/app-panel/` (см. ADR-007).
 - На desktop bottom-nav бесполезен — но это нормально, mobile-first проект.
 
 ## Альтернативы (отвергнутые)
@@ -74,5 +74,6 @@ tags: [adr, mobile, ux, navigation]
 
 - [[../../50 - Design/UX-паттерны]] — паттерны Appbar/BottomNav/Sheet
 - [[ADR-005 iOS-style Design Language]] — общий стиль интерфейса
+- [[ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop]] — заменяет OrderSheet/MoreSheet на единый AppPanel
 - [[../Routing & i18n]] — все страницы локализованы под bottom-nav
 - Skill: `.claude/skills/mobile-first.md`
