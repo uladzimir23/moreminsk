@@ -163,14 +163,18 @@ export interface Yacht {
 
 ```
 src/shared/
-├── ui/              # Button, Input, Modal, Accordion
+├── design-system/   # ТОКЕНЫ + МИКСИНЫ + БАЗА (по образцу flex-glass DS)
+│                    # tokens/, mixins/, base/, primitives/, components/ (зарезервировано под flex-glass пакет)
+├── ui/              # Атомарные компоненты ПРОЕКТА на DS-токенах:
+│                    # Button, Input, Modal, Accordion, Container, Section, Heading, JsonLd
 ├── lib/             # cn, format, seo helpers
 ├── i18n/            # config, routing
-├── content/         # yachts.ts, services.ts, faq.ts
+├── content/         # yachts.ts, services.ts, faq.ts (контент-as-code)
 ├── hooks/
-├── config/          # site.ts (SITE_URL, бренд)
-└── styles/          # tokens, mixins, globals
+└── config/          # site.ts (SITE_URL, бренд)
 ```
+
+> **Где живут UI-компоненты:** в `src/shared/ui/` (Button, Input, Modal и т.д.) — это наши атомарные компоненты ПРОЕКТА, построенные на DS-токенах. Папка `src/shared/design-system/components/` зарезервирована под прямой импорт из flex-glass пакета (когда он будет извлечён) — не дублируем.
 
 ## Публичный API через `index.ts`
 

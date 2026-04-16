@@ -1,5 +1,5 @@
 ---
-description: SCSS Modules — правила стилизации проекта moreminsk. Активируется при редактировании *.module.scss, добавлении новых компонентов, изменении токенов в src/shared/styles/.
+description: SCSS Modules — правила стилизации проекта moreminsk. Активируется при редактировании *.module.scss, добавлении новых компонентов, изменении токенов в src/shared/design-system/.
 ---
 
 # Skill: SCSS Modules
@@ -144,11 +144,12 @@ Media queries — только для **root-level** (font-size, print, layout s
 
 ```scss
 .button {
-  background: t.$color-primary;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
 
-  &:hover { background: t.$color-primary-dark; }
-  &:focus-visible { outline: 2px solid t.$color-accent; }
-  &:disabled { opacity: 0.5; pointer-events: none; }
+  &:hover { background: var(--color-primary-hover); }
+  &:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  &:disabled { opacity: var(--opacity-disabled); pointer-events: none; }
 
   &.isLoading { cursor: wait; }
 }
@@ -161,17 +162,17 @@ Media queries — только для **root-level** (font-size, print, layout s
 ```
 
 ```scss
-.button { ... }
-.button.primary { background: t.$color-primary; }
+.button { background: var(--color-secondary); }
+.button.primary { background: var(--color-primary); }
 ```
 
 ### 8. Анимации — в том же модуле или в `_animations.scss`
 
-Повторяющиеся — в `shared/styles/mixins/_animations.scss`:
+Повторяющиеся — в `shared/design-system/mixins/_animations.scss`:
 
 ```scss
-@mixin fade-in($duration: 300ms) {
-  animation: fadeIn $duration ease-out;
+@mixin fade-in($duration: var(--duration-base)) {
+  animation: fadeIn $duration var(--ease-out);
 }
 
 @keyframes fadeIn {
@@ -194,7 +195,7 @@ Media queries — только для **root-level** (font-size, print, layout s
 ```scss
 .root {
   :global(.swiper-slide) {
-    padding: t.$spacing-md;
+    padding: var(--space-md);
   }
 }
 ```
@@ -217,7 +218,13 @@ export function cn(...classes: (string | false | undefined | null)[]): string {
 
 ## Stylelint
 
-`.stylelintrc.json` с правилами для SCSS Modules (camelCase, порядок свойств, запрет `!important` без комментария).
+`.stylelintrc.json` с правилами как в flex-glass:
+- `max-nesting-depth: 2`
+- `selector-max-specificity: 0,3,0`
+- `declaration-no-important: true` — **строгий запрет**, без exceptions
+- `unit-disallowed-list: [px]` с allow для border/outline/box-shadow/contain-intrinsic-size
+- Layers-order check — порядок `@layer` должен совпадать с декларацией в `_tokens.scss`
+- camelCase для класс-имён (CSS Modules convention)
 
 ## Что НЕ делать
 

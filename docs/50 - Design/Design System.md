@@ -42,11 +42,11 @@ updated: 2026-04-17
 
 ## Способ переноса
 
-На этапе инициализации `src/shared/styles/`:
+На этапе инициализации `src/shared/design-system/` (имя папки как в flex-glass):
 1. Скопировать структуру `tokens/`, `mixins/`, `base/` из flex-glass (текущая ветка `feat/design-system`)
 2. Заменить значения `--color-*`, `--gradient-*`, `--font-*` на нашу палитру (см. ниже «Палитра»)
 3. Сохранить ссылку на исходный коммит flex-glass в комментарии header'а `_tokens.scss` — для синка, когда они выпустят пакет
-4. Дальше — собственные компоненты в `src/shared/ui/` с `*.module.scss` рядом (как и было задумано)
+4. Папки `design-system/components/` и `design-system/primitives/` оставляем **пустыми** (зарезервированы под прямой импорт из flex-glass пакета `@flex-glass/design-system`, когда он будет извлечён). Не дублируем — наши собственные компоненты идут в `src/shared/ui/` (Button/Input/Modal/Accordion/Container/Section/Heading/JsonLd) и используют DS-токены оттуда.
 
 ## Философия (наша, поверх архитектуры)
 
