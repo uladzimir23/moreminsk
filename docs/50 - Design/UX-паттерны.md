@@ -72,22 +72,42 @@ updated: 2026-04-17
 └────────────────────────────────────────────────┘
 ```
 
-## Дополнительные mobile-паттерны (критично — 70%+ трафика с mobile)
+## Mobile-нав: App-style (ADR-004)
 
-### Sticky CTA-bar
-Всегда виден внизу экрана на мобильном:
-```
-[🟢 WhatsApp] [📱 Telegram] [☎️ Позвонить]
-```
+> Sticky CTA-bar отменён. Вместо него — полная app-like двухслойная навигация (см. ADR-004).
 
-### Forma в lightbox
-Не открывается «вниз страницы», а в модалке — сохраняет контекст.
+### Appbar (top, fixed, mobile + desktop)
+- Высота 56px на mobile, 80px на desktop.
+- Mobile: лого слева + RU/EN + Telegram-иконка справа. **Без бургера** — нав ушла в bottom-nav.
+- Desktop (`lg+`): лого + horizontal nav (5 пунктов) + primary CTA «Заказать» справа.
+- При scroll > 20px — `backdrop-filter: blur(20px) saturate(180%)` + полупрозрачный фон + hairline-бордер снизу (iOS thin material).
 
-### Фото в swipe-галерее
-Лёгкая галерея с touch-свайпом. Без тяжёлых lightbox-либ — свой на Embla Carousel или Swiper (выбрать).
+### Bottom-nav (mobile only, fixed)
+- 5 пунктов, центральный — accent CTA (capsule, ярче, чуть приподнят -8px).
+- Учитывает `env(safe-area-inset-bottom)` для home bar iPhone X+.
+- Иконки Lucide (16-20px), лейбл 11px, активный — `--color-primary`.
+
+| # | Иконка | Лейбл | Действие |
+|---|---|---|---|
+| 1 | `Home` | Главная | `/` |
+| 2 | `Sailboat` | Флот | `/fleet` |
+| 3 | `Plus` | **Заказать** | открывает `<OrderSheet />` |
+| 4 | `Sparkles` | Услуги | `/services` |
+| 5 | `Menu` | Ещё | открывает `<MoreSheet />` |
+
+### Sheets (iOS UISheetPresentationController)
+Bottom-sheet для всех модальных взаимодействий:
+- Drag-handle сверху (4×40px серая капля).
+- Снапы: `medium` (50vh), `large` (90vh), draggable.
+- Закрытие свайпом вниз или тапом вне.
+- Backdrop: blur + затемнение `rgba(0,0,0,0.4)`.
+- Используется для: `OrderSheet` (3 кнопки контактов), `MoreSheet` (вторичные ссылки), фильтры флота, lightbox-галерея, форма заявки.
 
 ### Clickable контакты
 Телефон, адрес, email — кликабельные (`tel:`, `mailto:`, `https://maps...`).
+
+### Inset grouped lists (FAQ, прайс, контакты)
+По образцу iOS Settings: карточка `--radius-2xl`, внутри строки разделены hairline-бордером, иконка слева, контент центр, chevron-стрелка справа.
 
 ## Hero — как делаем
 

@@ -69,6 +69,8 @@ app → widgets → features → entities → shared
 - `docs/40 - Architecture/42 - ADR/ADR-001 SCSS Modules вместо Tailwind.md`
 - `docs/40 - Architecture/42 - ADR/ADR-002 Next.js Static Export.md`
 - `docs/40 - Architecture/42 - ADR/ADR-003 FSD-lite архитектура.md`
+- `docs/40 - Architecture/42 - ADR/ADR-004 Mobile App-style Navigation (Appbar + Bottom Nav).md`
+- `docs/40 - Architecture/42 - ADR/ADR-005 iOS-style Design Language.md`
 
 ## Базовые правила
 
@@ -80,8 +82,10 @@ app → widgets → features → entities → shared
 6. **Slug — транслит латиницей.** `svadba`, `den-rozhdeniya`, без подчёркиваний и camelCase.
 7. **Без штампов в текстах.** «Незабываемые впечатления», «команда профессионалов», «индивидуальный подход» — запрещены. См. `docs/50 - Design/UX-паттерны.md` и skill `content-writing`.
 8. **Цены — всегда на виду.** Никаких «звоните уточнить».
-9. **Mobile-first.** UI/UX-логика по образцу `~/Documents/neuro-center` и `~/Documents/wedding/wedding-app`. Стили пишем от mobile к desktop (`@include media('md')` для расширений), touch-target ≥ 44px, сетка стекается вертикально, hero-картинка сверху на mobile. См. `docs/50 - Design/UX-паттерны.md#Базовый-принцип-—-Mobile-first`.
+9. **Mobile-first.** UI/UX-логика по образцу `~/Documents/neuro-center` и `~/Documents/wedding/wedding-app`. Стили пишем от mobile к desktop через `mx.respond-to('md')`, touch-target ≥ 44px, сетка стекается вертикально, hero-картинка сверху на mobile. См. `docs/50 - Design/UX-паттерны.md#Базовый-принцип-—-Mobile-first`.
 10. **Локализация — ru/en (MVP).** `be` — post-MVP. Все страницы внутри `app/[locale]/...`, переводы в `messages/{locale}.po`.
+11. **App-like навигация (ADR-004).** На mobile — `<Appbar />` (top, frosted glass) + `<BottomNav />` (5 пунктов: Главная / Флот / **Заказать** / Услуги / Ещё). Sticky CTA-bar отменён. На desktop bottom-nav скрыт, appbar с horizontal nav.
+12. **iOS-style визуальный язык (ADR-005).** Liquid Glass / capsule buttons / hairline borders / multi-layer soft shadows / spring-easing. См. skill `ios-style` для конкретных паттернов и токенов.
 
 ## Что НЕ делать
 

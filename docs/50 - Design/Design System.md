@@ -48,6 +48,94 @@ updated: 2026-04-17
 3. Сохранить ссылку на исходный коммит flex-glass в комментарии header'а `_tokens.scss` — для синка, когда они выпустят пакет
 4. Папки `design-system/components/` и `design-system/primitives/` оставляем **пустыми** (зарезервированы под прямой импорт из flex-glass пакета `@flex-glass/design-system`, когда он будет извлечён). Не дублируем — наши собственные компоненты идут в `src/shared/ui/` (Button/Input/Modal/Accordion/Container/Section/Heading/JsonLd) и используют DS-токены оттуда.
 
+## iOS-style надбавка (наши токены поверх flex-glass DS)
+
+> Принято решение (ADR-005): общий визуальный язык — **iOS 17–18** (Liquid Glass / capsule / hairline / spring). Поверх flex-glass токенов добавляем следующие специфичные для iOS-стиля:
+
+### Materials (frosted glass)
+
+```scss
+// добавляются в :root
+--material-thin-bg:       rgba(255, 255, 255, 0.55);
+--material-regular-bg:    rgba(255, 255, 255, 0.72);
+--material-thick-bg:      rgba(255, 255, 255, 0.92);
+--material-blur-thin:     blur(20px) saturate(180%);
+--material-blur-regular:  blur(24px) saturate(180%);
+--material-blur-thick:    blur(40px) saturate(180%);
+```
+
+В `.dark` — переопределяем на `rgba(20, 25, 41, 0.6/0.75/0.92)`.
+
+Миксин `@mixin material($level: 'regular')` в `mixins/_materials.scss`:
+```scss
+@mixin material($level: 'regular') {
+  background: var(--material-#{$level}-bg);
+  backdrop-filter: var(--material-blur-#{$level});
+  -webkit-backdrop-filter: var(--material-blur-#{$level});
+}
+```
+
+### Capsule radius
+```scss
+--radius-capsule: 999px;   // полная капсула (кнопки, бейджи, теги)
+```
+
+### Hairline border
+```scss
+--color-border-hairline: color-mix(in oklch, var(--color-foreground) 8%, transparent);
+--border-hairline:       1px solid var(--color-border-hairline);
+```
+
+### iOS-style shadows (multi-layer soft)
+Перезаписываем стандартные:
+```scss
+--shadow-sm:           0 1px 0 rgba(0,0,0,0.04),
+                       0 1px 2px rgba(0,0,0,0.04);
+
+--shadow-md:           0 1px 0 rgba(0,0,0,0.04),
+                       0 8px 24px rgba(0,0,0,0.08),
+                       0 0 1px rgba(0,0,0,0.06);
+
+--shadow-lg:           0 2px 0 rgba(0,0,0,0.04),
+                       0 16px 48px rgba(0,0,0,0.12),
+                       0 0 1px rgba(0,0,0,0.08);
+
+--shadow-sheet:        0 -8px 32px rgba(0,0,0,0.12),
+                       0 -1px 0 rgba(0,0,0,0.06);
+```
+
+### Component tokens (специфичные)
+```scss
+--appbar-height:       3.5rem;     // 56px
+--bottomnav-height:    3.5rem;     // 56px
+--sheet-radius:        var(--radius-3xl);   // 32px только сверху
+--sheet-handle-w:      2.5rem;     // 40px
+--sheet-handle-h:      0.25rem;    // 4px
+```
+
+### Tap-feedback
+В `_animations.scss`:
+```scss
+@mixin tap-scale {
+  transition: transform 150ms var(--ease-spring);
+  &:active { transform: scale(0.97); }
+  @include reduced-motion { &:active { transform: none; } }
+}
+```
+
+### Шрифты — SF Pro stack
+```scss
+--font-display: -apple-system, 'SF Pro Display', 'Inter Display', system-ui, sans-serif;
+--font-body:    -apple-system, 'SF Pro Text', Inter, system-ui, sans-serif;
+```
+
+`-apple-system` подхватит SF Pro нативно на iOS/macOS. На Android/Windows — fallback на Inter (загружаем через `next/font`).
+
+### Tabular numerals для цен
+```scss
+.price { font-feature-settings: "tnum" on; }
+```
+
 ## Философия (наша, поверх архитектуры)
 
 ## Философия
