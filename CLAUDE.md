@@ -11,7 +11,7 @@
 | Стили | **SCSS Modules** (не Tailwind — см. ADR-001) |
 | UI | Radix UI (headless) + свои компоненты на SCSS Modules |
 | Иконки | Lucide React |
-| i18n | next-intl v4.7 (`localePrefix: "as-needed"`) |
+| i18n | next-intl v4.7 (`localePrefix: "as-needed"`) — **MVP: ru + en** |
 | Формы | react-hook-form + zod |
 | Анимация | Framer Motion (selective) |
 | Пакет-менеджер | **Bun** |
@@ -72,6 +72,8 @@ app → widgets → features → entities → shared
 6. **Slug — транслит латиницей.** `svadba`, `den-rozhdeniya`, без подчёркиваний и camelCase.
 7. **Без штампов в текстах.** «Незабываемые впечатления», «команда профессионалов», «индивидуальный подход» — запрещены. См. `docs/50 - Design/UX-паттерны.md` и skill `content-writing`.
 8. **Цены — всегда на виду.** Никаких «звоните уточнить».
+9. **Mobile-first.** UI/UX-логика по образцу `~/Documents/neuro-center` и `~/Documents/wedding/wedding-app`. Стили пишем от mobile к desktop (`@include media('md')` для расширений), touch-target ≥ 44px, сетка стекается вертикально, hero-картинка сверху на mobile. См. `docs/50 - Design/UX-паттерны.md#Базовый-принцип-—-Mobile-first`.
+10. **Локализация — ru/en (MVP).** `be` — post-MVP. Все страницы внутри `app/[locale]/...`, переводы в `messages/{locale}.po`.
 
 ## Что НЕ делать
 
