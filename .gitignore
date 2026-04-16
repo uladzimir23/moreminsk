@@ -39,6 +39,9 @@ yarn-error.log*
 .obsidian/
 .trash/
 
+# Claude Code — локальные permissions не коммитим
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db
