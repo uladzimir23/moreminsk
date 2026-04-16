@@ -1,12 +1,54 @@
 ---
 type: design-system
 tags: [design, tokens]
-updated: 2026-04-16
+updated: 2026-04-17
 ---
 
 # Design System (черновик)
 
-> Конкретные значения — черновые. Финализируются на этапе UI/визуала (после утверждения стиля дизайнером).
+> Конкретные значения (бренд-палитра, шрифты) — черновые, финализируются на этапе визуала.
+>
+> **Архитектурно** — берём готовый паттерн из **Flex Glass Design System** (`~/Documents/flex-glass/src/shared/design-system/`, ветка `feat/design-system`). Это активно разрабатываемая SCSS-DS с cascade layers, primitive→semantic→component токенами, fluid clamp(), container queries, color-mix() для state-вариантов, @property для анимации тем, Safari/iOS hardening и stylelint-enforced rules. Долгосрочно она будет извлечена в пакет `@flex-glass/design-system`.
+
+## Что переиспользуем из Flex Glass DS
+
+**Архитектуру (копируем целиком):**
+1. **Cascade layers** — `@layer reset, tokens, base, primitives, components, utilities, overrides;` декларация в `tokens/_tokens.scss`
+2. **Иерархию токенов** — primitive (`--primitive-color-blue-500`) → semantic (`--color-primary`) → component (`--btn-radius`)
+3. **Fluid clamp()** для `--space-*` и `--text-4xl`..`--text-7xl` (плавные между 320–1280px viewport — mobile-up без breakpoint-ов)
+4. **Logical properties** (`padding-inline`, `margin-block`, `inline-size`) — RTL/i18n-ready (актуально, у нас ru/en MVP)
+5. **`color-mix(in oklch)` для state-вариантов** (active/disabled/subtle автовыводятся из base)
+6. **`@property`** для анимируемых CSS-переменных
+7. **Container queries** как default; media queries — только для root-level
+8. **`:where()` для base-стилей** (specificity 0)
+9. **`content-visibility: auto`** для длинных секций
+10. **Safari/iOS hardening** — `color-scheme`, `100dvh` fallback, `font-size: max(1rem, 1em)` на инпутах, safe-area-insets миксины
+11. **Stylelint конфиг** — `max-nesting-depth: 2`, `selector-max-specificity: 0,3,0`, no `!important`, no `px` (кроме разрешённого списка), layers-order
+
+**Миксины (копируем как есть):**
+- `respond-to($breakpoint)`, `respond-below($breakpoint)`
+- `container-query($breakpoint, $name?)`, `container-root($name?, $type?)`
+- `render-optimized($height)`, `contain-paint`, `gpu-promote`, `isolate`
+- `reduced-motion`, `high-contrast`, `forced-colors`
+- `dark-mode`, `safe-area-padding($axis?)`
+- `viewport-fit`, `isolate-scroll`, `smooth-scroll`
+
+**Базовые стили (копируем):** `_reset.scss`, `_typography.scss`, `_layout.scss` — внутри `@layer base`.
+
+**Что переопределяем** (moreminsk-специфика):
+- Бренд-палитра (морская: глубокий синий, песочный, закатный коралл — а не голубой/фиолетовый Flex Glass)
+- Шрифты (Unbounded/Manrope или Playfair/Inter — не Manrope)
+- Component-токены (`--card-padding`, `--btn-height-*`) — могут немного отличаться
+
+## Способ переноса
+
+На этапе инициализации `src/shared/styles/`:
+1. Скопировать структуру `tokens/`, `mixins/`, `base/` из flex-glass (текущая ветка `feat/design-system`)
+2. Заменить значения `--color-*`, `--gradient-*`, `--font-*` на нашу палитру (см. ниже «Палитра»)
+3. Сохранить ссылку на исходный коммит flex-glass в комментарии header'а `_tokens.scss` — для синка, когда они выпустят пакет
+4. Дальше — собственные компоненты в `src/shared/ui/` с `*.module.scss` рядом (как и было задумано)
+
+## Философия (наша, поверх архитектуры)
 
 ## Философия
 
@@ -164,3 +206,8 @@ Lucide React. Размеры: 16 / 20 / 24 / 32px. Заполнять `currentCo
 - [[Медиа-стратегия]]
 - [[../20 - Market/Позиционирование]]
 - [[../40 - Architecture/42 - ADR/ADR-001 SCSS Modules вместо Tailwind]]
+
+## Внешние референсы
+
+- **Flex Glass DS** — `~/Documents/flex-glass/src/shared/design-system/` (ветка `feat/design-system`). Источник архитектуры. README: `~/Documents/flex-glass/src/shared/design-system/README.md`. CLAUDE.md проекта: `~/Documents/flex-glass/CLAUDE.md` (раздел «Design System» — точный список enforced-правил).
+- **FlexGlass-Docs** — `~/Documents/FlexGlass-Docs/20 - Architecture/Design System — Базовые компоненты и адаптивность.md` и `23 - Components/Design Tokens & Component System — Полная спецификация.md` — обоснование решений.

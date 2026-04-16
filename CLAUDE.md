@@ -64,7 +64,7 @@ app → widgets → features → entities → shared
 
 ## Базовые правила
 
-1. **SCSS Modules, не Tailwind.** На каждый компонент — `Component.module.scss` рядом. Токены в `src/shared/styles/tokens/`, миксины в `mixins/`. shadcn/ui не используем (он завязан на Tailwind).
+1. **SCSS Modules, не Tailwind.** На каждый компонент — `Component.module.scss` рядом. Архитектура DS — копия паттерна **Flex Glass** (`~/Documents/flex-glass/src/shared/design-system/`, ветка `feat/design-system`): cascade layers, primitive→semantic→component токены через CSS custom properties, fluid `clamp()`, container queries, `color-mix()`, `@property`, logical properties, Safari/iOS hardening, stylelint-enforced rules. Токены — `src/shared/design-system/tokens/`, миксины — `mixins/`. Переопределяем только бренд-палитру и шрифты. shadcn/ui не используем (он на Tailwind).
 2. **Server Components по умолчанию.** `"use client"` только там, где нужно состояние или эффект.
 3. **Static export — нет API routes и middleware.** Формы — через внешний сервис (Telegram Bot API / Resend / Formspree).
 4. **SEO на каждой странице.** `generateMetadata()` + JSON-LD через компонент `<JsonLd />`.

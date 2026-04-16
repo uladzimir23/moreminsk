@@ -5,25 +5,33 @@ description: SCSS Modules — правила стилизации проекта
 # Skill: SCSS Modules
 
 > Это единственный способ стилизации в проекте. Tailwind/styled-components/emotion — запрещены (см. ADR-001).
+>
+> **Архитектура DS — копия паттерна Flex Glass** (`~/Documents/flex-glass/src/shared/design-system/`, ветка `feat/design-system`). См. `docs/50 - Design/Design System.md` → раздел «Что переиспользуем».
 
 ## Расположение файлов
 
 ```
-src/shared/styles/
+src/shared/design-system/         # имя папки как в flex-glass
+├── README.md
+├── index.scss                    # импортируется в app/layout.tsx (одна точка входа)
 ├── tokens/
-│   ├── _colors.scss        # цветовая палитра
-│   ├── _typography.scss    # шрифты, размеры, line-height
-│   ├── _spacing.scss       # 8-point grid
-│   ├── _radius.scss        # радиусы скругления
-│   ├── _shadows.scss       # тени
-│   ├── _breakpoints.scss   # брейкпоинты
-│   └── _index.scss         # @forward всё
+│   ├── _tokens.scss              # primitive + semantic + component CSS vars + cascade layers + @property + dark theme
+│   ├── _variables.scss           # Sass-переменные (только $breakpoints map для миксинов)
+│   └── _index.scss               # @forward
 ├── mixins/
-│   ├── _responsive.scss    # @mixin mobile / tablet-up / desktop-up
-│   ├── _typography.scss    # @mixin heading / body-text
+│   ├── _mixins.scss              # respond-to, container-query, render-optimized, reduced-motion, dark-mode, safe-area-padding, viewport-fit, smooth-scroll, ...
+│   ├── _animations.scss          # keyframes + анимационные миксины
 │   └── _index.scss
-└── globals.scss            # reset + base (импортится в app/layout.tsx)
+├── base/                         # @layer base
+│   ├── _reset.scss
+│   ├── _typography.scss
+│   ├── _layout.scss
+│   └── _index.scss
+├── primitives/                   # Box, Stack, Cluster, Grid, Center, Frame (по мере надобности)
+└── components/                   # Button, Card, Input, Modal, … (свои компоненты на DS)
 ```
+
+> При инициализации — копируем `tokens/_tokens.scss`, `mixins/`, `base/` из `~/Documents/flex-glass/src/shared/design-system/` целиком, переопределяем только бренд-палитру и шрифты в `:root`.
 
 ## Правила
 
@@ -36,23 +44,30 @@ widgets/hero/
 └── index.ts
 ```
 
-### 2. Импорт токенов и миксинов — `@use`, не `@import`
+### 2. Токены — CSS custom properties, миксины — `@use`
+
+Токены — `var(--color-primary)`, не Sass-переменные. Миксины — через `@use`.
 
 ```scss
-@use '@/shared/styles/tokens' as t;
-@use '@/shared/styles/mixins' as m;
+@use '@/shared/design-system/mixins' as mx;
 
 .root {
-  padding: t.$spacing-xl;
-  background: t.$color-surface;
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  background: var(--color-surface);
+  color: var(--color-foreground);
 
-  @include m.mobile {
-    padding: t.$spacing-md;
+  @include mx.respond-to('md') {
+    padding-block: var(--space-3xl);
+  }
+
+  @include mx.dark-mode {
+    background: var(--color-card);
   }
 }
 ```
 
-### 3. Никаких hardcoded значений
+### 3. Никаких hardcoded значений и `px` в primitive-значениях
 
 ```scss
 // ❌ НЕТ
@@ -60,15 +75,21 @@ widgets/hero/
   padding: 12px 20px;
   color: #1E3A5F;
   border-radius: 8px;
+  width: 240px;
 }
 
 // ✅ ДА
 .button {
-  padding: t.$spacing-sm t.$spacing-lg;
-  color: t.$color-primary;
-  border-radius: t.$radius-md;
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-lg);
+  color: var(--color-primary-foreground);
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  inline-size: 15rem;
 }
 ```
+
+> `px` разрешены только для border / outline / box-shadow / contain-intrinsic-size — как в flex-glass stylelint конфиге.
 
 ### 4. Классы — camelCase, root-класс — `root`
 
@@ -91,22 +112,33 @@ export function Hero() {
 .primaryCta { ... }
 ```
 
-### 5. Респонсив — mobile-first
+### 5. Респонсив — mobile-first + container queries по умолчанию
+
+Для **компонентной** адаптивности — container queries:
 
 ```scss
 .root {
-  // mobile стили — базовые
-  padding: t.$spacing-md;
+  @include mx.container-root;          // делаем родителем для child container queries
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: 1fr;
 
-  @include m.tablet-up {
-    padding: t.$spacing-lg;
-  }
-
-  @include m.desktop-up {
-    padding: t.$spacing-xl;
+  @include mx.container-query('md') {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 ```
+
+Media queries — только для **root-level** (font-size, print, layout shell):
+
+```scss
+.root {
+  padding-block: var(--space-lg);
+  @include mx.respond-to('md') { padding-block: var(--space-xl); }
+}
+```
+
+Многие fluid-токены (`--space-2xl`, `--text-5xl`) уже плавно адаптируются через `clamp()` — отдельные media queries для них не нужны.
 
 ### 6. Псевдоклассы — вложены через `&`
 
@@ -148,9 +180,12 @@ export function Hero() {
 }
 ```
 
-### 9. CSS custom properties — только для темизации
+### 9. CSS custom properties — основа всей системы
 
-Обычные токены — sass-переменные (`t.$color-primary`). Для переключаемых тем (light/dark post-MVP) — CSS переменные в `:root` / `[data-theme="dark"]`.
+Все цвета/spacing/radius/shadow — только через `var(--token)`. Sass-переменные используем **только** для `$breakpoints` map в миксинах. Это позволяет:
+- Менять тему в runtime (light/dark) без перекомпиляции
+- Анимировать смену темы через зарегистрированные `@property`
+- Переопределять токены в любой части дерева через override-классы (`.dark`, `.theme-marine`)
 
 ### 10. Глобальные селекторы — через `:global()`
 
@@ -189,11 +224,18 @@ export function cn(...classes: (string | false | undefined | null)[]): string {
 - ❌ Tailwind-утилиты
 - ❌ styled-components / emotion / vanilla-extract
 - ❌ Глобальные классы без `:global()`
-- ❌ Хардкод цветов и размеров
+- ❌ Хардкод цветов и размеров; `px` за пределами border/outline/shadow
+- ❌ `width` / `height` (использовать `inline-size` / `block-size`)
+- ❌ `!important` (стайлайнт упадёт)
+- ❌ Глубокая вложенность (`max-nesting-depth: 2`)
 - ❌ Inline-стили `style={{ ... }}` (кроме динамических вычислений)
 - ❌ shadcn/ui компоненты (они на Tailwind)
+- ❌ Изобретать токен-архитектуру с нуля — взять её из flex-glass
 
 ## Связанные
 
 - ADR-001: `docs/40 - Architecture/42 - ADR/ADR-001 SCSS Modules вместо Tailwind.md`
 - Design System: `docs/50 - Design/Design System.md`
+- Skill: `mobile-first` — паттерны разметки и компонентов
+- Reference: `~/Documents/flex-glass/src/shared/design-system/` — источник архитектуры
+- Reference: `~/Documents/flex-glass/CLAUDE.md` → раздел «Design System» — точный список stylelint правил
