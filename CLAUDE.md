@@ -73,6 +73,7 @@ app → widgets → features → entities → shared
 - `docs/40 - Architecture/42 - ADR/ADR-005 iOS-style Design Language.md`
 - `docs/40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens.md`
 - `docs/40 - Architecture/42 - ADR/ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop.md`
+- `docs/40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable.md`
 
 ## Базовые правила
 
@@ -91,6 +92,7 @@ app → widgets → features → entities → shared
 13. **Палитра + темы — морская navy + sunset coral, light+dark в MVP (ADR-006).** Primary `#0A4D7A` (light) / `#5BA8D6` (dark). Accent / CTA `#E2956A`. Классы `.light-theme` / `.dark-theme` на `<html>` и `<body>` (sync-pattern). Каждый компонент проверяем в обоих темах. Anti-FOUC inline-script в `<head>` обязателен. Цвета только через `var(--color-*)` — никаких хардкод-гексов в компонентах.
 14. **Анимации — только Framer Motion (ADR-006).** Не GSAP, не Lottie. Easings и durations — из `tokens/_motion.scss` (`--ease-spring/sheet/bounce/out`, `--duration-fast/base/medium/slow`). Простые hover/tap — чистый CSS через токены. См. таблицу «Кейс → Duration+Easing» в Design System.
 15. **Adaptive Panel вместо отдельных модалок (ADR-007).** Один компонент `<AppPanel />` с глобальным контекстом `usePanel()`. На mobile — bottom-sheet с drag-to-dismiss. На desktop — floating side-drawer справа (430px). Режимы: `'order' | 'fleet-filter' | 'more' | 'gallery'`. Заменяет `<OrderSheet />` / `<MoreSheet />` из ADR-004.
+16. **Шрифт — Manrope Variable, один на всё (ADR-008).** Подключаем через `next/font/google` (`subsets: ['latin', 'cyrillic']`, weight 300/400/500/600/700, `variable: '--font-manrope'`). Не добавляем display-шрифт в MVP. Type scale — fluid `clamp()`, маппинг HTML→token в ADR-008. Цены — через `.tabular` (font-feature `tnum`+`lnum`). Body на mobile ≥ 16px (анти-zoom iOS).
 
 ## Что НЕ делать
 

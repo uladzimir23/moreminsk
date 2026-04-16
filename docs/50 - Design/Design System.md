@@ -164,27 +164,32 @@ updated: 2026-04-17
 - Не бирюзовый — отстройка от конкурентов (yachtminsk/arenda-yacht)
 - Тёплые песочные нейтральные вместо безжизненного серого
 
-## Типографика
+## Типографика (финализирована — ADR-008)
 
-**Основной шрифт:** одна из пар — финальный выбор с дизайнером.
-- Вариант А: **Unbounded** (H1-H3) + **Manrope** (body) — современный контраст
-- Вариант Б: **Playfair Display** (H1-H3) + **Inter** (body) — классический морской
+> Полная спецификация (token + семантический mapping) — в [[../40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]].
+
+**Шрифт:** **Manrope Variable**, один на всё (`--font-manrope`). Подключаем через `next/font/google` с subset `latin + cyrillic` и weights 300/400/500/600/700.
+
+**Type scale — fluid `clamp()` (mobile 360px → desktop 1440px):**
 
 ```scss
-// tokens/_typography.scss
-$font-display: 'Unbounded', 'Playfair Display', serif;
-$font-body:    'Manrope', 'Inter', sans-serif;
-
-$fs-h1: clamp(2rem, 5vw, 3.5rem);       // 32–56px
-$fs-h2: clamp(1.5rem, 4vw, 2.5rem);     // 24–40px
-$fs-h3: clamp(1.25rem, 3vw, 1.75rem);   // 20–28px
-$fs-body: 1rem;                          // 16px
-$fs-small: 0.875rem;                     // 14px
-
-$lh-tight: 1.1;
-$lh-normal: 1.5;
-$lh-relaxed: 1.7;
+--text-xs:   12-13px   // legal, image credits
+--text-sm:   14-15px   // captions
+--text-base: 16-17px   // body default
+--text-lg:   18-20px   // lead, hero subtitle
+--text-xl:   20-24px   // H4
+--text-2xl:  24-30px   // H3, prices
+--text-3xl:  30-40px   // H2
+--text-4xl:  36-48px   // H1 subpages
+--text-5xl:  44-60px   // H1 default
+--text-6xl:  56-72px   // Hero H1 only
 ```
+
+**Семантический mapping HTML→token** — таблица в ADR-008. Реализуется через `<Heading level>` и `<Text variant>` в `src/shared/ui/`.
+
+**Цены — `tabular-nums` через класс `.tabular`** или прямой `font-feature-settings: var(--font-feature-tabular)`. Цифры выравниваются вертикально → прайс-таблица читается ровно.
+
+**Анти-zoom iOS:** body на mobile ≥ 16px (включая `<input>`). Иначе Safari зумит при focus.
 
 ## Ритм (spacing)
 
