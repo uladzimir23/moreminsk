@@ -61,6 +61,9 @@ app → widgets → features → entities → shared
 - **Schema.org:** `docs/30 - SEO/Schema.org разметка.md`
 - **Design System:** `docs/50 - Design/Design System.md`
 - **UX-паттерны:** `docs/50 - Design/UX-паттерны.md`
+- **Brand Identity:** `docs/50 - Design/Brand Identity.md`
+- **Hero & Section Rhythm:** `docs/50 - Design/Hero & Section Rhythm.md`
+- **Component Specs:** `docs/50 - Design/Component Specs.md`
 - **Tone of voice:** `docs/20 - Market/Позиционирование.md#Tone-of-Voice`
 - **Конкуренты:** `docs/20 - Market/Конкурентный анализ.md`
 
