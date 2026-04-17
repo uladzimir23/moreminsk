@@ -1,0 +1,49 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-inline-size: 40rem;
+  margin-block-end: var(--space-2xl);
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-size: var(--text-xs);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-3xl);
+  font-weight: var(--primitive-weight-bold);
+  line-height: var(--primitive-leading-tight);
+  letter-spacing: var(--primitive-tracking-tight);
+  color: var(--color-foreground);
+  text-wrap: balance;
+
+  @include respond-to("md") {
+    font-size: var(--text-4xl);
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+  text-wrap: pretty;
+
+  @include respond-to("md") {
+    font-size: var(--text-lg);
+  }
+}
