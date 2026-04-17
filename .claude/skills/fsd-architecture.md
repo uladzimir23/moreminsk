@@ -52,19 +52,19 @@ Page-файл — только сборка виджетов + `generateMetadata
 
 ```tsx
 // src/app/[locale]/services/svadba/page.tsx
-import { Hero } from '@/widgets/hero';
-import { PriceTable } from '@/widgets/price-table';
-import { Gallery } from '@/widgets/gallery';
-import { FAQ } from '@/widgets/faq';
-import { BookingCTA } from '@/features/booking';
-import { services } from '@/shared/content/services';
+import { Hero } from "@/widgets/hero";
+import { PriceTable } from "@/widgets/price-table";
+import { Gallery } from "@/widgets/gallery";
+import { FAQ } from "@/widgets/faq";
+import { BookingCTA } from "@/features/booking";
+import { services } from "@/shared/content/services";
 
 export function generateMetadata() {
-  return buildMetadata({ page: 'services/svadba' });
+  return buildMetadata({ page: "services/svadba" });
 }
 
 export default function SvadbaPage() {
-  const service = services.find((s) => s.slug === 'svadba')!;
+  const service = services.find((s) => s.slug === "svadba")!;
   return (
     <>
       <Hero title={service.h1} lead={service.description} />
@@ -93,8 +93,8 @@ src/widgets/hero/
 
 ```tsx
 // src/widgets/hero/Hero.tsx
-import { Button } from '@/shared/ui/button';
-import styles from './Hero.module.scss';
+import { Button } from "@/shared/ui/button";
+import styles from "./Hero.module.scss";
 
 export interface HeroProps {
   title: string;
@@ -107,7 +107,11 @@ export function Hero({ title, lead, primaryCta }: HeroProps) {
     <section className={styles.root}>
       <h1>{title}</h1>
       <p>{lead}</p>
-      {primaryCta && <Button asChild><a href={primaryCta.href}>{primaryCta.label}</a></Button>}
+      {primaryCta && (
+        <Button asChild>
+          <a href={primaryCta.href}>{primaryCta.label}</a>
+        </Button>
+      )}
     </section>
   );
 }
@@ -158,7 +162,7 @@ src/entities/yacht/
 
 ```typescript
 // src/entities/yacht/model/types.ts
-export type YachtType = 'sail' | 'motor' | 'sail-motor';
+export type YachtType = "sail" | "motor" | "sail-motor";
 
 export interface Yacht {
   slug: string;
@@ -195,18 +199,18 @@ src/shared/
 
 ```typescript
 // src/widgets/hero/index.ts
-export { Hero } from './Hero';
-export type { HeroProps } from './types';
+export { Hero } from "./Hero";
+export type { HeroProps } from "./types";
 ```
 
 Импорт:
 
 ```typescript
 // ✅
-import { Hero } from '@/widgets/hero';
+import { Hero } from "@/widgets/hero";
 
 // ❌
-import { Hero } from '@/widgets/hero/Hero';
+import { Hero } from "@/widgets/hero/Hero";
 ```
 
 ## tsconfig paths
@@ -227,15 +231,15 @@ import { Hero } from '@/widgets/hero/Hero';
 
 ## Когда создавать новый слой
 
-| Создаю... | Куда | Пример |
-|---|---|---|
-| Страницу (URL) | `app/` | /services/svadba |
-| Блок страницы без состояния | `widgets/` | Hero, PriceTable |
-| Интерактивная фича со state | `features/` | Booking wizard, YachtFilter, ThemeToggle |
-| Бизнес-сущность и её карточку | `entities/` | Yacht, Service |
-| Атомарный UI (кнопка, инпут) | `shared/ui/` | Button, Input |
-| Утилиту/хелпер | `shared/lib/` | cn, formatPrice |
-| Тип/конфиг/контент | `shared/{содержательно}/` | types, content |
+| Создаю...                     | Куда                      | Пример                                   |
+| ----------------------------- | ------------------------- | ---------------------------------------- |
+| Страницу (URL)                | `app/`                    | /services/svadba                         |
+| Блок страницы без состояния   | `widgets/`                | Hero, PriceTable                         |
+| Интерактивная фича со state   | `features/`               | Booking wizard, YachtFilter, ThemeToggle |
+| Бизнес-сущность и её карточку | `entities/`               | Yacht, Service                           |
+| Атомарный UI (кнопка, инпут)  | `shared/ui/`              | Button, Input                            |
+| Утилиту/хелпер                | `shared/lib/`             | cn, formatPrice                          |
+| Тип/конфиг/контент            | `shared/{содержательно}/` | types, content                           |
 
 ## Когда НЕ создавать новый слой
 

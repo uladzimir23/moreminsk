@@ -49,7 +49,7 @@ widgets/hero/
 Токены — `var(--color-primary)`, не Sass-переменные. Миксины — через `@use`.
 
 ```scss
-@use '@/shared/design-system/mixins' as mx;
+@use "@/shared/design-system/mixins" as mx;
 
 .root {
   padding-block: var(--space-2xl);
@@ -57,7 +57,7 @@ widgets/hero/
   background: var(--color-surface);
   color: var(--color-foreground);
 
-  @include mx.respond-to('md') {
+  @include mx.respond-to("md") {
     padding-block: var(--space-3xl);
   }
 
@@ -73,7 +73,7 @@ widgets/hero/
 // ❌ НЕТ
 .button {
   padding: 12px 20px;
-  color: #0A4D7A;
+  color: #0a4d7a;
   border-radius: 8px;
   width: 240px;
 }
@@ -94,7 +94,7 @@ widgets/hero/
 ### 4. Классы — camelCase, root-класс — `root`
 
 ```tsx
-import styles from './Hero.module.scss';
+import styles from "./Hero.module.scss";
 
 export function Hero() {
   return (
@@ -118,12 +118,12 @@ export function Hero() {
 
 ```scss
 .root {
-  @include mx.container-root;          // делаем родителем для child container queries
+  @include mx.container-root; // делаем родителем для child container queries
   display: grid;
   gap: var(--space-md);
   grid-template-columns: 1fr;
 
-  @include mx.container-query('md') {
+  @include mx.container-query("md") {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -134,7 +134,9 @@ Media queries — только для **root-level** (font-size, print, layout s
 ```scss
 .root {
   padding-block: var(--space-lg);
-  @include mx.respond-to('md') { padding-block: var(--space-xl); }
+  @include mx.respond-to("md") {
+    padding-block: var(--space-xl);
+  }
 }
 ```
 
@@ -147,11 +149,21 @@ Media queries — только для **root-level** (font-size, print, layout s
   background: var(--color-primary);
   color: var(--color-primary-foreground);
 
-  &:hover { background: var(--color-primary-hover); }
-  &:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
-  &:disabled { opacity: var(--opacity-disabled); pointer-events: none; }
+  &:hover {
+    background: var(--color-primary-hover);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    pointer-events: none;
+  }
 
-  &.isLoading { cursor: wait; }
+  &.isLoading {
+    cursor: wait;
+  }
 }
 ```
 
@@ -162,8 +174,12 @@ Media queries — только для **root-level** (font-size, print, layout s
 ```
 
 ```scss
-.button { background: var(--color-secondary); }
-.button.primary { background: var(--color-primary); }
+.button {
+  background: var(--color-secondary);
+}
+.button.primary {
+  background: var(--color-primary);
+}
 ```
 
 ### 8. Анимации — в том же модуле или в `_animations.scss`
@@ -176,14 +192,19 @@ Media queries — только для **root-level** (font-size, print, layout s
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 ```
 
 ### 9. CSS custom properties — основа всей системы
 
 Все цвета/spacing/radius/shadow — только через `var(--token)`. Sass-переменные используем **только** для `$breakpoints` map в миксинах. Это позволяет:
+
 - Менять тему в runtime (light/dark) без перекомпиляции
 - Анимировать смену темы через зарегистрированные `@property`
 - Переопределять токены в любой части дерева через override-классы (`.dark`, `.theme-marine`)
@@ -206,7 +227,7 @@ Media queries — только для **root-level** (font-size, print, layout s
 
 ```typescript
 export function cn(...classes: (string | false | undefined | null)[]): string {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 ```
 
@@ -219,6 +240,7 @@ export function cn(...classes: (string | false | undefined | null)[]): string {
 ## Stylelint
 
 `.stylelintrc.json` с правилами как в flex-glass:
+
 - `max-nesting-depth: 2`
 - `selector-max-specificity: 0,3,0`
 - `declaration-no-important: true` — **строгий запрет**, без exceptions

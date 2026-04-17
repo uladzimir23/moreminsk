@@ -10,11 +10,11 @@ description: Ограничения и паттерны Next.js static export (o
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  images: { unoptimized: true },   // обязательно с static export
+  output: "export",
+  images: { unoptimized: true }, // обязательно с static export
   trailingSlash: false,
   eslint: { ignoreDuringBuilds: false },
   typescript: { ignoreBuildErrors: false },
@@ -53,35 +53,35 @@ export default nextConfig;
 
 ```typescript
 // src/features/booking/model/submit.ts
-import type { Booking } from '@/entities/booking';
-import { formatBookingForTelegram } from './format-telegram';
+import type { Booking } from "@/entities/booking";
+import { formatBookingForTelegram } from "./format-telegram";
 
 export async function submitBooking(data: Booking) {
   const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
   const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
   const text = formatBookingForTelegram(data);
 
-  const res = await fetch(
-    `https://api.telegram.org/bot${botToken}/sendMessage`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
-    }
-  );
-  if (!res.ok) throw new Error('TELEGRAM_FAIL');
+  const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
+  });
+  if (!res.ok) throw new Error("TELEGRAM_FAIL");
 }
 ```
 
 ⚠️ Токен будет в клиент-бандле. Используем **read-only бот с минимальными правами** (только send в один чат). При утечке — поменяем.
 
 ### Вариант 2 — Formspree / FormKeep
+
 Внешний сервис, URL в env, POST с form-data. Без кода.
 
 ### Вариант 3 — Вынесенный API (Vercel Function / CF Worker)
+
 Отдельный минимальный серверлес-проект, подключается через `NEXT_PUBLIC_API_URL`.
 
 ### Вариант 4 — Resend (email only)
+
 Библиотека + API-ключ. Также публичный токен — используем **restricted API key** только на send.
 
 **MVP решение:** все три канала параллельно через `Promise.allSettled` — Telegram Bot (уведомление менеджеру) + Resend (email-копия менеджеру) + Resend (confirmation клиенту). Детали — `docs/40 - Architecture/Booking Module.md#Submit`.
@@ -90,13 +90,11 @@ export async function submitBooking(data: Booking) {
 
 ```typescript
 // src/app/[locale]/services/[slug]/page.tsx
-import { services } from '@/shared/content/services';
-import { locales } from '@/shared/i18n/config';
+import { services } from "@/shared/content/services";
+import { locales } from "@/shared/i18n/config";
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) =>
-    services.map((service) => ({ locale, slug: service.slug }))
-  );
+  return locales.flatMap((locale) => services.map((service) => ({ locale, slug: service.slug })));
 }
 
 export default function ServicePage({ params }: { params: { locale: string; slug: string } }) {
@@ -110,13 +108,13 @@ export default function ServicePage({ params }: { params: { locale: string; slug
 
 ```typescript
 // scripts/optimize-images.ts
-import sharp from 'sharp';
-import { readdir } from 'fs/promises';
-import { join } from 'path';
+import sharp from "sharp";
+import { readdir } from "fs/promises";
+import { join } from "path";
 
 const SIZES = [640, 1024, 1920];
-const SRC = 'raw-media/';
-const OUT = 'public/';
+const SRC = "raw-media/";
+const OUT = "public/";
 
 async function optimize() {
   // For each .jpg/.png in SRC → generate .webp + .avif в 3 размерах
@@ -139,10 +137,10 @@ Package.json:
 Создать компонент `src/shared/ui/image/Image.tsx`:
 
 ```tsx
-import styles from './Image.module.scss';
+import styles from "./Image.module.scss";
 
 interface Props {
-  src: string;         // базовое имя, напр. "fleet/eva-01"
+  src: string; // базовое имя, напр. "fleet/eva-01"
   alt: string;
   eager?: boolean;
   sizes?: string;
@@ -150,13 +148,10 @@ interface Props {
 }
 
 export function Image({ src, alt, eager, sizes, className }: Props) {
-  const base = src.replace(/\.(jpg|png|webp)$/, '');
+  const base = src.replace(/\.(jpg|png|webp)$/, "");
   return (
     <picture>
-      <source
-        type="image/avif"
-        srcSet={`/${base}.avif`}
-      />
+      <source type="image/avif" srcSet={`/${base}.avif`} />
       <source
         type="image/webp"
         srcSet={`
@@ -169,8 +164,8 @@ export function Image({ src, alt, eager, sizes, className }: Props) {
       <img
         src={`/${base}.webp`}
         alt={alt}
-        loading={eager ? 'eager' : 'lazy'}
-        fetchPriority={eager ? 'high' : 'auto'}
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : "auto"}
         decoding="async"
         className={className}
       />
@@ -185,7 +180,7 @@ export function Image({ src, alt, eager, sizes, className }: Props) {
 
 ```tsx
 // src/shared/ui/redirect-to-locale/RedirectToLocale.tsx
-'use client';
+"use client";
 // ...выбирает локаль из navigator.language, делает router.replace
 ```
 
@@ -204,7 +199,12 @@ export function Image({ src, alt, eager, sizes, className }: Props) {
 {
   "redirects": [
     { "source": "/old-url", "destination": "/new-url", "permanent": true },
-    { "source": "/((?!en).*)", "has": [{ "type": "host", "value": "www.moreminsk.by" }], "destination": "https://moreminsk.by/$1", "permanent": true }
+    {
+      "source": "/((?!en).*)",
+      "has": [{ "type": "host", "value": "www.moreminsk.by" }],
+      "destination": "https://moreminsk.by/$1",
+      "permanent": true
+    }
   ]
 }
 ```
@@ -212,6 +212,7 @@ export function Image({ src, alt, eager, sizes, className }: Props) {
 ## Триггеры пересмотра решения о static export
 
 Если появится:
+
 - Календарь занятости с real-time — понадобится SSR или internal API
 - Личный кабинет — нужна авторизация с runtime
 - A/B тесты на сервере

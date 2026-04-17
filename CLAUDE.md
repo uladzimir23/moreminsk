@@ -12,22 +12,23 @@
 
 ## Tech Stack
 
-| Слой | Технология |
-|------|------------|
-| Framework | Next.js 16 (App Router, `output: "export"`) |
-| Язык | TypeScript (strict) |
-| Стили | **SCSS Modules** (не Tailwind — см. ADR-001) |
-| UI | Radix UI (headless) + свои компоненты на SCSS Modules |
-| Иконки | Lucide React |
-| i18n | next-intl v4.7 (`localePrefix: "as-needed"`) — **MVP: ru + en** |
-| Формы | react-hook-form + zod |
-| Анимация | Framer Motion (selective) |
-| Пакет-менеджер | **Bun** |
-| Линтеры | ESLint + Stylelint + Prettier |
+| Слой           | Технология                                                      |
+| -------------- | --------------------------------------------------------------- |
+| Framework      | Next.js 16 (App Router, `output: "export"`)                     |
+| Язык           | TypeScript (strict)                                             |
+| Стили          | **SCSS Modules** (не Tailwind — см. ADR-001)                    |
+| UI             | Radix UI (headless) + свои компоненты на SCSS Modules           |
+| Иконки         | Lucide React                                                    |
+| i18n           | next-intl v4.7 (`localePrefix: "as-needed"`) — **MVP: ru + en** |
+| Формы          | react-hook-form + zod                                           |
+| Анимация       | Framer Motion (selective)                                       |
+| Пакет-менеджер | **Bun**                                                         |
+| Линтеры        | ESLint + Stylelint + Prettier                                   |
 
 ## Архитектура
 
 **FSD-lite** — 5 слоёв, импорт только сверху вниз:
+
 ```
 app → widgets → features → entities → shared
 ```

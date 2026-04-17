@@ -21,19 +21,19 @@ Next.js 16 (App Router, static export) · TypeScript · SCSS Modules · next-int
 
 Основные разделы (внутри `docs/`):
 
-| # | Раздел |
-|---|---|
-| 00 | Indexes — Dashboard, Map of Content |
-| 10 | Brief & Requirements — ТЗ, цели, KPI |
-| 20 | Market — конкуренты, ЦА, позиционирование |
-| 30 | SEO — стратегия, ядро, карта страниц, meta, Schema.org |
-| 40 | Architecture — Next.js, FSD, ADR |
-| 50 | Design — дизайн-система, UX-паттерны, медиа |
-| 60 | Content — флот, услуги, FAQ, тексты |
-| 70 | Meetings & Logs — сессии |
-| 80 | Templates — шаблоны документов |
-| 90 | Ideas & Backlog — идеи развития |
-| 95 | Attachments — медиа, брифы, референсы |
+| #   | Раздел                                                 |
+| --- | ------------------------------------------------------ |
+| 00  | Indexes — Dashboard, Map of Content                    |
+| 10  | Brief & Requirements — ТЗ, цели, KPI                   |
+| 20  | Market — конкуренты, ЦА, позиционирование              |
+| 30  | SEO — стратегия, ядро, карта страниц, meta, Schema.org |
+| 40  | Architecture — Next.js, FSD, ADR                       |
+| 50  | Design — дизайн-система, UX-паттерны, медиа            |
+| 60  | Content — флот, услуги, FAQ, тексты                    |
+| 70  | Meetings & Logs — сессии                               |
+| 80  | Templates — шаблоны документов                         |
+| 90  | Ideas & Backlog — идеи развития                        |
+| 95  | Attachments — медиа, брифы, референсы                  |
 
 ## Ссылки
 

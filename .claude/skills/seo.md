@@ -17,6 +17,7 @@ description: SEO правила проекта — generateMetadata, JSON-LD Sch
 ## Формулы
 
 ### Title (50–60 символов)
+
 `{Ключ} — {УТП/уточнение} | Море Minsk`
 
 - Ключ в начале
@@ -25,6 +26,7 @@ description: SEO правила проекта — generateMetadata, JSON-LD Sch
 - Избегать `«» * ( ) —` (ломает парсеры)
 
 ### Description (140–160 символов)
+
 `[Что] [для кого] [УТП] [CTA]`
 
 - Содержит ключ + 1–2 LSI
@@ -32,21 +34,22 @@ description: SEO правила проекта — generateMetadata, JSON-LD Sch
 - CTA в конце: «Забронируйте онлайн», «Свободные даты в Telegram»
 
 ### Готовые заготовки
+
 `docs/30 - SEO/Meta-стратегия.md` — 11 страниц с готовыми title/description.
 
 ## generateMetadata pattern
 
 ```typescript
 // src/app/[locale]/services/svadba/page.tsx
-import type { Metadata } from 'next';
-import { buildPageMetadata } from '@/shared/lib/seo';
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/shared/lib/seo";
 
 export function generateMetadata(): Metadata {
   return buildPageMetadata({
-    title: 'Свадьба на яхте в Минске — от 1500 BYN',
-    description: 'Свадебная церемония и банкет на яхте в Минске...',
-    path: '/services/svadba',
-    ogImage: '/og/svadba.jpg',
+    title: "Свадьба на яхте в Минске — от 1500 BYN",
+    description: "Свадебная церемония и банкет на яхте в Минске...",
+    path: "/services/svadba",
+    ogImage: "/og/svadba.jpg",
   });
 }
 ```
@@ -56,14 +59,14 @@ export function generateMetadata(): Metadata {
 `src/shared/lib/seo.ts` собирает Metadata объект:
 
 ```typescript
-import type { Metadata } from 'next';
-import { SITE_URL, BRAND } from '@/shared/config/site';
+import type { Metadata } from "next";
+import { SITE_URL, BRAND } from "@/shared/config/site";
 
 interface Args {
-  title: string;        // без "| Море Minsk"
+  title: string; // без "| Море Minsk"
   description: string;
-  path: string;         // "/services/svadba"
-  ogImage?: string;     // относительный путь
+  path: string; // "/services/svadba"
+  ogImage?: string; // относительный путь
   noIndex?: boolean;
 }
 
@@ -79,12 +82,12 @@ export function buildPageMetadata({ title, description, path, ogImage, noIndex }
       description,
       url,
       siteName: BRAND,
-      locale: 'ru_RU',
-      type: 'website',
+      locale: "ru_RU",
+      type: "website",
       images: ogImage ? [{ url: `${SITE_URL}${ogImage}`, width: 1200, height: 630 }] : undefined,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: ogImage ? [`${SITE_URL}${ogImage}`] : undefined,
@@ -101,24 +104,21 @@ export function buildPageMetadata({ title, description, path, ogImage, noIndex }
 ```tsx
 export function JsonLd({ data }: { data: object }) {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }
 ```
 
 **На каждой странице** — ставим нужные типы:
 
-| Тип | Страницы |
-|---|---|
+| Тип                       | Страницы                        |
+| ------------------------- | ------------------------------- |
 | `Organization`, `WebSite` | app/[locale]/layout.tsx (везде) |
-| `LocalBusiness` | главная, /kontakty |
-| `Service` | /services/* |
-| `Product` | /fleet/* |
-| `FAQPage` | /faq, каждая /services/* |
-| `BreadcrumbList` | все кроме главной |
+| `LocalBusiness`           | главная, /kontakty              |
+| `Service`                 | /services/\*                    |
+| `Product`                 | /fleet/\*                       |
+| `FAQPage`                 | /faq, каждая /services/\*       |
+| `BreadcrumbList`          | все кроме главной               |
 
 Готовые JSON-LD шаблоны — в `docs/30 - SEO/Schema.org разметка.md`.
 
@@ -138,26 +138,26 @@ export function buildBreadcrumbsSchema(trail: { name: string; path: string }[]) 
 
 ```typescript
 // src/app/sitemap.ts
-import type { MetadataRoute } from 'next';
-import { SITE_URL } from '@/shared/config/site';
-import { services } from '@/shared/content/services';
-import { yachts } from '@/shared/content/yachts';
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/shared/config/site";
+import { services } from "@/shared/content/services";
+import { yachts } from "@/shared/content/yachts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
-    { url: `${SITE_URL}/`, priority: 1.0, changeFrequency: 'weekly' as const },
-    { url: `${SITE_URL}/ceny`, priority: 0.9, changeFrequency: 'weekly' as const },
+    { url: `${SITE_URL}/`, priority: 1.0, changeFrequency: "weekly" as const },
+    { url: `${SITE_URL}/ceny`, priority: 0.9, changeFrequency: "weekly" as const },
     // ...
   ];
   const servicePages = services.map((s) => ({
     url: `${SITE_URL}/services/${s.slug}`,
     priority: 0.8,
-    changeFrequency: 'monthly' as const,
+    changeFrequency: "monthly" as const,
   }));
   const fleetPages = yachts.map((y) => ({
     url: `${SITE_URL}/fleet/${y.slug}`,
     priority: 0.9,
-    changeFrequency: 'monthly' as const,
+    changeFrequency: "monthly" as const,
   }));
   return [...staticPages, ...servicePages, ...fleetPages];
 }
@@ -167,12 +167,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
 ```typescript
 // src/app/robots.ts
-import type { MetadataRoute } from 'next';
-import { SITE_URL } from '@/shared/config/site';
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/shared/config/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: '*', allow: '/', disallow: ['/api/'] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/api/"] },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }
