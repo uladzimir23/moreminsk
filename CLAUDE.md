@@ -52,6 +52,8 @@ app → widgets → features → entities → shared
 ## Ключевые документы (читать перед работой)
 
 - **Start here:** `docs/00 - Indexes/Dashboard.md` — текущий статус и ссылки
+- ⭐ **Module map:** `docs/40 - Architecture/Project Overview.md` — описание всех модулей, провайдеров, потока данных
+- ⭐ **Booking Module:** `docs/40 - Architecture/Booking Module.md` — главная бизнес-фича (wizard, availability, submit)
 - **Brief:** `docs/10 - Brief & Requirements/Бриф клиента.md` — дословное ТЗ от заказчика
 - **Архитектура:** `docs/40 - Architecture/Architecture Overview.md`
 - **Структура проекта:** `docs/40 - Architecture/Структура проекта.md`
@@ -64,6 +66,9 @@ app → widgets → features → entities → shared
 - **Brand Identity:** `docs/50 - Design/Brand Identity.md`
 - **Hero & Section Rhythm:** `docs/50 - Design/Hero & Section Rhythm.md`
 - **Component Specs:** `docs/50 - Design/Component Specs.md`
+- **Анимации:** `docs/50 - Design/Анимации.md` — Framer Motion пресеты
+- **Scraping plan:** `docs/40 - Architecture/Scraping plan.md` — миграция фото/текста с moreminsk.by
+- **Контент-план:** `docs/60 - Content/Контент-план текстов.md` — Hero H1, lead-абзацы, мета
 - **Tone of voice:** `docs/20 - Market/Позиционирование.md#Tone-of-Voice`
 - **Конкуренты:** `docs/20 - Market/Конкурентный анализ.md`
 
@@ -117,7 +122,10 @@ bun run typecheck      # tsc --noEmit
 
 ## Git
 
-- Ветка по умолчанию: `main`
+- Ветка по умолчанию: `main` (force-push запрещён).
 - Remote: `https://github.com/uladzimir23/moreminsk`
-- Commit-стиль: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `style:`)
-- Пре-коммит: lint + typecheck (настроится через Husky / lefthook на следующем шаге)
+- Commit-стиль: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `style:`, `perf:`, `test:`, `ci:`, `build:`, `i18n:`, `content:`).
+- Пре-коммит: lint + typecheck + stylelint через lefthook. **Никогда `--no-verify`.**
+- **Фазовый коммит обязателен** — каждая завершённая фаза из [[docs/00 - Indexes/Dashboard]] закрывается серией коммитов (3–8 шт.), не копим работу между фазами.
+- Полная таксономия scope'ов + план коммитов по фазам + правила amend/force — в skill `.claude/skills/git-workflow.md`.
+- Коммиты от ассистента — с footer `Co-Authored-By: Claude Opus 4.7 <noreply@anthropic.com>` и только по явному запросу пользователя.
