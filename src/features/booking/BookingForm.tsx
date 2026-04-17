@@ -4,12 +4,13 @@ import styles from "./BookingForm.module.scss";
 import { useBookingStore, type WizardStep } from "./model/store";
 import { StepIndicator } from "./ui/StepIndicator";
 import { WizardNav } from "./ui/WizardNav";
+import { DateTimeStep } from "./ui/steps/DateTimeStep";
 import { YachtStep } from "./ui/steps/YachtStep";
 
 const TOTAL_STEPS = 5;
 
-const STUB_TITLES: Record<Exclude<WizardStep, 1>, string> = {
-  2: "Когда?",
+type StubStepNum = 3 | 4 | 5 | 6;
+const STUB_TITLES: Record<StubStepNum, string> = {
   3: "Повод (опционально)",
   4: "Как с вами связаться?",
   5: "Проверьте детали",
@@ -19,7 +20,7 @@ const STUB_TITLES: Record<Exclude<WizardStep, 1>, string> = {
 // Per-step content is added in subsequent commits (DateTimeStep → PackageStep → …).
 // Shell renders the step frame, indicator and nav; each step owns its own form/validation.
 
-function StubStep({ step }: { step: Exclude<WizardStep, 1> }) {
+function StubStep({ step }: { step: StubStepNum }) {
   const { goBack, goNext } = useBookingStore();
   return (
     <>
@@ -30,13 +31,19 @@ function StubStep({ step }: { step: Exclude<WizardStep, 1> }) {
   );
 }
 
+function renderStep(step: WizardStep) {
+  if (step === 1) return <YachtStep />;
+  if (step === 2) return <DateTimeStep />;
+  return <StubStep step={step} />;
+}
+
 export function BookingForm() {
   const step = useBookingStore((s) => s.step);
 
   return (
     <div className={styles.root}>
       {step !== 6 && <StepIndicator current={step} total={TOTAL_STEPS} />}
-      <div className={styles.stage}>{step === 1 ? <YachtStep /> : <StubStep step={step} />}</div>
+      <div className={styles.stage}>{renderStep(step)}</div>
     </div>
   );
 }
