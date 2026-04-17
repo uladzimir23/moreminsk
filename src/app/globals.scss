@@ -1,0 +1,5 @@
+// Global styles entry.
+// Imports moreminsk design-system (tokens → mixins → base).
+// Ported from flex-glass@a33fc70 — see src/shared/design-system/index.scss.
+
+@use "../shared/design-system" as *;

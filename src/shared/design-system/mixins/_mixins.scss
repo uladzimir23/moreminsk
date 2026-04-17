@@ -1,0 +1,352 @@
+// ─── Mixins ────────────────────────────────────────────────────────────────
+// Ported from flex-glass@a33fc70.
+@use "sass:map";
+@use "../tokens/variables" as *;
+
+// ── Responsive ────────────────────────────────────────────────────────────
+// Usage: @include respond-to('md') { ... }
+@mixin respond-to($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+  @if $value == null {
+    @error "Unknown breakpoint: `#{$breakpoint}`. Available: #{map.keys($breakpoints)}";
+  }
+  @media screen and (min-width: $value) {
+    @content;
+  }
+}
+
+// ── Respond below ─────────────────────────────────────────────────────────
+// Usage: @include respond-below('md') { ... }
+// NOTE: prefer container queries (see `container-query` mixin) for component
+// adaptivity. Use media queries only for root-level concerns.
+@mixin respond-below($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+  @if $value == null {
+    @error "Unknown breakpoint: `#{$breakpoint}`.";
+  }
+  // 0.00125rem = 0.02px at 16px base — prevents overlap with min-width rule
+  @media screen and (max-width: #{$value - 0.00125rem}) {
+    @content;
+  }
+}
+
+// ── Container query ───────────────────────────────────────────────────────
+// Usage: @include container-query('md') { ... }
+//        @include container-query('md', $name: 'sidebar') { ... }
+// Parent must declare `container-type: inline-size` (or use container-root mixin).
+@mixin container-query($breakpoint, $name: null) {
+  $value: map.get($breakpoints, $breakpoint);
+  @if $value == null {
+    @error "Unknown breakpoint: `#{$breakpoint}`.";
+  }
+  @if $name {
+    @container #{$name} (min-width: #{$value}) {
+      @content;
+    }
+  } @else {
+    @container (min-width: #{$value}) {
+      @content;
+    }
+  }
+}
+
+// ── Container root ────────────────────────────────────────────────────────
+// Mark an element as a container query boundary.
+// Usage: @include container-root('sidebar'); // then @include container-query
+@mixin container-root($name: null, $type: inline-size) {
+  container-type: $type;
+  @if $name {
+    container-name: $name;
+  }
+}
+
+// ── Render optimized (content-visibility) ─────────────────────────────────
+// For long off-screen sections. Browser skips layout/paint until near viewport.
+// $height — estimated intrinsic size (prevents scrollbar jank).
+// Usage: @include render-optimized(500px); on section-renderer > *
+@mixin render-optimized($height: 500px) {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 $height;
+}
+
+// ── Contain paint (layer isolation) ───────────────────────────────────────
+// Prevents child repaints from invalidating parent. Use on large animated
+// regions (editor canvas, virtualized lists).
+@mixin contain-paint {
+  contain: paint;
+}
+
+// ── GPU promote ───────────────────────────────────────────────────────────
+// Forces compositor layer for smoother transforms. Don't overuse — each layer
+// consumes memory. Apply on hot-path animated elements only.
+@mixin gpu-promote {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+// ── Isolate (create stacking context) ─────────────────────────────────────
+// Cheap way to isolate z-index scope without positioning.
+@mixin isolate {
+  isolation: isolate;
+}
+
+// ── A11y: prefers-reduced-motion ──────────────────────────────────────────
+// Usage: @include reduced-motion { transition: none; }
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+// ── A11y: prefers-contrast ────────────────────────────────────────────────
+@mixin high-contrast {
+  @media (prefers-contrast: more) {
+    @content;
+  }
+}
+
+// ── A11y: forced-colors (Windows high-contrast) ───────────────────────────
+@mixin forced-colors {
+  @media (forced-colors: active) {
+    @content;
+  }
+}
+
+// ── Dark-mode scope helper ────────────────────────────────────────────────
+// Usage inside any selector:
+//   &:hover { @include dark-mode { background: ... } }
+// NOTE: task #27 заменит селектор на `.dark-theme` по ADR-006.
+@mixin dark-mode {
+  :where(.dark) & {
+    @content;
+  }
+}
+
+// ── Safari/iOS: safe-area insets (notch / dynamic island / home bar) ──────
+// Adds env(safe-area-inset-*) to the given axis. Use on app shell, navbar,
+// bottom sheets. Pair with <meta name="viewport" content="viewport-fit=cover">.
+@mixin safe-area-padding($axis: "all") {
+  @if $axis == "all" or $axis == "block" {
+    padding-block-start: max(var(--space-md), env(safe-area-inset-top));
+    padding-block-end: max(var(--space-md), env(safe-area-inset-bottom));
+  }
+  @if $axis == "all" or $axis == "inline" {
+    padding-inline-start: max(var(--space-md), env(safe-area-inset-left));
+    padding-inline-end: max(var(--space-md), env(safe-area-inset-right));
+  }
+}
+
+// ── Safari/iOS: full viewport with dynamic address bar ────────────────────
+// Shortcut for mobile Safari-safe full-height panels (modals, drawers).
+@mixin viewport-fit {
+  block-size: 100vh;
+  block-size: 100dvh;
+}
+
+// ── Overscroll behavior ───────────────────────────────────────────────────
+// Prevents scroll-chaining (parent scrolls when child reaches edge). Critical
+// for modals, drawers, editor canvas. Safari 16+.
+@mixin isolate-scroll {
+  overscroll-behavior: contain;
+}
+
+// ── Hardware-accelerated smooth scroll on old iOS ─────────────────────────
+// iOS 13+ scrolls smoothly by default, but this helps 12 and below.
+// Plus `scroll-behavior: smooth` for anchor-jumps everywhere supporting it.
+@mixin smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  @include reduced-motion {
+    scroll-behavior: auto;
+  }
+}
+
+// ── Typography: balance & pretty wrapping ─────────────────────────────────
+// text-wrap: balance — evens out short multi-line titles (headings).
+// text-wrap: pretty — avoids widows/orphans on body copy.
+@mixin text-balance {
+  text-wrap: balance;
+}
+@mixin text-pretty {
+  text-wrap: pretty;
+}
+
+// ── Flex center ────────────────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── Flex between ──────────────────────────────────────────────────────────
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ── Absolute fill ─────────────────────────────────────────────────────────
+@mixin absolute-fill {
+  position: absolute;
+  inset: 0;
+}
+
+// ── Glass effect ──────────────────────────────────────────────────────────
+// $opacity as percentage (e.g. 8%); blur in rem (scales with font-size).
+@mixin glass-effect($blur: 0.75rem, $opacity: 8%) {
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  background-color: color-mix(in oklch, white #{$opacity}, transparent);
+  border: 1px solid color-mix(in oklch, white calc(#{$opacity} * 1.5), transparent);
+}
+
+// ── Glass card (dark) ─────────────────────────────────────────────────────
+// Uses tokens — adapts on theme switch.
+@mixin glass-card-dark($blur: 1rem) {
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  background: color-mix(in oklch, var(--primitive-color-slate-900) 70%, transparent);
+  border: 1px solid color-mix(in oklch, white 8%, transparent);
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: "";
+    @include absolute-fill;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklch, white 4%, transparent),
+      transparent
+    );
+    transform: translateX(-100%) skewX(-12deg);
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    animation: mm-shimmer 0.7s ease forwards;
+  }
+
+  @include reduced-motion {
+    &:hover::after {
+      animation: none;
+    }
+  }
+}
+
+// ── Hover lift ────────────────────────────────────────────────────────────
+@mixin hover-lift($distance: -0.125rem, $shadow: true) {
+  transition:
+    transform var(--duration-base) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-out);
+
+  &:hover {
+    transform: translateY($distance);
+    @if $shadow {
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  @include reduced-motion {
+    transition: none;
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// ── Focus ring ────────────────────────────────────────────────────────────
+@mixin focus-ring($color: var(--color-ring), $offset: 0.125rem, $width: 0.125rem) {
+  &:focus-visible {
+    outline: $width solid $color;
+    outline-offset: $offset;
+  }
+  @include forced-colors {
+    &:focus-visible {
+      outline-color: Highlight;
+    }
+  }
+}
+
+// ── Text gradient ─────────────────────────────────────────────────────────
+// $fallback — solid color used where background-clip: text is unsupported.
+@mixin text-gradient($from, $to, $dir: to right, $fallback: null) {
+  // fallback so text never invisible where background-clip: text is unsupported
+  @if $fallback {
+    color: $fallback;
+  } @else {
+    color: $from;
+  }
+  background: linear-gradient($dir, $from, $to);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Truncate ──────────────────────────────────────────────────────────────
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Truncate multiline ────────────────────────────────────────────────────
+@mixin truncate-lines($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ── Scrollbar custom ──────────────────────────────────────────────────────
+@mixin scrollbar($size: 0.375rem) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+
+  &::-webkit-scrollbar {
+    inline-size: $size;
+    block-size: $size;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-strong);
+  }
+}
+
+// ── Container ─────────────────────────────────────────────────────────────
+@mixin container($max-width: "2xl") {
+  $value: map.get($container-max-widths, $max-width);
+  inline-size: 100%;
+  max-inline-size: $value;
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+
+  @include respond-to("md") {
+    padding-inline: var(--space-xl);
+  }
+}
+
+// ── Visually hidden ───────────────────────────────────────────────────────
+@mixin sr-only {
+  position: absolute;
+  inline-size: 0.0625rem; // 1px — sub-pixel hack for screen-reader-only pattern
+  block-size: 0.0625rem;
+  padding: 0;
+  margin: -0.0625rem;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// ── Z-index from map ──────────────────────────────────────────────────────
+@function z($layer) {
+  @return map.get($z-layers, $layer);
+}

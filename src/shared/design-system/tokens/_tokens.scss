@@ -1,0 +1,455 @@
+// ─── Design Tokens — Primitive → Semantic → Component ─────────────────────
+// All values live here as CSS custom properties. Zero hardcode elsewhere.
+//
+// Ported from flex-glass@a33fc70 (src/shared/design-system/tokens/_tokens.scss).
+// Palette override for Море Minsk — ADR-006 (navy + sunset coral) — см. task #27.
+//
+// Unit policy:
+//   • Primitive layer — static rem (1rem = 16px, based on html { font-size: 100% }).
+//   • Semantic spacing & large headings — fluid via clamp() between 320px and 1280px viewport.
+//   • Radius / duration / z-index / colors — static.
+// Do NOT change html font-size; rem respects user browser accessibility settings.
+
+// ── Cascade Layers — fixed specificity order for the whole app ────────────
+// Declaration must appear before any layered rules. Order: low → high priority.
+@layer reset, tokens, base, primitives, components, utilities, overrides;
+
+// ── Registered animatable custom properties ───────────────────────────────
+// @property enables transitions on CSS variables (theme switches, glow, gradients).
+// Must be declared before :root assignments for initial-value to register.
+@property --color-primary {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #4f6ef7;
+}
+@property --color-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #9b5cf6;
+}
+@property --color-background {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f8f9fa;
+}
+@property --color-foreground {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #202124;
+}
+@property --gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 135deg;
+}
+
+@layer tokens {
+  :where(html) {
+    font-size: 100%;
+  }
+
+  :root {
+    // ── Primitive: Color Palette ───────────────────────────────────────────
+    --primitive-color-white: #ffffff;
+    --primitive-color-black: #000000;
+
+    // Slate
+    --primitive-color-slate-50: #f8fafc;
+    --primitive-color-slate-100: #f1f5f9;
+    --primitive-color-slate-200: #e2e8f0;
+    --primitive-color-slate-300: #cbd5e1;
+    --primitive-color-slate-400: #94a3b8;
+    --primitive-color-slate-500: #64748b;
+    --primitive-color-slate-600: #475569;
+    --primitive-color-slate-700: #334155;
+    --primitive-color-slate-800: #1e293b;
+    --primitive-color-slate-900: #0f172a;
+    --primitive-color-slate-950: #020617;
+
+    // Google-spectrum blue
+    --primitive-color-blue-100: #d2e3fc;
+    --primitive-color-blue-200: #aecbfa;
+    --primitive-color-blue-300: #8ab4f8;
+    --primitive-color-blue-400: #6c9bff;
+    --primitive-color-blue-500: #4f6ef7;
+    --primitive-color-blue-600: #3b5de8;
+    --primitive-color-blue-700: #2848d4;
+
+    // Violet / Purple
+    --primitive-color-violet-300: #c4b5fd;
+    --primitive-color-violet-400: #a78bfa;
+    --primitive-color-violet-500: #9b5cf6;
+    --primitive-color-violet-600: #7c3aed;
+
+    // Emerald
+    --primitive-color-emerald-400: #34d399;
+    --primitive-color-emerald-500: #10b981;
+    --primitive-color-emerald-600: #059669;
+
+    // Rose
+    --primitive-color-rose-400: #fb7185;
+    --primitive-color-rose-500: #f43f5e;
+    --primitive-color-rose-600: #e11d48;
+
+    // Amber
+    --primitive-color-amber-400: #fbbf24;
+    --primitive-color-amber-500: #f59e0b;
+
+    // ── Primitive: Spacing Scale (static rem) ──────────────────────────────
+    --primitive-space-0: 0;
+    --primitive-space-1: 0.25rem; //  4px
+    --primitive-space-2: 0.5rem; //  8px
+    --primitive-space-3: 0.75rem; // 12px
+    --primitive-space-4: 1rem; // 16px
+    --primitive-space-5: 1.25rem; // 20px
+    --primitive-space-6: 1.5rem; // 24px
+    --primitive-space-8: 2rem; // 32px
+    --primitive-space-10: 2.5rem; // 40px
+    --primitive-space-12: 3rem; // 48px
+    --primitive-space-16: 4rem; // 64px
+    --primitive-space-20: 5rem; // 80px
+    --primitive-space-24: 6rem; // 96px
+    --primitive-space-32: 8rem; // 128px
+
+    // ── Primitive: Typography ──────────────────────────────────────────────
+    // Manrope is loaded via next/font in app/layout.tsx → exposes --font-manrope.
+    // Primitive stack adds cross-script fallbacks (latin / cyrillic native).
+    --primitive-font-sans:
+      var(--font-manrope, "Manrope"), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    --primitive-font-mono:
+      ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Mono", Consolas, "JetBrains Mono",
+      "Fira Code", monospace;
+
+    --primitive-text-xs: 0.75rem;
+    --primitive-text-sm: 0.875rem;
+    --primitive-text-base: 1rem;
+    --primitive-text-lg: 1.125rem;
+    --primitive-text-xl: 1.25rem;
+    --primitive-text-2xl: 1.5rem;
+    --primitive-text-3xl: 1.875rem;
+    --primitive-text-4xl: 2.25rem;
+    --primitive-text-5xl: 3rem;
+    --primitive-text-6xl: 3.75rem;
+    --primitive-text-7xl: 4.5rem;
+
+    --primitive-leading-none: 1;
+    --primitive-leading-tight: 1.25;
+    --primitive-leading-snug: 1.375;
+    --primitive-leading-normal: 1.5;
+    --primitive-leading-relaxed: 1.625;
+
+    --primitive-weight-light: 300;
+    --primitive-weight-regular: 400;
+    --primitive-weight-medium: 500;
+    --primitive-weight-semibold: 600;
+    --primitive-weight-bold: 700;
+    --primitive-weight-extrabold: 800;
+
+    --primitive-tracking-tight: -0.025em;
+    --primitive-tracking-normal: 0em;
+    --primitive-tracking-wide: 0.025em;
+
+    // ── Primitive: Border Radius (static rem) ──────────────────────────────
+    --primitive-radius-none: 0;
+    --primitive-radius-sm: 0.25rem; //  4px
+    --primitive-radius-md: 0.5rem; //  8px
+    --primitive-radius-lg: 0.75rem; // 12px
+    --primitive-radius-xl: 1rem; // 16px
+    --primitive-radius-2xl: 1.5rem; // 24px
+    --primitive-radius-3xl: 2rem; // 32px
+    --primitive-radius-full: 9999px;
+
+    // ── Primitive: Shadows ─────────────────────────────────────────────────
+    --primitive-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --primitive-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --primitive-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --primitive-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --primitive-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    // ── Primitive: Motion ──────────────────────────────────────────────────
+    --primitive-duration-fast: 150ms;
+    --primitive-duration-base: 250ms;
+    --primitive-duration-slow: 400ms;
+    --primitive-duration-slower: 600ms;
+
+    --primitive-ease-linear: linear;
+    --primitive-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --primitive-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --primitive-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --primitive-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+    // ── Primitive: Aspect Ratios ──────────────────────────────────────────
+    --primitive-ratio-square: 1 / 1;
+    --primitive-ratio-video: 16 / 9;
+    --primitive-ratio-cinema: 21 / 9;
+    --primitive-ratio-portrait: 3 / 4;
+    --primitive-ratio-landscape: 4 / 3;
+    --primitive-ratio-golden: 1.618 / 1;
+
+    // ── Primitive: Opacity Scale ──────────────────────────────────────────
+    --primitive-opacity-0: 0;
+    --primitive-opacity-10: 0.1;
+    --primitive-opacity-20: 0.2;
+    --primitive-opacity-40: 0.4;
+    --primitive-opacity-60: 0.6;
+    --primitive-opacity-80: 0.8;
+    --primitive-opacity-100: 1;
+
+    // ── Primitive: Z-index ─────────────────────────────────────────────────
+    --primitive-z-below: -1;
+    --primitive-z-base: 0;
+    --primitive-z-raised: 10;
+    --primitive-z-dropdown: 100;
+    --primitive-z-sticky: 200;
+    --primitive-z-overlay: 300;
+    --primitive-z-modal: 400;
+    --primitive-z-popover: 500;
+    --primitive-z-toast: 600;
+
+    // ── Semantic: Light Theme ──────────────────────────────────────────────
+    // Палитра — placeholder из flex-glass, переопределяется в task #27 (ADR-006).
+    --color-background: #f8f9fa;
+    --color-background-subtle: #f1f3f4;
+    --color-background-muted: #e8eaed;
+
+    --color-foreground: #202124;
+    --color-foreground-muted: #5f6368;
+    --color-foreground-subtle: #80868b;
+
+    --color-border: #dadce0;
+    --color-border-strong: #bdc1c6;
+
+    --color-primary: var(--primitive-color-blue-500);
+    --color-primary-hover: var(--primitive-color-blue-600);
+    --color-primary-active: color-mix(in oklch, var(--color-primary) 80%, black);
+    --color-primary-disabled: color-mix(
+      in oklch,
+      var(--color-primary) 40%,
+      var(--color-background)
+    );
+    --color-primary-subtle: color-mix(in oklch, var(--color-primary) 12%, transparent);
+    --color-primary-foreground: #ffffff;
+
+    --color-secondary: #e8eaed;
+    --color-secondary-hover: #dadce0;
+    --color-secondary-active: color-mix(in oklch, var(--color-secondary) 80%, black);
+    --color-secondary-foreground: #202124;
+
+    --color-accent: var(--primitive-color-violet-500);
+    --color-accent-hover: var(--primitive-color-violet-600);
+    --color-accent-active: color-mix(in oklch, var(--color-accent) 80%, black);
+    --color-accent-subtle: color-mix(in oklch, var(--color-accent) 12%, transparent);
+    --color-accent-foreground: #ffffff;
+
+    --color-destructive: var(--primitive-color-rose-500);
+    --color-destructive-hover: var(--primitive-color-rose-600);
+    --color-destructive-active: color-mix(in oklch, var(--color-destructive) 80%, black);
+    --color-destructive-subtle: color-mix(in oklch, var(--color-destructive) 12%, transparent);
+    --color-destructive-foreground: #ffffff;
+
+    --color-success: var(--primitive-color-emerald-500);
+    --color-success-subtle: color-mix(in oklch, var(--color-success) 12%, transparent);
+    --color-success-foreground: #ffffff;
+
+    --color-warning: var(--primitive-color-amber-500);
+    --color-warning-subtle: color-mix(in oklch, var(--color-warning) 12%, transparent);
+    --color-warning-foreground: #ffffff;
+
+    --color-card: #ffffff;
+    --color-card-foreground: #202124;
+    --color-card-border: #dadce0;
+
+    --color-input: #dadce0;
+    --color-input-focus: var(--primitive-color-blue-500);
+    --color-input-background: #ffffff;
+    --color-input-foreground: #202124;
+    --color-input-placeholder: #80868b;
+
+    --color-ring: var(--primitive-color-blue-500);
+
+    --color-surface: #ffffff;
+    --color-muted: #e8eaed;
+    --color-overlay: color-mix(in oklch, var(--color-foreground) 50%, transparent);
+    --color-muted-foreground: var(--color-foreground-muted);
+    --radius: var(--radius-lg);
+
+    // ── Gradients (light) ─────────────────────────────────────────────────
+    --gradient-primary: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
+    --gradient-primary-subtle: linear-gradient(
+      135deg,
+      rgb(79 110 247 / 0.1) 0%,
+      rgb(155 92 246 / 0.1) 100%
+    );
+    --gradient-text: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
+    --gradient-glow: 0 0 24px rgb(79 110 247 / 0.25);
+
+    // ── Semantic: Spacing (fluid clamp, 320–1280px viewport) ───────────────
+    // Small tokens stay static — fluid below sm is visually noise.
+    --space-xs: var(--primitive-space-1); // 4px
+    --space-sm: var(--primitive-space-2); // 8px
+    --space-md: clamp(0.75rem, 0.667rem + 0.417vw, 1rem); // 12 → 16
+    --space-lg: clamp(1rem, 0.833rem + 0.833vw, 1.5rem); // 16 → 24
+    --space-xl: clamp(1.5rem, 1.333rem + 0.833vw, 2rem); // 24 → 32
+    --space-2xl: clamp(2rem, 1.667rem + 1.667vw, 3rem); // 32 → 48
+    --space-3xl: clamp(3rem, 2.667rem + 1.667vw, 4rem); // 48 → 64
+    --space-4xl: clamp(4rem, 3.667rem + 1.667vw, 5rem); // 64 → 80
+    --space-section: clamp(5rem, 4.667rem + 1.667vw, 6rem); // 80 → 96
+
+    // ── Semantic: Typography ───────────────────────────────────────────────
+    --font-body: var(--primitive-font-sans);
+    --font-heading: var(--primitive-font-sans);
+    --font-mono: var(--primitive-font-mono);
+
+    // Small/medium text — static (fluid too subtle to matter).
+    --text-xs: var(--primitive-text-xs); // 12
+    --text-sm: var(--primitive-text-sm); // 14
+    --text-base: var(--primitive-text-base); // 16
+    --text-lg: var(--primitive-text-lg); // 18
+    --text-xl: var(--primitive-text-xl); // 20
+    --text-2xl: var(--primitive-text-2xl); // 24
+    --text-3xl: var(--primitive-text-3xl); // 30
+
+    // Large headings — fluid for responsive display type.
+    --text-4xl: clamp(1.875rem, 1.75rem + 0.625vw, 2.25rem); // 30 → 36
+    --text-5xl: clamp(2.25rem, 2rem + 1.25vw, 3rem); // 36 → 48
+    --text-6xl: clamp(3rem, 2.75rem + 1.25vw, 3.75rem); // 48 → 60
+    --text-7xl: clamp(3.75rem, 3.5rem + 1.25vw, 4.5rem); // 60 → 72
+
+    // ── Semantic: Radius ───────────────────────────────────────────────────
+    --radius-sm: var(--primitive-radius-sm);
+    --radius-md: var(--primitive-radius-md);
+    --radius-lg: var(--primitive-radius-lg);
+    --radius-xl: var(--primitive-radius-xl);
+    --radius-2xl: var(--primitive-radius-2xl);
+    --radius-3xl: var(--primitive-radius-3xl);
+    --radius-full: var(--primitive-radius-full);
+
+    // ── Semantic: Shadow ───────────────────────────────────────────────────
+    --shadow-sm: var(--primitive-shadow-sm);
+    --shadow-md: var(--primitive-shadow-md);
+    --shadow-lg: var(--primitive-shadow-lg);
+
+    // ── Semantic: Motion ───────────────────────────────────────────────────
+    --duration-fast: var(--primitive-duration-fast);
+    --duration-base: var(--primitive-duration-base);
+    --duration-slow: var(--primitive-duration-slow);
+    --ease-out: var(--primitive-ease-out);
+    --ease-spring: var(--primitive-ease-spring);
+
+    // ── Semantic: Aspect Ratio ────────────────────────────────────────────
+    --ratio-square: var(--primitive-ratio-square);
+    --ratio-video: var(--primitive-ratio-video);
+    --ratio-cinema: var(--primitive-ratio-cinema);
+    --ratio-portrait: var(--primitive-ratio-portrait);
+    --ratio-landscape: var(--primitive-ratio-landscape);
+    --ratio-golden: var(--primitive-ratio-golden);
+
+    // ── Semantic: Opacity ─────────────────────────────────────────────────
+    --opacity-disabled: var(--primitive-opacity-40);
+    --opacity-muted: var(--primitive-opacity-60);
+    --opacity-subtle: var(--primitive-opacity-80);
+
+    // ── Component: Navbar ──────────────────────────────────────────────────
+    --navbar-height: 3.5rem; // 56px
+    --navbar-background: var(--color-background);
+    --navbar-border: var(--color-border);
+    --navbar-foreground: var(--color-foreground);
+
+    // ── Component: Sidebar ─────────────────────────────────────────────────
+    --sidebar-width: 15rem; // 240px
+    --sidebar-background: var(--color-background);
+    --sidebar-border: var(--color-border);
+
+    // ── Component: Button ──────────────────────────────────────────────────
+    --btn-height-sm: 2rem; // 32px
+    --btn-height-md: 2.375rem; // 38px
+    --btn-height-lg: 2.875rem; // 46px
+    --btn-padding-x-sm: var(--primitive-space-3);
+    --btn-padding-x-md: var(--primitive-space-4);
+    --btn-padding-x-lg: var(--primitive-space-6);
+    --btn-radius: var(--radius-lg);
+    --btn-font-weight: var(--primitive-weight-medium);
+
+    // ── Component: Input ───────────────────────────────────────────────────
+    --input-height-sm: 2rem; // 32px
+    --input-height-md: 2.5rem; // 40px
+    --input-height-lg: 3rem; // 48px
+    --input-padding-x: var(--primitive-space-4);
+    --input-radius: var(--radius-lg);
+    --input-border: var(--color-border);
+    --input-border-focus: var(--color-ring);
+
+    // ── Component: Card ────────────────────────────────────────────────────
+    --card-padding: var(--primitive-space-6);
+    --card-radius: var(--primitive-radius-xl);
+    --card-border: var(--color-card-border);
+    --card-background: var(--color-card);
+    --card-shadow: var(--shadow-sm);
+  }
+
+  // ── Dark Theme ───────────────────────────────────────────────────────────
+  // Палитра — placeholder из flex-glass, переопределяется в task #27 (ADR-006).
+  // Класс `.dark` заменяется на `.dark-theme` в task #27 (ADR-006 sync-pattern).
+  .dark {
+    --color-background: #0d0f17;
+    --color-background-subtle: #111520;
+    --color-background-muted: #161c2d;
+
+    --color-foreground: #e8eaed;
+    --color-foreground-muted: #8b9cb5;
+    --color-foreground-subtle: #5a6a84;
+
+    --color-border: #1e2535;
+    --color-border-strong: #2a3347;
+
+    --color-primary: var(--primitive-color-blue-400);
+    --color-primary-hover: var(--primitive-color-blue-300);
+    --color-primary-foreground: #0d0f17;
+
+    --color-secondary: #1e2535;
+    --color-secondary-hover: #2a3347;
+    --color-secondary-foreground: #e8eaed;
+
+    --color-accent: var(--primitive-color-violet-400);
+    --color-accent-hover: var(--primitive-color-violet-300);
+    --color-accent-foreground: #0d0f17;
+
+    --color-destructive: var(--primitive-color-rose-400);
+    --color-destructive-hover: var(--primitive-color-rose-500);
+    --color-success: var(--primitive-color-emerald-400);
+
+    --color-card: #141929;
+    --color-card-foreground: #e8eaed;
+    --color-card-border: #1e2535;
+
+    --color-input: #1e2535;
+    --color-input-background: #141929;
+    --color-input-foreground: #e8eaed;
+    --color-input-placeholder: #5a6a84;
+
+    --color-ring: var(--primitive-color-blue-400);
+
+    --color-surface: #141929;
+    --color-muted: #1e2535;
+    --color-overlay: color-mix(in oklch, var(--color-foreground) 50%, transparent);
+
+    --gradient-primary: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
+    --gradient-primary-subtle: linear-gradient(
+      135deg,
+      rgb(79 110 247 / 0.12) 0%,
+      rgb(155 92 246 / 0.12) 100%
+    );
+    --gradient-text: linear-gradient(135deg, #6c9bff 0%, #a78bfa 100%);
+    --gradient-glow: 0 0 32px rgb(79 110 247 / 0.3);
+
+    --navbar-background: #0d0f17;
+    --sidebar-background: #0d0f17;
+    --sidebar-border: #1e2535;
+
+    --card-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.5);
+  }
+} // close @layer tokens

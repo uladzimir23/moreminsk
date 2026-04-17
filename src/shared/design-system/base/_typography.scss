@@ -1,0 +1,89 @@
+// ─── Base Typography ────────────────────────────────────────────────────────
+// Wrapped in @layer base + :where() so specificity stays at 0.
+// Ported from flex-glass@a33fc70.
+@use "../mixins" as *;
+
+@layer base {
+  :where(body) {
+    font-family: var(--font-body);
+    font-size: var(--primitive-text-base);
+    font-weight: var(--primitive-weight-regular);
+    line-height: var(--primitive-leading-normal);
+    color: var(--color-foreground);
+  }
+
+  // ── Heading scale (fluid via semantic --text-* tokens) ────────────────────
+  // text-wrap: balance — evens out short multi-line titles (Chrome 114+, FF 121+).
+  :where(h1, h2, h3, h4, h5, h6) {
+    text-wrap: balance;
+  }
+
+  :where(h1) {
+    font-size: var(--text-5xl);
+    font-weight: var(--primitive-weight-bold);
+    line-height: var(--primitive-leading-tight);
+    letter-spacing: var(--primitive-tracking-tight);
+  }
+
+  :where(h2) {
+    font-size: var(--text-4xl);
+    font-weight: var(--primitive-weight-bold);
+    line-height: var(--primitive-leading-tight);
+    letter-spacing: var(--primitive-tracking-tight);
+  }
+
+  :where(h3) {
+    font-size: var(--text-2xl);
+    font-weight: var(--primitive-weight-semibold);
+    line-height: var(--primitive-leading-snug);
+  }
+
+  :where(h4) {
+    font-size: var(--text-xl);
+    font-weight: var(--primitive-weight-semibold);
+    line-height: var(--primitive-leading-snug);
+  }
+
+  :where(h5) {
+    font-size: var(--text-lg);
+    font-weight: var(--primitive-weight-medium);
+    line-height: var(--primitive-leading-normal);
+  }
+
+  :where(h6) {
+    font-size: var(--text-base);
+    font-weight: var(--primitive-weight-medium);
+    line-height: var(--primitive-leading-normal);
+  }
+
+  // text-wrap: pretty — avoids widows/orphans on body copy (Chrome 117+, FF 128+).
+  :where(p) {
+    line-height: var(--primitive-leading-relaxed);
+    text-wrap: pretty;
+  }
+
+  :where(small) {
+    font-size: var(--primitive-text-sm);
+  }
+
+  :where(strong, b) {
+    font-weight: var(--primitive-weight-semibold);
+  }
+
+  :where(code) {
+    padding-block: 0.125em;
+    padding-inline: 0.375em;
+    border-radius: var(--radius-sm);
+
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+
+    background-color: var(--color-background-muted);
+  }
+
+  :where(pre) {
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: var(--primitive-text-sm);
+  }
+} // close @layer base

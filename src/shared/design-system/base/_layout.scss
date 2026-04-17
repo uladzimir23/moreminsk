@@ -1,0 +1,69 @@
+// ─── Base Layout ───────────────────────────────────────────────────────────
+// Ported from flex-glass@a33fc70.
+@use "../mixins" as *;
+
+@layer base {
+  // ── Root layout ───────────────────────────────────────────────────────────
+  :where(#__next, #root, #main) {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100vh;
+    min-block-size: 100dvh; // mobile Safari: follows dynamic viewport
+  }
+
+  // ── Skip link (a11y: keyboard-only users jump past navigation) ───────────
+  .skip-link {
+    @include sr-only;
+
+    &:focus-visible {
+      position: fixed;
+      z-index: var(--primitive-z-toast);
+      inset-block-start: var(--space-sm);
+      inset-inline-start: var(--space-sm);
+
+      overflow: visible;
+
+      inline-size: auto;
+      block-size: auto;
+      margin: 0;
+      padding-block: var(--space-sm);
+      padding-inline: var(--space-md);
+      border: 0.125rem solid var(--color-ring);
+      border-radius: var(--radius-md);
+
+      font-weight: var(--primitive-weight-semibold);
+      color: var(--color-foreground);
+      text-decoration: none;
+
+      background: var(--color-background);
+      clip-path: none;
+    }
+  }
+
+  // ── Container ─────────────────────────────────────────────────────────────
+  .container {
+    @include container("2xl");
+  }
+
+  .container-sm {
+    @include container("sm");
+  }
+
+  .container-md {
+    @include container("md");
+  }
+
+  .container-lg {
+    @include container("lg");
+  }
+
+  .container-xl {
+    @include container("xl");
+  }
+
+  // ── Selection ─────────────────────────────────────────────────────────────
+  ::selection {
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary);
+  }
+} // close @layer base

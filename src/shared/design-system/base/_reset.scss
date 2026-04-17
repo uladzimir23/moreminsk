@@ -1,0 +1,139 @@
+// ─── Reset & Normalization ─────────────────────────────────────────────────
+// Wrapped in @layer reset + :where() so consumers always win without hacks.
+// Uses logical properties (margin-block, padding-inline) — RTL/i18n ready.
+// Includes Safari/iOS-specific hardening (tap highlight, safe areas, 100dvh).
+// Ported from flex-glass@a33fc70.
+
+@layer reset {
+  :where(*, *::before, *::after) {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :where(html) {
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+
+    // Tells browser which themes document supports — required for correct
+    // native scrollbars, form controls, and light-dark() CSS function.
+    color-scheme: light dark;
+
+    // Kill iOS tap-highlight flash on links/buttons.
+    -webkit-tap-highlight-color: transparent;
+
+    // Match printed output to screen colors.
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  :where(body) {
+    // 100dvh follows dynamic viewport on mobile Safari (handles address bar).
+    // 100vh fallback for any browser that doesn't understand dvh.
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+
+    line-height: var(--primitive-leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-body);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+
+    // Prevent rare iOS horizontal scroll from 100vw elements.
+    overflow-x: clip;
+  }
+
+  // ── Interactive elements ──────────────────────────────────────────────────
+  :where(button, [role="button"], a, input, select, textarea, label) {
+    // Removes 300ms tap delay on legacy iOS; disables double-tap-zoom.
+    touch-action: manipulation;
+  }
+
+  :where(button, [role="button"]) {
+    cursor: pointer;
+  }
+
+  :where(button:disabled) {
+    cursor: not-allowed;
+  }
+
+  // ── Images & media ────────────────────────────────────────────────────────
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
+    display: block;
+  }
+
+  :where(img, video) {
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  // ── Typography ────────────────────────────────────────────────────────────
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  // ── Form elements ─────────────────────────────────────────────────────────
+  :where(input, button, textarea, select) {
+    font: inherit;
+    color: inherit;
+
+    // Strip iOS/Safari native appearance (rounded corners on buttons, etc.).
+    // Components opt back in per-element where needed.
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  // iOS zooms into any input with font-size < 16px on focus. Guard by pinning
+  // the minimum to 1rem; components can scale up but never below readable size.
+  :where(input, textarea, select) {
+    font-size: max(1rem, 1em);
+  }
+
+  // Safari still shows native search-input decorations without this.
+  :where(input[type="search"]) {
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+      -webkit-appearance: none;
+    }
+  }
+
+  // Token-driven checkbox/radio tint.
+  :where(input[type="checkbox"], input[type="radio"]) {
+    -webkit-appearance: auto; // restore native draw (we only re-tint)
+    appearance: auto;
+    accent-color: var(--color-primary);
+  }
+
+  :where(textarea) {
+    resize: vertical;
+  }
+
+  // ── List elements ─────────────────────────────────────────────────────────
+  :where(ol, ul) {
+    list-style: none;
+  }
+
+  // ── Tables ────────────────────────────────────────────────────────────────
+  :where(table) {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  // ── Border default ────────────────────────────────────────────────────────
+  :where(*, *::before, *::after) {
+    border-color: var(--color-border);
+    border-style: solid;
+    border-width: 0;
+  }
+} // close @layer reset

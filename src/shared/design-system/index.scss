@@ -1,0 +1,13 @@
+// Море Minsk — Design System entry point
+// Ported from flex-glass@a33fc70 (src/shared/design-system/)
+//
+// Architecture:
+//   • Cascade layers fix specificity order (see _tokens.scss for @layer decl).
+//   • :where() keeps base specificity at 0 — consumers always win without hacks.
+//   • Logical properties (padding-inline, margin-block) — RTL/i18n ready.
+//   • color-mix() + @property — animatable theme-aware state variants.
+//   • Container queries as default; media queries only for root-level concerns.
+
+@forward "tokens";
+@forward "mixins";
+@forward "base";

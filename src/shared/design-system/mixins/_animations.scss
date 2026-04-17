@@ -1,0 +1,205 @@
+// ─── Keyframe Animations ───────────────────────────────────────────────────
+// Ported from flex-glass@a33fc70.
+// Префикс mm- (Море Minsk) вместо fg- (Flex Glass), чтобы не конфликтовать,
+// если когда-нибудь окажемся в одном бандле.
+
+// ── Glass shimmer sweep ────────────────────────────────────────────────────
+@keyframes mm-shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+// ── Fade in ───────────────────────────────────────────────────────────────
+@keyframes mm-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// ── Fade up ───────────────────────────────────────────────────────────────
+@keyframes mm-fade-up {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// ── Fade down ─────────────────────────────────────────────────────────────
+@keyframes mm-fade-down {
+  from {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// ── Fade left ─────────────────────────────────────────────────────────────
+@keyframes mm-fade-left {
+  from {
+    transform: translateX(-16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// ── Fade right ────────────────────────────────────────────────────────────
+@keyframes mm-fade-right {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// ── Zoom in ───────────────────────────────────────────────────────────────
+@keyframes mm-zoom-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ── Scale pulse ───────────────────────────────────────────────────────────
+@keyframes mm-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// ── Spin ──────────────────────────────────────────────────────────────────
+@keyframes mm-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ── Slide in from right ───────────────────────────────────────────────────
+@keyframes mm-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// ── Slide in from bottom ──────────────────────────────────────────────────
+@keyframes mm-slide-in-bottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// ── Scroll-triggered animations: data-anim attribute system ───────────────
+@layer base {
+  :where([data-anim]) {
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-spring);
+  }
+
+  :where([data-anim]:not([data-anim-visible])) {
+    opacity: 0;
+  }
+
+  :where([data-anim="fade-up"]:not([data-anim-visible])) {
+    transform: translateY(24px);
+  }
+
+  :where([data-anim="fade-left"]:not([data-anim-visible])) {
+    transform: translateX(-24px);
+  }
+
+  :where([data-anim="zoom"]:not([data-anim-visible])) {
+    transform: scale(0.95);
+  }
+
+  :where([data-anim][data-anim-visible]) {
+    transform: none;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-anim]) {
+      transform: none;
+      opacity: 1;
+      transition: none;
+    }
+  }
+} // close @layer base
+
+// ── Animation utility classes ─────────────────────────────────────────────
+@layer utilities {
+  .animate-fade-in {
+    animation: mm-fade-in var(--duration-base) var(--ease-out) both;
+  }
+
+  .animate-fade-up {
+    animation: mm-fade-up var(--duration-slow) var(--ease-spring) both;
+  }
+
+  .animate-zoom-in {
+    animation: mm-zoom-in var(--duration-base) var(--ease-spring) both;
+  }
+
+  .animate-spin {
+    animation: mm-spin 1s linear infinite;
+  }
+
+  .animate-pulse {
+    animation: mm-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-slide-in-right {
+    animation: mm-slide-in-right var(--duration-base) var(--ease-spring) both;
+  }
+} // close @layer utilities
