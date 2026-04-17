@@ -26,7 +26,7 @@ app → widgets → features → entities → shared
 
 - **app** — страницы Next.js (`src/app/[locale]/...`), layout'ы, sitemap
 - **widgets** — крупные UI-блоки страниц (Hero, FleetGrid, FAQ...)
-- **features** — интерактивные фичи (LeadForm, YachtFilter, BookingCTA)
+- **features** — интерактивные фичи (Booking wizard, YachtFilter, BookingCTA, ThemeToggle, LocaleSwitcher)
 - **entities** — бизнес-сущности с карточками (Yacht, Service, Review)
 - **shared** — атомарный UI, утилиты, типы, стили, контент, конфиг
 

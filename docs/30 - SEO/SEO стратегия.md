@@ -73,7 +73,7 @@ MAIN CLUSTER: "аренда яхты Минск"
 - [ ] Canonical URLs
 - [ ] `og:image` уникальный на каждую страницу
 - [ ] Breadcrumbs (UI + разметка BreadcrumbList)
-- [ ] Изображения: `next/image` с LCP-приоритетом, alt на каждую
+- [ ] Изображения: компонент `<Image />` (`shared/ui/image/`) на `<picture>` со srcset (mobile/tablet/desktop) — оптимизация на этапе билда через sharp (`scripts/optimize-images.ts`). Встроенный `next/image` оптимизатор недоступен при `output: "export"` (`images: { unoptimized: true }`). LCP-фото: `loading="eager"`, `fetchpriority="high"`. Alt на каждую
 - [ ] Core Web Vitals: LCP ≤ 2.5s, CLS < 0.1
 
 ### Фаза 4 — Внешнее SEO

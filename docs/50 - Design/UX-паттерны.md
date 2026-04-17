@@ -12,7 +12,7 @@ updated: 2026-04-17
 
 **Что это значит на практике:**
 
-1. **Стили пишем от mobile к desktop.** Базовые правила в `.module.scss` — для узких экранов; через `@include media('md')` / `media('lg')` добавляем расширения для планшета и десктопа. Никаких `max-width` медиа.
+1. **Стили пишем от mobile к desktop.** Базовые правила в `.module.scss` — для узких экранов; через `@include mx.respond-to('md')` / `mx.respond-to('lg')` добавляем расширения для планшета и десктопа. Никаких `max-width` медиа. Миксин из `@/shared/design-system/mixins`.
 2. **Touch-target ≥ 44×44px** на всех интерактивах (Apple HIG / Material). Кнопки в хедере, иконки соцсетей, чекбоксы — все.
 3. **Один колонок по умолчанию.** Сетки `grid-cols-2/3` появляются только с `md`+. На мобиле всё стекается вертикально.
 4. **Hero-картинка сверху, текст снизу на mobile**, в desktop — текст слева, картинка справа (`order-2 / order-1` пара через flex/grid order).
@@ -78,8 +78,9 @@ updated: 2026-04-17
 
 ### Appbar (top, fixed, mobile + desktop)
 - Высота 56px на mobile, 80px на desktop.
-- Mobile: лого слева + RU/EN + Telegram-иконка справа. **Без бургера** — нав ушла в bottom-nav.
-- Desktop (`lg+`): лого + horizontal nav (5 пунктов) + primary CTA «Заказать» справа.
+- **Mobile:** `[Logo] _____ [☀/🌙] [RU/EN] [✈ Telegram]` — лого слева, справа три icon-button по 40×40 с gap `--space-xs`. **Без бургера** — нав ушла в bottom-nav.
+- **Desktop (`lg+`):** `[Logo + tagline] [Главная Флот Услуги Цены Контакты] [☀/🌙] [RU/EN] [Заказать]` — лого слева, horizontal nav в центре, theme+lang+primary CTA справа.
+- **ThemeToggle и LocaleSwitcher всегда видны в Appbar** (на всех breakpoints) — это глобальные настройки UI, доступ без открытия панели.
 - При scroll > 20px — `backdrop-filter: blur(20px) saturate(180%)` + полупрозрачный фон + hairline-бордер снизу (iOS thin material).
 
 ### Bottom-nav (mobile only, fixed)
@@ -91,9 +92,11 @@ updated: 2026-04-17
 |---|---|---|---|
 | 1 | `Home` | Главная | `/` |
 | 2 | `Sailboat` | Флот | `/fleet` |
-| 3 | `Plus` | **Заказать** | открывает `<OrderSheet />` |
+| 3 | `Plus` | **Заказать** | `usePanel().open('order')` |
 | 4 | `Sparkles` | Услуги | `/services` |
-| 5 | `Menu` | Ещё | открывает `<MoreSheet />` |
+| 5 | `Menu` | Ещё | `usePanel().open('more')` |
+
+> **Note:** отдельных компонентов `<OrderSheet />` / `<MoreSheet />` нет — всё через единый `<AppPanel />` с режимами (ADR-007).
 
 ### Adaptive Panel — `<AppPanel />` (ADR-007)
 
@@ -169,6 +172,8 @@ H1: <конкретный запрос>
 
 *Цены — draft, финальные согласовать с заказчиком.*
 
+**Mobile:** первая колонка («Яхта») — `position: sticky; inset-inline-start: 0;` с правым hairline-бордером при horizontal scroll таблицы. CTA в каждой строке — `panel.open('order', { yachtSlug })` с предзаполненной яхтой в wizard Step 1.
+
 ## Отзыв — карточка
 
 ```
@@ -196,11 +201,15 @@ H1: <конкретный запрос>
 
 ## Формы — правила
 
-1. **Минимум полей:** имя + телефон/telegram + дата + комментарий. Email опционально.
-2. **Валидация realtime** (на blur, не на каждое нажатие).
-3. **Честные ошибки:** «Телефон начинается с +375», не «Invalid format».
-4. **Success state** в той же модалке: «Спасибо! Менеджер ответит в Telegram в течение 30 мин.»
-5. **Без капчи для пользователя** — honeypot или invisible reCAPTCHA.
+> Основная форма проекта — **Booking wizard** (6 шагов, см. [[../40 - Architecture/Booking Module]]). Правила ниже применяются к любым формам (wizard, быстрый callback и т.д.).
+
+1. **Минимум полей на экране:** 1–2 ключевых поля на шаг (wizard разбивает длинную форму на шаги).
+2. **Валидация realtime** (на blur, не на каждое нажатие), zod-схема per-step.
+3. **Честные ошибки:** «Телефон начинается с +375», не «Invalid format». Используем libphonenumber-js.
+4. **Success state** в той же панели: финальный шаг с «Заявка отправлена. Менеджер ответит в течение 30 минут через @moreminsk.»
+5. **Без капчи для пользователя** — honeypot на клиенте (field `company` off-screen + time-gate > 3s).
+6. **State сохраняется** в `sessionStorage` — если пользователь закрыл панель на шаге 4, wizard восстановит прогресс при следующем открытии.
+7. **Submit через `Promise.allSettled`** — Telegram + Resend(manager) + Resend(client) параллельно, частичный успех ≠ ошибка для пользователя.
 
 ## CTA — лексикон
 

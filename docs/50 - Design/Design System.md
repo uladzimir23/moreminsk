@@ -36,9 +36,9 @@ updated: 2026-04-17
 **Базовые стили (копируем):** `_reset.scss`, `_typography.scss`, `_layout.scss` — внутри `@layer base`.
 
 **Что переопределяем** (moreminsk-специфика):
-- Бренд-палитра (морская: глубокий синий, песочный, закатный коралл — а не голубой/фиолетовый Flex Glass)
-- Шрифты (Unbounded/Manrope или Playfair/Inter — не Manrope)
-- Component-токены (`--card-padding`, `--btn-height-*`) — могут немного отличаться
+- Бренд-палитра (морская: navy `#0A4D7A` + sunset coral `#E2956A` + warm sand — финализирована в ADR-006)
+- Шрифты — **Manrope Variable** (UI/body/headings) + **Lora Variable** (accent only) через `next/font/google` с subset `latin + cyrillic` (финализировано в ADR-008)
+- Component-токены (`--card-padding`, `--btn-height-*`, `--appbar-height`, `--bottomnav-height`, `--sheet-radius`) — добавляем поверх flex-glass
 
 ## Способ переноса
 
@@ -123,17 +123,19 @@ updated: 2026-04-17
 }
 ```
 
-### Шрифты — SF Pro stack
+### Шрифты — Manrope (UI) + Lora (accent only)
+> Финализировано в ADR-008. SF Pro отвергнут (только нативно на Apple, fallback на Android даёт визуальный разрыв).
+
 ```scss
---font-display: -apple-system, 'SF Pro Display', 'Inter Display', system-ui, sans-serif;
---font-body:    -apple-system, 'SF Pro Text', Inter, system-ui, sans-serif;
+--font-family-base:   var(--font-manrope), system-ui, -apple-system, sans-serif;
+--font-family-accent: var(--font-lora), Georgia, 'Times New Roman', serif;
 ```
 
-`-apple-system` подхватит SF Pro нативно на iOS/macOS. На Android/Windows — fallback на Inter (загружаем через `next/font`).
+Подключение через `next/font/google` в `app/layout.tsx`. Subset `latin + cyrillic` обязательно. Lora `preload: false`.
 
 ### Tabular numerals для цен
 ```scss
-.price { font-feature-settings: "tnum" on; }
+.tabular { font-feature-settings: "tnum" on, "lnum" on; }
 ```
 
 ## Философия (наша, поверх архитектуры)
@@ -203,48 +205,71 @@ updated: 2026-04-17
 
 ## Ритм (spacing)
 
-Базовая единица — `0.25rem` (4px). 8-point grid.
+> Берём scale из flex-glass `tokens/_tokens.scss` без переопределения. Базовая единица — `0.25rem` (4px), 8-point grid. Многие токены — fluid `clamp()` (320–1280px), отдельные media-queries обычно не нужны.
 
 ```scss
-$spacing-xs:  0.25rem;   // 4px
-$spacing-sm:  0.5rem;    // 8px
-$spacing-md:  1rem;      // 16px
-$spacing-lg:  1.5rem;    // 24px
-$spacing-xl:  2.5rem;    // 40px
-$spacing-2xl: 4rem;      // 64px
-$spacing-3xl: 6rem;      // 96px
-$spacing-4xl: 8rem;      // 128px
+// CSS custom properties (выводятся из flex-glass primitive scale)
+--space-xs:    0.25rem;   // 4px
+--space-sm:    0.5rem;    // 8px
+--space-md:    1rem;      // 16px
+--space-lg:    1.5rem;    // 24px
+--space-xl:    2.5rem;    // 40px
+--space-2xl:   clamp(3rem, 6vw, 4rem);     // fluid
+--space-3xl:   clamp(4rem, 8vw, 6rem);     // fluid
+--space-4xl:   clamp(6rem, 12vw, 8rem);    // fluid
+--space-section: clamp(4rem, 8vw, 6rem);   // section padding-block
 ```
 
 ## Брейкпоинты
 
-```scss
-$bp-sm:  480px;   // small phones
-$bp-md:  768px;   // tablets
-$bp-lg:  1024px;  // laptops
-$bp-xl:  1280px;  // desktops
-$bp-2xl: 1536px;  // big screens
-```
-
-Миксины:
+> Только Sass-переменные (нужны для `respond-to` миксина — media-queries не принимают CSS vars). Брейкпоинты в **rem**, не px — масштабируются с user font-size (a11y).
 
 ```scss
-@mixin mobile { @media (max-width: #{$bp-md - 1px}) { @content; } }
-@mixin tablet-up { @media (min-width: #{$bp-md}) { @content; } }
-@mixin desktop-up { @media (min-width: #{$bp-lg}) { @content; } }
+// src/shared/design-system/tokens/_variables.scss
+$breakpoints: (
+  'xs':  30rem,   // 480px  — большой mobile
+  'sm':  40rem,   // 640px  — landscape mobile
+  'md':  48rem,   // 768px  — планшет
+  'lg':  64rem,   // 1024px — desktop
+  'xl':  80rem,   // 1280px — wide
+  '2xl': 96rem,   // 1536px — очень широкий
+);
 ```
+
+Использование — через миксины из `mixins/_mixins.scss` (см. skill `mobile-first`):
+
+```scss
+@use '@/shared/design-system/mixins' as mx;
+
+.root {
+  padding-block: var(--space-lg);
+  @include mx.respond-to('md') { padding-block: var(--space-xl); }
+}
+```
+
+Container queries — default для **компонентной** адаптивности (`mx.container-root` + `mx.container-query('md')`).
 
 ## Радиусы и тени
 
-```scss
-$radius-sm: 0.25rem;
-$radius-md: 0.75rem;
-$radius-lg: 1.5rem;
-$radius-full: 9999px;
+> Финализированы в ADR-005 (iOS-style). Здесь — semantic CSS vars; конкретные значения primitive — в flex-glass `tokens/_tokens.scss`.
 
-$shadow-sm: 0 1px 2px rgba(27, 34, 48, 0.05);
-$shadow-md: 0 4px 12px rgba(27, 34, 48, 0.08);
-$shadow-lg: 0 12px 32px rgba(27, 34, 48, 0.12);
+```scss
+--radius-sm:      0.5rem;     // 8px  — inputs small
+--radius-md:      0.75rem;    // 12px — inputs default (ADR-005)
+--radius-lg:      1rem;       // 16px
+--radius-2xl:     1.5rem;     // 24px — cards (ADR-005)
+--radius-3xl:     2rem;       // 32px — sheets, hero photo (ADR-005)
+--radius-capsule: 999px;      // полная капсула — кнопки, бейджи (ADR-005)
+
+// Hairline (ADR-005)
+--color-border-hairline: color-mix(in oklch, var(--color-foreground) 8%, transparent);
+--border-hairline:       1px solid var(--color-border-hairline);
+
+// iOS multi-layer soft shadows (ADR-005)
+--shadow-sm:     0 1px 0 rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.04);
+--shadow-md:     0 1px 0 rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.06);
+--shadow-lg:     0 2px 0 rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.12), 0 0 1px rgba(0,0,0,0.08);
+--shadow-sheet:  0 -8px 32px rgba(0,0,0,0.12), 0 -1px 0 rgba(0,0,0,0.06);
 ```
 
 ## Атомарные компоненты (`shared/ui`)
@@ -337,9 +362,16 @@ Lucide React. Размеры: 16 / 20 / 24 / 32px. Заполнять `currentCo
 
 ## Связанные документы
 - [[UX-паттерны]]
+- [[Hero & Section Rhythm]]
+- [[Component Specs]]
+- [[Brand Identity]]
 - [[Медиа-стратегия]]
 - [[../20 - Market/Позиционирование]]
 - [[../40 - Architecture/42 - ADR/ADR-001 SCSS Modules вместо Tailwind]]
+- [[../40 - Architecture/42 - ADR/ADR-005 iOS-style Design Language]]
+- [[../40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens]]
+- [[../40 - Architecture/42 - ADR/ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop]]
+- [[../40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]]
 
 ## Внешние референсы
 

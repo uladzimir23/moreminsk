@@ -65,25 +65,28 @@ tags: [adr, design, ds, ios]
 
 Никаких heavy `0 25px 50px rgba(0,0,0,0.5)` — это Material, не iOS.
 
-### 5. Typography — SF Pro vibe через Inter / SF Pro Display
-- **Display (H1, hero):** SF Pro Display fallback `Inter Display`, `font-weight: 600`, `letter-spacing: -0.025em` (tight tracking — iOS large titles).
-- **Body:** SF Pro Text fallback `Inter`, `400`/`500`. Line-height 1.45–1.5.
-- **Numerals:** `font-feature-settings: "tnum" on` (tabular nums для цен — выравниваются в столбик).
-- Шрифт-стек:
+### 5. Typography — Manrope (UI) + Lora (accent only)
+> Финализировано в **ADR-008**. Здесь — только iOS-проекция выбора.
+
+- **Display и UI:** **Manrope Variable** (через `next/font/google`, `subsets: ['latin', 'cyrillic']`, weights 300–700) — даёт «iOS-vibe» через округлую геометрию, читается на retina и подхватывает кириллицу.
+- **Tight tracking** на крупных заголовках через токен `--tracking-tightest: -0.025em` (iOS large titles).
+- **Accent:** **Lora Variable** (`weight: ['400', '500']`, `style: ['normal', 'italic']`, `preload: false`) — **только** через `<Accent>` или класс `.accent` (max 5 instances/страница, 2/вьюпорт).
+- **Numerals:** `font-feature-settings: "tnum" on, "lnum" on` для цен — класс `.tabular`.
+- Семейные токены:
 
 ```css
---font-display: -apple-system, 'SF Pro Display', 'Inter Display', system-ui, sans-serif;
---font-body:    -apple-system, 'SF Pro Text', Inter, system-ui, sans-serif;
+--font-family-base:   var(--font-manrope), system-ui, -apple-system, sans-serif;
+--font-family-accent: var(--font-lora), Georgia, 'Times New Roman', serif;
 ```
 
-`-apple-system` подхватит SF Pro нативно на Apple-устройствах (≈40% трафика). Остальные получат Inter (визуально близок).
+> SF Pro отвергнут: лицензируется только нативно через `-apple-system`, на Android даёт fallback к произвольному шрифту → визуальный разрыв. Manrope даёт ту же тёплую premium-эстетику и контроль на всех платформах + полный кириллический набор.
 
-### 6. Color — light mode default, opt-in dark
-- **Светлый фон с warm tint** (не чисто белый). Песочно-морская палитра (см. Design System).
-- **Дип-навигейшн bar:** не чёрный (#000), а **deep navy** `#0d0f17` (как в Apple Maps dark).
-- **Vibrant accent:** один яркий бренд-цвет (закатный коралл) — для CTA, активного состояния, фокус-ринга.
-- **Tinted text:** `--color-foreground` это не чёрный (#000), а deep slate `#1B2230` — Apple HIG.
-- Dark mode — отдельная палитра, не invert. Готовим архитектурно через `.dark { }` override (см. flex-glass _tokens.scss), но в MVP не активируем (toggle добавим post-MVP).
+### 6. Color — light + dark в MVP (см. ADR-006)
+- **Светлый фон с warm tint** (не чисто белый): `--color-background` = `#FAF7F2` (sand-50).
+- **Dark navigation bar:** не чёрный (#000), а **deep navy** `#0E1620` — `--color-background` в dark theme.
+- **Vibrant accent:** `--color-accent` = `#E2956A` (sunset coral, light) / `#EBA77E` (dark) — для CTA, активного состояния, фокус-ринга.
+- **Tinted text:** `--color-foreground` это не чёрный (#000), а deep slate `#1B2230` (light) / `#E8EEF3` (dark) — Apple HIG.
+- **Dark mode активен в MVP** через классы `.light-theme` / `.dark-theme` на `<html>` и `<body>` (sync-pattern), default `'system'`, anti-FOUC inline-script. Каждый компонент проверяется в обоих темах перед merge.
 
 ### 7. Micro-interactions — spring + tap-scale
 - **Tap feedback:** на `:active` — `transform: scale(0.97)` + `transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1)`. Лёгкий «отклик» как iOS haptic-эквивалент.
@@ -92,13 +95,13 @@ tags: [adr, design, ds, ios]
 - **Page transitions:** на mobile fade 200ms (без сложных переходов, чтобы не мешать SEO crawling).
 - **`prefers-reduced-motion`** — все scale/spring заменяются на opacity-only.
 
-### 8. Sheets — primary modal pattern
-По образцу iOS UISheetPresentationController:
-- Bottom-sheet с **drag-handle** (4×40px серая капля сверху).
-- Снапы: `medium` (50vh) и `large` (90vh). Можно перетягивать.
-- Закрытие: тап вне или свайп вниз.
-- Поверх — `backdrop-filter: blur` + затемнение `rgba(0,0,0,0.4)`.
-- Используем для: `OrderSheet`, `MoreSheet` (из ADR-004), фильтры флота, форма заявки, lightbox-галерея.
+### 8. Sheets — primary modal pattern (Adaptive Panel, ADR-007)
+По образцу iOS UISheetPresentationController, но **один компонент** `<AppPanel />` с морфингом по breakpoint:
+- **Mobile (`< md`):** bottom-sheet с **drag-handle** (4×40px серая капля сверху), `max-height: 92dvh`, drag-to-dismiss 120px+, backdrop `rgba(0,0,0,0.4)` + blur 8px.
+- **Desktop (`≥ md`):** floating side-drawer справа (27rem), backdrop `rgba(0,0,0,0.05)` + blur 3px.
+- Закрытие: тап вне / свайп вниз / ESC / кнопка X.
+- Easing — `var(--ease-sheet)` (Apple `cubic-bezier(0.32, 0.72, 0, 1)`), open `var(--duration-slow)`, close `var(--duration-medium)`.
+- Используем для (через `usePanel().open(mode, payload)`): `'order'` (форма брони), `'fleet-filter'` (фильтры флота), `'more'` (вторичная нав mobile), `'gallery'` (lightbox).
 
 ### 9. Lists — grouped / inset (iOS Settings style)
 Для FAQ, прайс-листа, контактов — паттерн «inset grouped list»:
@@ -131,13 +134,13 @@ Lucide React визуально близок к SF Symbols (тонкие 1.5–2
 
 ### Негативные
 - `backdrop-filter` слабее на старых Android (< Android 9, Chrome < 76) — fallback solid-цвет.
-- SF Pro Display только нативно на Apple — fallback Inter не идентичен (но достаточно близок).
+- Manrope не имеет точного «iOS-вайба» SF Pro, но близок по геометрии и работает идентично на всех платформах + кириллица (см. ADR-008 для обоснования выбора).
 - Сложнее писать кастомные иллюстрации в этом стиле — нужна рука дизайнера / стоковые AI-render. Но иллюстраций у нас почти не будет (продаём фото).
 - Spring-анимации требуют дисциплины — везде один easing, иначе UX рассыпается.
 
 ### Нейтральные
 - Нужно держать DS-токены в актуальном состоянии (radius/material/shadow).
-- Шрифты: SF Pro лицензируется только для веба через `system-ui` стек — но это работает.
+- Шрифты: финализированы в ADR-008 — Manrope (UI) + Lora (accent only) через `next/font/google`.
 
 ## Альтернативы (отвергнутые)
 

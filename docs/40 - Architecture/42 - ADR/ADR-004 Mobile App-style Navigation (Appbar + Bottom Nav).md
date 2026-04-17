@@ -19,8 +19,10 @@ tags: [adr, mobile, ux, navigation]
 ### Appbar (top, fixed)
 - Высота 56px (3.5rem). На скролле > 20px — добавляется `backdrop-filter: blur(16px)` + полупрозрачный фон + hairline-бордер снизу.
 - Слева: лого (иконка «волна»/«яхта» + текстовая марка, текст скрыт до `xs`).
-- Справа: компактные иконки — переключатель языка `RU/EN` + Telegram-иконка (deep-link, не открывает sheet).
+- Справа: всегда — `<ThemeToggle />` (☀/🌙/💻) + `<LocaleSwitcher />` (RU/EN) + Telegram-иконка (deep-link). Размер icon-button 40×40, gap `var(--space-xs)`.
 - НЕТ бургера — основная навигация ушла в bottom-nav, бургер избыточен.
+
+> **Решение 2026-04-17:** ThemeToggle + LocaleSwitcher живут в Appbar на **всех** breakpoints (включая mobile) — это глобальные настройки UI, должны быть доступны без открытия панели. Из `<AppPanel mode='more' />` они убраны — там остаются только ссылки на вторичные страницы.
 
 ### Bottom-nav (fixed, 5 пунктов)
 Высота 56px + `env(safe-area-inset-bottom)` (для home bar iPhone X+):
@@ -37,7 +39,7 @@ tags: [adr, mobile, ux, navigation]
 
 ### Desktop (`lg+`)
 - Bottom-nav **скрыт** (`display: none`).
-- Appbar превращается в полноценный horizontal nav с теми же ссылками + кнопкой «Заказать» справа (как primary CTA).
+- Appbar становится: `[Logo] [Главная Флот Услуги Цены Контакты] [☀/🌙] [RU/EN] [Заказать]` — те же right-side контролы (theme + lang) + добавляется horizontal nav в центре + primary CTA «Заказать» справа.
 - Логика по образцу neuro-center header (см. UX-паттерны).
 
 ### Контент-отступы

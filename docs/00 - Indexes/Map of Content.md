@@ -26,6 +26,8 @@ updated: 2026-04-16
 - [[30 - SEO/Schema.org разметка]] — JSON-LD типы
 
 ## 40 — Architecture
+- ⭐ [[40 - Architecture/Project Overview]] — module map (читать первым)
+- ⭐ [[40 - Architecture/Booking Module]] — главная бизнес-фича (wizard + availability + submit)
 - [[40 - Architecture/Architecture Overview]] — стек, слои, поток данных
 - [[40 - Architecture/Структура проекта]] — FSD-lite, дерево папок
 - [[40 - Architecture/Routing & i18n]] — App Router, next-intl, static export
@@ -33,17 +35,31 @@ updated: 2026-04-16
 - [[40 - Architecture/42 - ADR/ADR-001 SCSS Modules вместо Tailwind]]
 - [[40 - Architecture/42 - ADR/ADR-002 Next.js Static Export]]
 - [[40 - Architecture/42 - ADR/ADR-003 FSD-lite архитектура]]
+- [[40 - Architecture/42 - ADR/ADR-004 Mobile App-style Navigation (Appbar + Bottom Nav)]]
+- [[40 - Architecture/42 - ADR/ADR-005 iOS-style Design Language]]
+- [[40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens]]
+- [[40 - Architecture/42 - ADR/ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop]]
+- [[40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]]
+- [[40 - Architecture/Scraping plan]] — миграция контента с moreminsk.by
 
 ## 50 — Design
 - [[50 - Design/Design System]] — токены, типографика, компоненты
 - [[50 - Design/UX-паттерны]] — формулы блоков, сценарии конверсии
+- [[50 - Design/Hero & Section Rhythm]] — визуальный язык секций
+- [[50 - Design/Component Specs]] — спецификации UI-компонентов
+- [[50 - Design/Brand Identity]] — wordmark, lockups, OG, voice
+- [[50 - Design/Анимации]] — motion spec (Framer Motion пресеты)
 - [[50 - Design/Медиа-стратегия]] — фото/видео, оптимизация
 
 ## 60 — Content
 - [[60 - Content/Флот яхт]] — карточки EVA/ALFA/MARIO/BRAVO
 - [[60 - Content/Каталог услуг]] — список из 15+ страниц
-- [[60 - Content/FAQ]] — частые вопросы
-- [[60 - Content/Тексты блоков]] — hero, описания, CTA
+- [[60 - Content/FAQ]] — частые вопросы (исходные заметки)
+- [[60 - Content/FAQ драфт]] — 18 вопросов с ответами на согласование
+- [[60 - Content/Reviews (заглушки)]] — 5 шаблонных отзывов для MVP
+- [[60 - Content/Контент-план текстов]] — Hero H1, lead-абзацы, мета-теги
+- [[60 - Content/Тексты блоков]] — hero, описания, CTA (исходные)
+- [[60 - Content/Политика конфиденциальности (шаблон)]] — юр.документ для `/legal/politika`
 
 ## 90 — Ideas & Backlog
 - [[90 - Ideas & Backlog/Идеи развития]] — фичи и направления роста
