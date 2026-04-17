@@ -270,6 +270,10 @@
     --navbar-height: 3.5rem;
     --sidebar-width: 15rem;
 
+    // App-shell heights per ADR-004 (Appbar 56px top, BottomNav 56px mobile-only).
+    --appbar-height: 3.5rem;
+    --bottomnav-height: 3.5rem;
+
     --btn-height-sm: 2rem;
     --btn-height-md: 2.375rem;
     --btn-height-lg: 2.875rem;

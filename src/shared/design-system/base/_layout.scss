@@ -11,6 +11,21 @@
     min-block-size: 100dvh; // mobile Safari: follows dynamic viewport
   }
 
+  // ── App shell offsets (ADR-004) ───────────────────────────────────────────
+  // Fixed Appbar + (mobile) BottomNav overlay the viewport — push content
+  // inside <main> past them. Bottom padding drops to 0 on desktop (md+)
+  // where the bottom-nav is hidden.
+  :where(main) {
+    padding-block-start: var(--appbar-height);
+    padding-block-end: calc(var(--bottomnav-height) + env(safe-area-inset-bottom));
+  }
+
+  @include respond-to("md") {
+    :where(main) {
+      padding-block-end: 0;
+    }
+  }
+
   // ── Skip link (a11y: keyboard-only users jump past navigation) ───────────
   .skip-link {
     @include sr-only;

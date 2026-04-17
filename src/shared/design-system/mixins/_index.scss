@@ -1,2 +1,5 @@
+// Pure mixins only — safe to `@use` inside `.module.scss` files without
+// leaking global CSS. Global animation keyframes + data-anim selectors
+// live in `_animations.scss` and are forwarded from the top-level DS entry
+// (`design-system/index.scss`) so they emit exactly once via `globals.scss`.
 @forward "mixins";
-@forward "animations";
