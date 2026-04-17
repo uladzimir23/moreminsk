@@ -1,5 +1,6 @@
 import { type Locale, routing } from "@/i18n/routing";
 import { Appbar } from "@/widgets/appbar/Appbar";
+import { BottomNav } from "@/widgets/bottom-nav/BottomNav";
 import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -43,6 +44,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Providers>
             <Appbar />
             {children}
+            <BottomNav />
           </Providers>
         </NextIntlClientProvider>
       </body>
