@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: true
+  commands:
+    typecheck:
+      glob: "*.{ts,tsx}"
+      run: /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+    lint-ts:
+      glob: "*.{ts,tsx,js,mjs}"
+      run: /Users/vladimirmazyrec/.bun/bin/bun run lint -- {staged_files}
+    lint-scss:
+      glob: "*.{scss,css}"
+      run: /Users/vladimirmazyrec/.bun/bin/bun run lint:css -- {staged_files}
+    format-check:
+      glob: "*.{ts,tsx,js,mjs,json,scss,css}"
+      run: /Users/vladimirmazyrec/.bun/bin/bun run format:check -- {staged_files}
+
+pre-push:
+  parallel: false
+  commands:
+    typecheck:
+      run: /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+    build:
+      run: /Users/vladimirmazyrec/.bun/bin/bun run build

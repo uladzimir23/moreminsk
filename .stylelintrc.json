@@ -1,0 +1,41 @@
+{
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-clean-order"],
+  "customSyntax": "postcss-scss",
+  "rules": {
+    "declaration-no-important": true,
+    "max-nesting-depth": [2, { "ignore": ["blockless-at-rules", "pseudo-classes"] }],
+    "selector-max-specificity": ["0,3,0", { "ignoreSelectors": [":where", ":is", ":has"] }],
+    "unit-disallowed-list": [
+      ["px"],
+      {
+        "ignoreProperties": {
+          "px": ["/^border/", "/^outline/", "box-shadow", "text-shadow", "contain-intrinsic-size"]
+        },
+        "ignoreMediaFeatureNames": {
+          "px": ["/.*/"]
+        }
+      }
+    ],
+    "selector-class-pattern": null,
+    "scss/at-rule-no-unknown": [
+      true,
+      { "ignoreAtRules": ["layer", "container", "property", "tailwind"] }
+    ],
+    "at-rule-no-unknown": null,
+    "no-descending-specificity": null,
+    "declaration-property-value-no-unknown": null,
+    "scss/load-no-partial-leading-underscore": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/percent-placeholder-pattern": null,
+    "color-function-notation": "modern",
+    "alpha-value-notation": "number",
+    "hue-degree-notation": "angle"
+  },
+  "ignoreFiles": [
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "src/shared/design-system/tokens/**",
+    "src/app/globals.css"
+  ]
+}

@@ -1,0 +1,7 @@
+.next/
+out/
+node_modules/
+public/
+bun.lock
+next-env.d.ts
+docs/
