@@ -1,0 +1,114 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-xl);
+  padding: var(--space-md);
+  background: var(--color-surface);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.month {
+  font-weight: var(--primitive-weight-semibold);
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  text-transform: capitalize;
+}
+
+.nav {
+  inline-size: 2rem;
+  block-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--color-foreground) 6%, transparent);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  @include focus-ring;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in oklch, var(--color-foreground) 10%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.125rem;
+}
+
+.weekday {
+  font-size: var(--text-xs);
+  color: var(--color-foreground-muted);
+  text-align: center;
+  padding-block: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cell {
+  inline-size: 100%;
+  min-block-size: 2.25rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--primitive-weight-medium);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  @include focus-ring($offset: -0.125rem);
+
+  @include respond-to("md") {
+    min-block-size: 2.75rem;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in oklch, var(--color-primary) 10%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.cellEmpty {
+  visibility: hidden;
+}
+
+.cellToday {
+  font-weight: var(--primitive-weight-bold);
+  color: var(--color-primary);
+}
+
+.cellSelected {
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+
+  &:hover {
+    background: var(--color-primary-hover);
+  }
+}
