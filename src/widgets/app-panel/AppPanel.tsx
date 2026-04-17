@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import styles from "./AppPanel.module.scss";
+import { MorePanel } from "./MorePanel";
 
 const TITLE: Record<PanelMode, string> = {
   order: "Заказать яхту",
@@ -19,11 +20,16 @@ const TITLE: Record<PanelMode, string> = {
   gallery: "Галерея",
 };
 
-const PLACEHOLDER: Record<Exclude<PanelMode, "order">, string> = {
+const PLACEHOLDER: Record<"fleet-filter" | "gallery", string> = {
   "fleet-filter": "Фильтры по типу яхты, вместимости, длине и дате — Phase 3.2.",
-  more: "Вторичные ссылки (FAQ, Отзывы, О нас, Блог, Контакты) — Phase 3.2.",
   gallery: "Lightbox-галерея с свайпом — Phase 5.",
 };
+
+function PanelBody({ mode }: { mode: PanelMode }) {
+  if (mode === "order") return <BookingForm />;
+  if (mode === "more") return <MorePanel />;
+  return <p className={styles.placeholder}>{PLACEHOLDER[mode]}</p>;
+}
 
 export function AppPanel() {
   const { isOpen, mode, close, payload } = usePanel();
@@ -91,11 +97,7 @@ export function AppPanel() {
                 </header>
 
                 <div className={styles.body}>
-                  {mode === "order" ? (
-                    <BookingForm />
-                  ) : (
-                    <p className={styles.placeholder}>{PLACEHOLDER[mode]}</p>
-                  )}
+                  <PanelBody mode={mode} />
                 </div>
               </motion.div>
             </Dialog.Content>
