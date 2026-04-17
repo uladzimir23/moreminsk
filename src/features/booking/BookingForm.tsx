@@ -5,13 +5,13 @@ import { useBookingStore, type WizardStep } from "./model/store";
 import { StepIndicator } from "./ui/StepIndicator";
 import { WizardNav } from "./ui/WizardNav";
 import { DateTimeStep } from "./ui/steps/DateTimeStep";
+import { PackageStep } from "./ui/steps/PackageStep";
 import { YachtStep } from "./ui/steps/YachtStep";
 
 const TOTAL_STEPS = 5;
 
-type StubStepNum = 3 | 4 | 5 | 6;
+type StubStepNum = 4 | 5 | 6;
 const STUB_TITLES: Record<StubStepNum, string> = {
-  3: "Повод (опционально)",
   4: "Как с вами связаться?",
   5: "Проверьте детали",
   6: "Заявка отправлена",
@@ -34,6 +34,7 @@ function StubStep({ step }: { step: StubStepNum }) {
 function renderStep(step: WizardStep) {
   if (step === 1) return <YachtStep />;
   if (step === 2) return <DateTimeStep />;
+  if (step === 3) return <PackageStep />;
   return <StubStep step={step} />;
 }
 
