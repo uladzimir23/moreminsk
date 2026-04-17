@@ -1,0 +1,85 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: var(--text-xs);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+
+.input,
+.textarea {
+  inline-size: 100%;
+  padding-block: 0.6875rem;
+  padding-inline: var(--space-md);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  font-size: max(1rem, 1em); // iOS anti-zoom
+  font-family: inherit;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+
+  &:hover:not(:focus) {
+    border-color: color-mix(in oklch, var(--color-foreground) 20%, transparent);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.1875rem color-mix(in oklch, var(--color-primary) 20%, transparent);
+  }
+
+  &::placeholder {
+    color: color-mix(in oklch, var(--color-foreground) 35%, transparent);
+  }
+}
+
+.textarea {
+  min-block-size: 4rem;
+  resize: vertical;
+}
+
+.inputError {
+  border-color: var(--color-status-danger, #c0392b);
+}
+
+.errorMsg {
+  font-size: var(--text-xs);
+  color: var(--color-status-danger, #c0392b);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+
+  @include respond-to("sm") {
+    grid-template-columns: 1fr 6rem;
+  }
+}
+
+.counter {
+  padding-block: 0.6875rem;
+  padding-inline: var(--space-md);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  font-size: max(1rem, 1em);
+  color: var(--color-foreground);
+}
