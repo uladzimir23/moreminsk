@@ -5,6 +5,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { lora, manrope } from "../fonts";
 import "../globals.scss";
+import { Providers } from "../providers/Providers";
 
 export const metadata: Metadata = {
   title: "Море Minsk — аренда яхт на Минском море",
@@ -37,7 +38,9 @@ export default async function LocaleLayout({ children, params }: Props) {
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
       <body>
-        <NextIntlClientProvider locale={typedLocale}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider locale={typedLocale}>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
