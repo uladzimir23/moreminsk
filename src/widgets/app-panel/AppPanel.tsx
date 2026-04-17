@@ -1,11 +1,15 @@
 "use client";
 
+import { BookingForm } from "@/features/booking/BookingForm";
+import { useBookingStore } from "@/features/booking/model/store";
+import type { BookingPanelPayload, BookingSource } from "@/features/booking/model/types";
 import type { PanelMode } from "@/shared/lib/panel/types";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import * as Dialog from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import styles from "./AppPanel.module.scss";
 
 const TITLE: Record<PanelMode, string> = {
@@ -15,17 +19,32 @@ const TITLE: Record<PanelMode, string> = {
   gallery: "Галерея",
 };
 
-// Mode-specific bodies land in `./contents/` in a later phase (ADR-007 §
-// "Один компонент = большой файл"). For now each mode renders a placeholder.
-const PLACEHOLDER: Record<PanelMode, string> = {
-  order: "Форма бронирования появится на этапе Phase 3.4 (booking wizard).",
+const PLACEHOLDER: Record<Exclude<PanelMode, "order">, string> = {
   "fleet-filter": "Фильтры по типу яхты, вместимости, длине и дате — Phase 3.2.",
   more: "Вторичные ссылки (FAQ, Отзывы, О нас, Блог, Контакты) — Phase 3.2.",
   gallery: "Lightbox-галерея с свайпом — Phase 5.",
 };
 
 export function AppPanel() {
-  const { isOpen, mode, close } = usePanel();
+  const { isOpen, mode, close, payload } = usePanel();
+  const hydrate = useBookingStore((s) => s.hydrateFromPayload);
+  const hydratedFor = useRef<string | null>(null);
+
+  // Hydrate booking draft once per open of the order panel. Re-hydrate is
+  // keyed by (payload identity) so re-opening from the same card doesn't
+  // wipe user progress mid-session.
+  useEffect(() => {
+    if (!isOpen || mode !== "order") {
+      hydratedFor.current = null;
+      return;
+    }
+    const key = JSON.stringify(payload ?? null);
+    if (hydratedFor.current === key) return;
+    hydratedFor.current = key;
+    const bookingPayload = (payload as BookingPanelPayload | undefined) ?? undefined;
+    const source: BookingSource = bookingPayload?.source ?? "appbar";
+    hydrate(bookingPayload, source);
+  }, [isOpen, mode, payload, hydrate]);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={(next) => !next && close()}>
@@ -72,7 +91,11 @@ export function AppPanel() {
                 </header>
 
                 <div className={styles.body}>
-                  <p className={styles.placeholder}>{PLACEHOLDER[mode]}</p>
+                  {mode === "order" ? (
+                    <BookingForm />
+                  ) : (
+                    <p className={styles.placeholder}>{PLACEHOLDER[mode]}</p>
+                  )}
                 </div>
               </motion.div>
             </Dialog.Content>
