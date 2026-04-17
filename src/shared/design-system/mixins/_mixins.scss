@@ -116,9 +116,9 @@
 // ── Dark-mode scope helper ────────────────────────────────────────────────
 // Usage inside any selector:
 //   &:hover { @include dark-mode { background: ... } }
-// NOTE: task #27 заменит селектор на `.dark-theme` по ADR-006.
+// Class `.dark-theme` applied to <html> + <body> via ThemeProvider (ADR-006).
 @mixin dark-mode {
-  :where(.dark) & {
+  :where(.dark-theme) & {
     @content;
   }
 }

@@ -1,8 +1,8 @@
 // ─── Design Tokens — Primitive → Semantic → Component ─────────────────────
 // All values live here as CSS custom properties. Zero hardcode elsewhere.
 //
-// Ported from flex-glass@a33fc70 (src/shared/design-system/tokens/_tokens.scss).
-// Palette override for Море Minsk — ADR-006 (navy + sunset coral) — см. task #27.
+// Architecture ported from flex-glass@a33fc70. Palette, theme classes
+// (.light-theme / .dark-theme) and motion ladder — per ADR-006.
 //
 // Unit policy:
 //   • Primitive layer — static rem (1rem = 16px, based on html { font-size: 100% }).
@@ -20,22 +20,22 @@
 @property --color-primary {
   syntax: "<color>";
   inherits: true;
-  initial-value: #4f6ef7;
+  initial-value: #0a4d7a;
 }
 @property --color-accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #9b5cf6;
+  initial-value: #e2956a;
 }
 @property --color-background {
   syntax: "<color>";
   inherits: true;
-  initial-value: #f8f9fa;
+  initial-value: #faf7f2;
 }
 @property --color-foreground {
   syntax: "<color>";
   inherits: true;
-  initial-value: #202124;
+  initial-value: #1b2230;
 }
 @property --gradient-angle {
   syntax: "<angle>";
@@ -48,75 +48,65 @@
     font-size: 100%;
   }
 
+  // ── Primitive: shared across all themes ──────────────────────────────────
   :root {
-    // ── Primitive: Color Palette ───────────────────────────────────────────
     --primitive-color-white: #ffffff;
     --primitive-color-black: #000000;
 
-    // Slate
-    --primitive-color-slate-50: #f8fafc;
-    --primitive-color-slate-100: #f1f5f9;
-    --primitive-color-slate-200: #e2e8f0;
-    --primitive-color-slate-300: #cbd5e1;
-    --primitive-color-slate-400: #94a3b8;
-    --primitive-color-slate-500: #64748b;
-    --primitive-color-slate-600: #475569;
-    --primitive-color-slate-700: #334155;
-    --primitive-color-slate-800: #1e293b;
-    --primitive-color-slate-900: #0f172a;
-    --primitive-color-slate-950: #020617;
+    // Sea (premium navy — ADR-006)
+    --primitive-color-sea-50: #eff5f9;
+    --primitive-color-sea-100: #d6e4ef;
+    --primitive-color-sea-200: #a8c4d8;
+    --primitive-color-sea-300: #6ea0be;
+    --primitive-color-sea-400: #3f7da1;
+    --primitive-color-sea-500: #0a4d7a;
+    --primitive-color-sea-600: #084064;
+    --primitive-color-sea-700: #06324f;
+    --primitive-color-sea-800: #04253b;
+    --primitive-color-sea-900: #0e1620;
 
-    // Google-spectrum blue
-    --primitive-color-blue-100: #d2e3fc;
-    --primitive-color-blue-200: #aecbfa;
-    --primitive-color-blue-300: #8ab4f8;
-    --primitive-color-blue-400: #6c9bff;
-    --primitive-color-blue-500: #4f6ef7;
-    --primitive-color-blue-600: #3b5de8;
-    --primitive-color-blue-700: #2848d4;
+    // Sunset (warm CTA accent — ADR-006)
+    --primitive-color-sunset-50: #fbf1ea;
+    --primitive-color-sunset-100: #f5dcc9;
+    --primitive-color-sunset-300: #ecb593;
+    --primitive-color-sunset-500: #e2956a;
+    --primitive-color-sunset-600: #c47a51;
+    --primitive-color-sunset-700: #a26240;
 
-    // Violet / Purple
-    --primitive-color-violet-300: #c4b5fd;
-    --primitive-color-violet-400: #a78bfa;
-    --primitive-color-violet-500: #9b5cf6;
-    --primitive-color-violet-600: #7c3aed;
+    // Sand (warm off-white neutrals — ADR-006)
+    --primitive-color-sand-50: #faf7f2;
+    --primitive-color-sand-100: #f1ece3;
+    --primitive-color-sand-200: #e4dfd5;
+    --primitive-color-sand-700: #5c6270;
+    --primitive-color-sand-900: #1b2230;
 
-    // Emerald
-    --primitive-color-emerald-400: #34d399;
-    --primitive-color-emerald-500: #10b981;
-    --primitive-color-emerald-600: #059669;
-
-    // Rose
-    --primitive-color-rose-400: #fb7185;
-    --primitive-color-rose-500: #f43f5e;
-    --primitive-color-rose-600: #e11d48;
-
-    // Amber
-    --primitive-color-amber-400: #fbbf24;
-    --primitive-color-amber-500: #f59e0b;
+    // Status
+    --primitive-color-success: #4a7c59;
+    --primitive-color-warning: #d4a84b;
+    --primitive-color-error: #b24c4c;
 
     // ── Primitive: Spacing Scale (static rem) ──────────────────────────────
     --primitive-space-0: 0;
-    --primitive-space-1: 0.25rem; //  4px
-    --primitive-space-2: 0.5rem; //  8px
-    --primitive-space-3: 0.75rem; // 12px
-    --primitive-space-4: 1rem; // 16px
-    --primitive-space-5: 1.25rem; // 20px
-    --primitive-space-6: 1.5rem; // 24px
-    --primitive-space-8: 2rem; // 32px
-    --primitive-space-10: 2.5rem; // 40px
-    --primitive-space-12: 3rem; // 48px
-    --primitive-space-16: 4rem; // 64px
-    --primitive-space-20: 5rem; // 80px
-    --primitive-space-24: 6rem; // 96px
-    --primitive-space-32: 8rem; // 128px
+    --primitive-space-1: 0.25rem;
+    --primitive-space-2: 0.5rem;
+    --primitive-space-3: 0.75rem;
+    --primitive-space-4: 1rem;
+    --primitive-space-5: 1.25rem;
+    --primitive-space-6: 1.5rem;
+    --primitive-space-8: 2rem;
+    --primitive-space-10: 2.5rem;
+    --primitive-space-12: 3rem;
+    --primitive-space-16: 4rem;
+    --primitive-space-20: 5rem;
+    --primitive-space-24: 6rem;
+    --primitive-space-32: 8rem;
 
     // ── Primitive: Typography ──────────────────────────────────────────────
-    // Manrope is loaded via next/font in app/layout.tsx → exposes --font-manrope.
-    // Primitive stack adds cross-script fallbacks (latin / cyrillic native).
+    // Manrope + Lora are wired via next/font in app/layout.tsx — task #28 (ADR-008).
     --primitive-font-sans:
       var(--font-manrope, "Manrope"), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
       "Helvetica Neue", Arial, sans-serif;
+    --primitive-font-accent: var(--font-lora, "Lora"), Georgia, "Times New Roman", ui-serif, serif;
     --primitive-font-mono:
       ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Mono", Consolas, "JetBrains Mono",
       "Fira Code", monospace;
@@ -152,12 +142,12 @@
 
     // ── Primitive: Border Radius (static rem) ──────────────────────────────
     --primitive-radius-none: 0;
-    --primitive-radius-sm: 0.25rem; //  4px
-    --primitive-radius-md: 0.5rem; //  8px
-    --primitive-radius-lg: 0.75rem; // 12px
-    --primitive-radius-xl: 1rem; // 16px
-    --primitive-radius-2xl: 1.5rem; // 24px
-    --primitive-radius-3xl: 2rem; // 32px
+    --primitive-radius-sm: 0.25rem;
+    --primitive-radius-md: 0.5rem;
+    --primitive-radius-lg: 0.75rem;
+    --primitive-radius-xl: 1rem;
+    --primitive-radius-2xl: 1.5rem;
+    --primitive-radius-3xl: 2rem;
     --primitive-radius-full: 9999px;
 
     // ── Primitive: Shadows ─────────────────────────────────────────────────
@@ -167,17 +157,21 @@
     --primitive-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     --primitive-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
-    // ── Primitive: Motion ──────────────────────────────────────────────────
+    // ── Primitive: Motion (ADR-006 ladder) ────────────────────────────────
+    --primitive-duration-instant: 50ms;
     --primitive-duration-fast: 150ms;
-    --primitive-duration-base: 250ms;
-    --primitive-duration-slow: 400ms;
-    --primitive-duration-slower: 600ms;
+    --primitive-duration-base: 200ms;
+    --primitive-duration-medium: 300ms;
+    --primitive-duration-slow: 500ms;
+    --primitive-duration-slower: 800ms;
 
     --primitive-ease-linear: linear;
     --primitive-ease-in: cubic-bezier(0.4, 0, 1, 1);
-    --primitive-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --primitive-ease-out: cubic-bezier(0.4, 0, 0.2, 1);
     --primitive-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --primitive-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --primitive-ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+    --primitive-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
     // ── Primitive: Aspect Ratios ──────────────────────────────────────────
     --primitive-ratio-square: 1 / 1;
@@ -207,116 +201,34 @@
     --primitive-z-popover: 500;
     --primitive-z-toast: 600;
 
-    // ── Semantic: Light Theme ──────────────────────────────────────────────
-    // Палитра — placeholder из flex-glass, переопределяется в task #27 (ADR-006).
-    --color-background: #f8f9fa;
-    --color-background-subtle: #f1f3f4;
-    --color-background-muted: #e8eaed;
-
-    --color-foreground: #202124;
-    --color-foreground-muted: #5f6368;
-    --color-foreground-subtle: #80868b;
-
-    --color-border: #dadce0;
-    --color-border-strong: #bdc1c6;
-
-    --color-primary: var(--primitive-color-blue-500);
-    --color-primary-hover: var(--primitive-color-blue-600);
-    --color-primary-active: color-mix(in oklch, var(--color-primary) 80%, black);
-    --color-primary-disabled: color-mix(
-      in oklch,
-      var(--color-primary) 40%,
-      var(--color-background)
-    );
-    --color-primary-subtle: color-mix(in oklch, var(--color-primary) 12%, transparent);
-    --color-primary-foreground: #ffffff;
-
-    --color-secondary: #e8eaed;
-    --color-secondary-hover: #dadce0;
-    --color-secondary-active: color-mix(in oklch, var(--color-secondary) 80%, black);
-    --color-secondary-foreground: #202124;
-
-    --color-accent: var(--primitive-color-violet-500);
-    --color-accent-hover: var(--primitive-color-violet-600);
-    --color-accent-active: color-mix(in oklch, var(--color-accent) 80%, black);
-    --color-accent-subtle: color-mix(in oklch, var(--color-accent) 12%, transparent);
-    --color-accent-foreground: #ffffff;
-
-    --color-destructive: var(--primitive-color-rose-500);
-    --color-destructive-hover: var(--primitive-color-rose-600);
-    --color-destructive-active: color-mix(in oklch, var(--color-destructive) 80%, black);
-    --color-destructive-subtle: color-mix(in oklch, var(--color-destructive) 12%, transparent);
-    --color-destructive-foreground: #ffffff;
-
-    --color-success: var(--primitive-color-emerald-500);
-    --color-success-subtle: color-mix(in oklch, var(--color-success) 12%, transparent);
-    --color-success-foreground: #ffffff;
-
-    --color-warning: var(--primitive-color-amber-500);
-    --color-warning-subtle: color-mix(in oklch, var(--color-warning) 12%, transparent);
-    --color-warning-foreground: #ffffff;
-
-    --color-card: #ffffff;
-    --color-card-foreground: #202124;
-    --color-card-border: #dadce0;
-
-    --color-input: #dadce0;
-    --color-input-focus: var(--primitive-color-blue-500);
-    --color-input-background: #ffffff;
-    --color-input-foreground: #202124;
-    --color-input-placeholder: #80868b;
-
-    --color-ring: var(--primitive-color-blue-500);
-
-    --color-surface: #ffffff;
-    --color-muted: #e8eaed;
-    --color-overlay: color-mix(in oklch, var(--color-foreground) 50%, transparent);
-    --color-muted-foreground: var(--color-foreground-muted);
-    --radius: var(--radius-lg);
-
-    // ── Gradients (light) ─────────────────────────────────────────────────
-    --gradient-primary: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
-    --gradient-primary-subtle: linear-gradient(
-      135deg,
-      rgb(79 110 247 / 0.1) 0%,
-      rgb(155 92 246 / 0.1) 100%
-    );
-    --gradient-text: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
-    --gradient-glow: 0 0 24px rgb(79 110 247 / 0.25);
-
-    // ── Semantic: Spacing (fluid clamp, 320–1280px viewport) ───────────────
-    // Small tokens stay static — fluid below sm is visually noise.
-    --space-xs: var(--primitive-space-1); // 4px
-    --space-sm: var(--primitive-space-2); // 8px
-    --space-md: clamp(0.75rem, 0.667rem + 0.417vw, 1rem); // 12 → 16
-    --space-lg: clamp(1rem, 0.833rem + 0.833vw, 1.5rem); // 16 → 24
-    --space-xl: clamp(1.5rem, 1.333rem + 0.833vw, 2rem); // 24 → 32
-    --space-2xl: clamp(2rem, 1.667rem + 1.667vw, 3rem); // 32 → 48
-    --space-3xl: clamp(3rem, 2.667rem + 1.667vw, 4rem); // 48 → 64
-    --space-4xl: clamp(4rem, 3.667rem + 1.667vw, 5rem); // 64 → 80
-    --space-section: clamp(5rem, 4.667rem + 1.667vw, 6rem); // 80 → 96
-
-    // ── Semantic: Typography ───────────────────────────────────────────────
+    // ── Semantic: static (theme-independent) ──────────────────────────────
     --font-body: var(--primitive-font-sans);
     --font-heading: var(--primitive-font-sans);
+    --font-accent: var(--primitive-font-accent);
     --font-mono: var(--primitive-font-mono);
 
-    // Small/medium text — static (fluid too subtle to matter).
-    --text-xs: var(--primitive-text-xs); // 12
-    --text-sm: var(--primitive-text-sm); // 14
-    --text-base: var(--primitive-text-base); // 16
-    --text-lg: var(--primitive-text-lg); // 18
-    --text-xl: var(--primitive-text-xl); // 20
-    --text-2xl: var(--primitive-text-2xl); // 24
-    --text-3xl: var(--primitive-text-3xl); // 30
+    --text-xs: var(--primitive-text-xs);
+    --text-sm: var(--primitive-text-sm);
+    --text-base: var(--primitive-text-base);
+    --text-lg: var(--primitive-text-lg);
+    --text-xl: var(--primitive-text-xl);
+    --text-2xl: var(--primitive-text-2xl);
+    --text-3xl: var(--primitive-text-3xl);
+    --text-4xl: clamp(1.875rem, 1.75rem + 0.625vw, 2.25rem);
+    --text-5xl: clamp(2.25rem, 2rem + 1.25vw, 3rem);
+    --text-6xl: clamp(3rem, 2.75rem + 1.25vw, 3.75rem);
+    --text-7xl: clamp(3.75rem, 3.5rem + 1.25vw, 4.5rem);
 
-    // Large headings — fluid for responsive display type.
-    --text-4xl: clamp(1.875rem, 1.75rem + 0.625vw, 2.25rem); // 30 → 36
-    --text-5xl: clamp(2.25rem, 2rem + 1.25vw, 3rem); // 36 → 48
-    --text-6xl: clamp(3rem, 2.75rem + 1.25vw, 3.75rem); // 48 → 60
-    --text-7xl: clamp(3.75rem, 3.5rem + 1.25vw, 4.5rem); // 60 → 72
+    --space-xs: var(--primitive-space-1);
+    --space-sm: var(--primitive-space-2);
+    --space-md: clamp(0.75rem, 0.667rem + 0.417vw, 1rem);
+    --space-lg: clamp(1rem, 0.833rem + 0.833vw, 1.5rem);
+    --space-xl: clamp(1.5rem, 1.333rem + 0.833vw, 2rem);
+    --space-2xl: clamp(2rem, 1.667rem + 1.667vw, 3rem);
+    --space-3xl: clamp(3rem, 2.667rem + 1.667vw, 4rem);
+    --space-4xl: clamp(4rem, 3.667rem + 1.667vw, 5rem);
+    --space-section: clamp(5rem, 4.667rem + 1.667vw, 6rem);
 
-    // ── Semantic: Radius ───────────────────────────────────────────────────
     --radius-sm: var(--primitive-radius-sm);
     --radius-md: var(--primitive-radius-md);
     --radius-lg: var(--primitive-radius-lg);
@@ -324,20 +236,25 @@
     --radius-2xl: var(--primitive-radius-2xl);
     --radius-3xl: var(--primitive-radius-3xl);
     --radius-full: var(--primitive-radius-full);
+    --radius: var(--radius-lg);
 
-    // ── Semantic: Shadow ───────────────────────────────────────────────────
     --shadow-sm: var(--primitive-shadow-sm);
     --shadow-md: var(--primitive-shadow-md);
     --shadow-lg: var(--primitive-shadow-lg);
 
-    // ── Semantic: Motion ───────────────────────────────────────────────────
+    // Motion aliases — the ones typical CSS consumers reach for (ADR-006 table).
+    --duration-instant: var(--primitive-duration-instant);
     --duration-fast: var(--primitive-duration-fast);
     --duration-base: var(--primitive-duration-base);
+    --duration-medium: var(--primitive-duration-medium);
     --duration-slow: var(--primitive-duration-slow);
+    --duration-slower: var(--primitive-duration-slower);
+    --ease-linear: var(--primitive-ease-linear);
     --ease-out: var(--primitive-ease-out);
     --ease-spring: var(--primitive-ease-spring);
+    --ease-sheet: var(--primitive-ease-sheet);
+    --ease-bounce: var(--primitive-ease-bounce);
 
-    // ── Semantic: Aspect Ratio ────────────────────────────────────────────
     --ratio-square: var(--primitive-ratio-square);
     --ratio-video: var(--primitive-ratio-video);
     --ratio-cinema: var(--primitive-ratio-cinema);
@@ -345,111 +262,163 @@
     --ratio-landscape: var(--primitive-ratio-landscape);
     --ratio-golden: var(--primitive-ratio-golden);
 
-    // ── Semantic: Opacity ─────────────────────────────────────────────────
     --opacity-disabled: var(--primitive-opacity-40);
     --opacity-muted: var(--primitive-opacity-60);
     --opacity-subtle: var(--primitive-opacity-80);
 
-    // ── Component: Navbar ──────────────────────────────────────────────────
-    --navbar-height: 3.5rem; // 56px
-    --navbar-background: var(--color-background);
-    --navbar-border: var(--color-border);
-    --navbar-foreground: var(--color-foreground);
+    // Component slots — theme-independent structure, colors pulled from theme slots.
+    --navbar-height: 3.5rem;
+    --sidebar-width: 15rem;
 
-    // ── Component: Sidebar ─────────────────────────────────────────────────
-    --sidebar-width: 15rem; // 240px
-    --sidebar-background: var(--color-background);
-    --sidebar-border: var(--color-border);
-
-    // ── Component: Button ──────────────────────────────────────────────────
-    --btn-height-sm: 2rem; // 32px
-    --btn-height-md: 2.375rem; // 38px
-    --btn-height-lg: 2.875rem; // 46px
+    --btn-height-sm: 2rem;
+    --btn-height-md: 2.375rem;
+    --btn-height-lg: 2.875rem;
     --btn-padding-x-sm: var(--primitive-space-3);
     --btn-padding-x-md: var(--primitive-space-4);
     --btn-padding-x-lg: var(--primitive-space-6);
-    --btn-radius: var(--radius-lg);
+    --btn-radius: var(--radius-full);
     --btn-font-weight: var(--primitive-weight-medium);
 
-    // ── Component: Input ───────────────────────────────────────────────────
-    --input-height-sm: 2rem; // 32px
-    --input-height-md: 2.5rem; // 40px
-    --input-height-lg: 3rem; // 48px
+    --input-height-sm: 2rem;
+    --input-height-md: 2.5rem;
+    --input-height-lg: 3rem;
     --input-padding-x: var(--primitive-space-4);
     --input-radius: var(--radius-lg);
-    --input-border: var(--color-border);
-    --input-border-focus: var(--color-ring);
 
-    // ── Component: Card ────────────────────────────────────────────────────
     --card-padding: var(--primitive-space-6);
-    --card-radius: var(--primitive-radius-xl);
-    --card-border: var(--color-card-border);
-    --card-background: var(--color-card);
-    --card-shadow: var(--shadow-sm);
+    --card-radius: var(--primitive-radius-2xl);
   }
 
-  // ── Dark Theme ───────────────────────────────────────────────────────────
-  // Палитра — placeholder из flex-glass, переопределяется в task #27 (ADR-006).
-  // Класс `.dark` заменяется на `.dark-theme` в task #27 (ADR-006 sync-pattern).
-  .dark {
-    --color-background: #0d0f17;
-    --color-background-subtle: #111520;
-    --color-background-muted: #161c2d;
+  // ── Semantic: Light Theme (ADR-006) ──────────────────────────────────────
+  // :root sets defaults, .light-theme is the explicit sync-pattern selector
+  // applied to <html> + <body>. Either path yields identical palette.
+  :root,
+  :where(.light-theme) {
+    color-scheme: light;
 
-    --color-foreground: #e8eaed;
-    --color-foreground-muted: #8b9cb5;
-    --color-foreground-subtle: #5a6a84;
+    --color-background: var(--primitive-color-sand-50);
+    --color-surface: #ffffff;
+    --color-surface-alt: var(--primitive-color-sand-100);
+    --color-foreground: var(--primitive-color-sand-900);
+    --color-foreground-muted: var(--primitive-color-sand-700);
+    --color-foreground-subtle: color-mix(in oklch, var(--color-foreground) 40%, transparent);
 
-    --color-border: #1e2535;
-    --color-border-strong: #2a3347;
+    --color-primary: var(--primitive-color-sea-500);
+    --color-primary-hover: var(--primitive-color-sea-600);
+    --color-primary-active: var(--primitive-color-sea-700);
+    --color-primary-soft: var(--primitive-color-sea-50);
+    --color-on-primary: #ffffff;
 
-    --color-primary: var(--primitive-color-blue-400);
-    --color-primary-hover: var(--primitive-color-blue-300);
-    --color-primary-foreground: #0d0f17;
+    --color-accent: var(--primitive-color-sunset-500);
+    --color-accent-hover: var(--primitive-color-sunset-600);
+    --color-accent-active: var(--primitive-color-sunset-700);
+    --color-accent-soft: var(--primitive-color-sunset-50);
+    --color-on-accent: #ffffff;
 
-    --color-secondary: #1e2535;
-    --color-secondary-hover: #2a3347;
-    --color-secondary-foreground: #e8eaed;
+    --color-success: var(--primitive-color-success);
+    --color-warning: var(--primitive-color-warning);
+    --color-destructive: var(--primitive-color-error);
+    --color-on-status: #ffffff;
 
-    --color-accent: var(--primitive-color-violet-400);
-    --color-accent-hover: var(--primitive-color-violet-300);
-    --color-accent-foreground: #0d0f17;
+    --color-border: var(--primitive-color-sand-200);
+    --color-border-hairline: color-mix(in oklch, var(--color-foreground) 8%, transparent);
+    --color-border-strong: color-mix(in oklch, var(--color-foreground) 16%, transparent);
+    --color-ring: var(--primitive-color-sea-400);
 
-    --color-destructive: var(--primitive-color-rose-400);
-    --color-destructive-hover: var(--primitive-color-rose-500);
-    --color-success: var(--primitive-color-emerald-400);
+    --color-card: var(--color-surface);
+    --color-card-foreground: var(--color-foreground);
+    --color-card-border: var(--color-border);
+    --color-card-shadow: var(--shadow-sm);
 
-    --color-card: #141929;
-    --color-card-foreground: #e8eaed;
-    --color-card-border: #1e2535;
+    --color-input-background: var(--color-surface);
+    --color-input-foreground: var(--color-foreground);
+    --color-input-placeholder: var(--color-foreground-subtle);
+    --color-input-border: var(--color-border);
+    --color-input-border-focus: var(--color-ring);
 
-    --color-input: #1e2535;
-    --color-input-background: #141929;
-    --color-input-foreground: #e8eaed;
-    --color-input-placeholder: #5a6a84;
+    --color-overlay: color-mix(in oklch, var(--primitive-color-sand-900) 45%, transparent);
 
-    --color-ring: var(--primitive-color-blue-400);
+    // Materials (iOS-style translucent layers — ADR-005)
+    --material-thin-bg: rgb(255 255 255 / 0.55);
+    --material-regular-bg: rgb(255 255 255 / 0.72);
+    --material-thick-bg: rgb(255 255 255 / 0.92);
 
-    --color-surface: #141929;
-    --color-muted: #1e2535;
-    --color-overlay: color-mix(in oklch, var(--color-foreground) 50%, transparent);
-
-    --gradient-primary: linear-gradient(135deg, #4f6ef7 0%, #9b5cf6 100%);
-    --gradient-primary-subtle: linear-gradient(
-      135deg,
-      rgb(79 110 247 / 0.12) 0%,
-      rgb(155 92 246 / 0.12) 100%
+    // Gradients (light)
+    --gradient-primary: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sea-500) 0%,
+      var(--primitive-color-sea-700) 100%
     );
-    --gradient-text: linear-gradient(135deg, #6c9bff 0%, #a78bfa 100%);
-    --gradient-glow: 0 0 32px rgb(79 110 247 / 0.3);
+    --gradient-accent: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sunset-500) 0%,
+      var(--primitive-color-sunset-700) 100%
+    );
+    --gradient-sunset: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sunset-300) 0%,
+      var(--primitive-color-sea-500) 100%
+    );
 
-    --navbar-background: #0d0f17;
-    --sidebar-background: #0d0f17;
-    --sidebar-border: #1e2535;
+    // Compat aliases for flex-glass-ported base/mixins/typography files.
+    --color-background-subtle: var(--color-surface);
+    --color-background-muted: var(--color-surface-alt);
+    --color-primary-foreground: var(--color-on-primary);
+  }
 
-    --card-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
+  // ── Semantic: Dark Theme (ADR-006) ───────────────────────────────────────
+  :where(.dark-theme) {
+    color-scheme: dark;
+
+    --color-background: var(--primitive-color-sea-900);
+    --color-surface: #16202e;
+    --color-surface-alt: #1d2a3b;
+    --color-foreground: #e8eef3;
+    --color-foreground-muted: #94a3b8;
+    --color-foreground-subtle: color-mix(in oklch, var(--color-foreground) 35%, transparent);
+
+    --color-primary: #5ba8d6;
+    --color-primary-hover: #7dbce0;
+    --color-primary-active: #a0cee8;
+    --color-primary-soft: color-mix(in oklch, var(--color-primary) 15%, transparent);
+    --color-on-primary: var(--primitive-color-sea-900);
+
+    --color-accent: #eba77e;
+    --color-accent-hover: #f0b89a;
+    --color-accent-active: #f5c9b5;
+    --color-accent-soft: color-mix(in oklch, var(--color-accent) 15%, transparent);
+    --color-on-accent: var(--primitive-color-sea-900);
+
+    --color-success: color-mix(in oklch, var(--primitive-color-success) 70%, white);
+    --color-warning: color-mix(in oklch, var(--primitive-color-warning) 80%, white);
+    --color-destructive: color-mix(in oklch, var(--primitive-color-error) 70%, white);
+
+    --color-border: #2a3a4f;
+    --color-border-hairline: color-mix(in oklch, var(--color-foreground) 12%, transparent);
+    --color-border-strong: color-mix(in oklch, var(--color-foreground) 24%, transparent);
+    --color-ring: #7dbce0;
+
+    --color-card-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
     --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.5);
+
+    --color-overlay: color-mix(in oklch, black 65%, transparent);
+
+    // Materials (dark — «вечерняя яхта»)
+    --material-thin-bg: rgb(14 22 32 / 0.55);
+    --material-regular-bg: rgb(14 22 32 / 0.72);
+    --material-thick-bg: rgb(14 22 32 / 0.92);
+
+    --gradient-primary: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sea-700) 0%,
+      var(--primitive-color-sea-900) 100%
+    );
+    --gradient-sunset: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sunset-600) 0%,
+      var(--primitive-color-sea-700) 100%
+    );
   }
 } // close @layer tokens
