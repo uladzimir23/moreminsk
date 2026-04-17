@@ -11,7 +11,7 @@ app          — страницы Next.js, layouts, sitemap, robots
   ↓
 widgets      — крупные UI-блоки страниц (Hero, FleetGrid, FAQ)
   ↓
-features     — интерактивные фичи (LeadForm, YachtFilter, BookingCTA)
+features     — интерактивные фичи (Booking wizard, YachtFilter, BookingCTA, ThemeToggle, LocaleSwitcher)
   ↓
 entities     — бизнес-сущности с карточками (Yacht, Service, Review)
   ↓
@@ -56,7 +56,7 @@ import { Hero } from '@/widgets/hero';
 import { PriceTable } from '@/widgets/price-table';
 import { Gallery } from '@/widgets/gallery';
 import { FAQ } from '@/widgets/faq';
-import { LeadForm } from '@/features/lead-form';
+import { BookingCTA } from '@/features/booking';
 import { services } from '@/shared/content/services';
 
 export function generateMetadata() {
@@ -70,7 +70,7 @@ export default function SvadbaPage() {
       <Hero title={service.h1} lead={service.description} />
       <PriceTable packages={service.packages} />
       <Gallery images={service.gallery} />
-      <LeadForm source="service:svadba" />
+      <BookingCTA source="service:svadba" />
       <FAQ scope="svadba" />
     </>
   );
@@ -118,13 +118,26 @@ export function Hero({ title, lead, primaryCta }: HeroProps) {
 Интерактивные фичи — форма, фильтр, кнопка с действием. Содержит state / effects.
 
 ```
-src/features/lead-form/
-├── LeadForm.tsx           # 'use client'
-├── LeadForm.module.scss
+src/features/booking/
+├── BookingCTA.tsx          # кнопка-триггер, открывает AppPanel('order')
+├── ui/
+│   ├── BookingWizard.tsx   # 'use client' — контейнер 6 шагов
+│   ├── steps/
+│   │   ├── StepYacht.tsx
+│   │   ├── StepDateTime.tsx
+│   │   ├── StepPackage.tsx
+│   │   ├── StepContact.tsx
+│   │   ├── StepSummary.tsx
+│   │   └── StepSuccess.tsx
+│   └── *.module.scss
 ├── model/
-│   ├── schema.ts           # zod-схема
-│   └── submit.ts           # send to Telegram/Resend
-└── index.ts
+│   ├── store.ts            # zustand + sessionStorage persist
+│   ├── schema.ts           # zod per-step
+│   ├── availability.ts     # pluggable AvailabilityProvider
+│   ├── price.ts            # calcPrice()
+│   ├── submit.ts           # Telegram + Resend через Promise.allSettled
+│   └── format-telegram.ts
+└── index.ts                # export { BookingCTA }
 ```
 
 ## Слой: entities
@@ -218,7 +231,7 @@ import { Hero } from '@/widgets/hero/Hero';
 |---|---|---|
 | Страницу (URL) | `app/` | /services/svadba |
 | Блок страницы без состояния | `widgets/` | Hero, PriceTable |
-| Интерактивная фича со state | `features/` | LeadForm, YachtFilter |
+| Интерактивная фича со state | `features/` | Booking wizard, YachtFilter, ThemeToggle |
 | Бизнес-сущность и её карточку | `entities/` | Yacht, Service |
 | Атомарный UI (кнопка, инпут) | `shared/ui/` | Button, Input |
 | Утилиту/хелпер | `shared/lib/` | cn, formatPrice |

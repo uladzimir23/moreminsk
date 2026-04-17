@@ -52,11 +52,14 @@ export default nextConfig;
 ### Вариант 1 — Telegram Bot напрямую из браузера
 
 ```typescript
-// src/features/lead-form/model/submit.ts
-export async function submitLead(data: LeadFormData) {
+// src/features/booking/model/submit.ts
+import type { Booking } from '@/entities/booking';
+import { formatBookingForTelegram } from './format-telegram';
+
+export async function submitBooking(data: Booking) {
   const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
   const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
-  const text = formatLeadMessage(data);
+  const text = formatBookingForTelegram(data);
 
   const res = await fetch(
     `https://api.telegram.org/bot${botToken}/sendMessage`,
@@ -81,7 +84,7 @@ export async function submitLead(data: LeadFormData) {
 ### Вариант 4 — Resend (email only)
 Библиотека + API-ключ. Также публичный токен — используем **restricted API key** только на send.
 
-**MVP решение:** Вариант 1 (Telegram Bot) + дубль через Resend (email копия менеджеру).
+**MVP решение:** все три канала параллельно через `Promise.allSettled` — Telegram Bot (уведомление менеджеру) + Resend (email-копия менеджеру) + Resend (confirmation клиенту). Детали — `docs/40 - Architecture/Booking Module.md#Submit`.
 
 ## Динамические роуты — обязательный generateStaticParams
 

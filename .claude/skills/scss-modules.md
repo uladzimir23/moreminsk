@@ -73,7 +73,7 @@ widgets/hero/
 // ❌ НЕТ
 .button {
   padding: 12px 20px;
-  color: #1E3A5F;
+  color: #0A4D7A;
   border-radius: 8px;
   width: 240px;
 }
