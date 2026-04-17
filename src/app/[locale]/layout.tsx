@@ -1,4 +1,5 @@
 import { type Locale, routing } from "@/i18n/routing";
+import { AppPanel } from "@/widgets/app-panel/AppPanel";
 import { Appbar } from "@/widgets/appbar/Appbar";
 import { BottomNav } from "@/widgets/bottom-nav/BottomNav";
 import type { Metadata } from "next";
@@ -45,6 +46,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <Appbar />
             {children}
             <BottomNav />
+            <AppPanel />
           </Providers>
         </NextIntlClientProvider>
       </body>

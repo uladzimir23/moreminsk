@@ -1,0 +1,114 @@
+@use "@/shared/design-system/mixins" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: z("overlay");
+  background: color-mix(in oklch, var(--primitive-color-sea-900) 40%, transparent);
+}
+
+.content {
+  position: fixed;
+  z-index: z("modal");
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  background: var(--material-thick-bg);
+  backdrop-filter: blur(1.5rem) saturate(180%);
+  -webkit-backdrop-filter: blur(1.5rem) saturate(180%);
+  box-shadow: var(--shadow-lg);
+  border: 0.0625rem solid var(--color-border-hairline);
+
+  // Mobile: bottom-sheet (slides up from the edge).
+  inset-inline: 0;
+  inset-block-end: 0;
+  max-block-size: 92dvh;
+  border-start-start-radius: var(--radius-2xl);
+  border-start-end-radius: var(--radius-2xl);
+
+  // Desktop: floating side-drawer (430px, inset 1rem).
+  @include respond-to("md") {
+    inset-block-end: 1rem;
+    inset-block-start: 1rem;
+    inset-inline: auto;
+    inset-inline-end: 1rem;
+    inline-size: 26.875rem;
+    max-inline-size: calc(100vw - 2rem);
+    max-block-size: none;
+    border-radius: var(--radius-2xl);
+  }
+
+  @include isolate-scroll;
+  @include focus-ring($offset: 0);
+}
+
+.handle {
+  flex: 0 0 auto;
+  inline-size: 2.25rem;
+  block-size: 0.25rem;
+  margin: var(--space-sm) auto 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--color-foreground) 20%, transparent);
+
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  border-block-end: 0.0625rem solid var(--color-border-hairline);
+}
+
+.title {
+  font-size: var(--text-lg);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--color-foreground);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--color-foreground) 6%, transparent);
+  color: var(--color-foreground-muted);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  @include focus-ring;
+}
+
+.closeIcon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-lg);
+
+  @include scrollbar;
+}
+
+.placeholder {
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+  line-height: var(--primitive-leading-relaxed);
+}
