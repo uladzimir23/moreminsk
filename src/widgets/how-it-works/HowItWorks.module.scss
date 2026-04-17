@@ -1,0 +1,116 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: var(--space-3xl);
+  background: var(--color-background);
+
+  // Soft glow — same rule as Hero but flipped to the left edge for rhythm.
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inline-size: 30rem;
+    block-size: 30rem;
+    inset-block-end: -12rem;
+    inset-inline-start: -12rem;
+    border-radius: 50%;
+    background: var(--color-primary-soft);
+    filter: blur(7.5rem);
+    opacity: 0.5;
+    pointer-events: none;
+
+    @include dark-mode {
+      background: var(--color-accent-soft);
+      opacity: 0.35;
+    }
+  }
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 75rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 75rem);
+  }
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-block-end: var(--space-xs);
+}
+
+.stepNumber {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-size: var(--text-4xl);
+  font-weight: var(--primitive-weight-regular);
+  line-height: 1;
+  color: var(--color-primary);
+  font-feature-settings: "tnum", "lnum";
+}
+
+.stepIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.icon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--primitive-weight-semibold);
+  color: var(--color-foreground);
+}
+
+.stepText {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+  text-wrap: pretty;
+}

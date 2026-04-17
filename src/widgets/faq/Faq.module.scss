@@ -1,0 +1,129 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  padding-block: var(--space-3xl);
+  background: var(--color-background);
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 48rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 48rem);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.item {
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  overflow: hidden;
+
+  &[data-state="open"] {
+    border-color: var(--color-border-strong);
+  }
+}
+
+.header {
+  margin: 0;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  inline-size: 100%;
+  padding-block: var(--space-md);
+  padding-inline: var(--space-lg);
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--primitive-weight-semibold);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: color-mix(in oklch, var(--color-foreground) 4%, transparent);
+  }
+
+  @include focus-ring($offset: -0.125rem);
+}
+
+.question {
+  flex: 1 1 auto;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  color: var(--color-foreground-muted);
+  transition: transform var(--duration-base) var(--ease-out);
+
+  [data-state="open"] & {
+    transform: rotate(180deg);
+    color: var(--color-primary);
+  }
+
+  @include reduced-motion {
+    transition: none;
+  }
+}
+
+.content {
+  overflow: hidden;
+
+  &[data-state="open"] {
+    animation: faq-expand var(--duration-medium) var(--ease-out);
+  }
+
+  &[data-state="closed"] {
+    animation: faq-collapse var(--duration-fast) var(--ease-out);
+  }
+
+  @include reduced-motion {
+    &[data-state="open"],
+    &[data-state="closed"] {
+      animation: none;
+    }
+  }
+}
+
+.answer {
+  margin: 0;
+  padding-block-end: var(--space-md);
+  padding-inline: var(--space-lg);
+  font-size: var(--text-sm);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+  text-wrap: pretty;
+}
+
+@keyframes faq-expand {
+  from {
+    block-size: 0;
+  }
+  to {
+    block-size: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes faq-collapse {
+  from {
+    block-size: var(--radix-accordion-content-height);
+  }
+  to {
+    block-size: 0;
+  }
+}

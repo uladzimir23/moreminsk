@@ -1,0 +1,30 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  padding-block: var(--space-3xl);
+  background: var(--color-surface-alt);
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 75rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 75rem);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("lg") {
+    // 5 reviews — keep 3 on top row and 2 on bottom to balance.
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
