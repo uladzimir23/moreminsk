@@ -1,4 +1,4 @@
-import { type Locale } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { CtaFinale } from "@/widgets/cta-finale/CtaFinale";
 import { Faq } from "@/widgets/faq/Faq";
 import { FleetGrid } from "@/widgets/fleet-grid/FleetGrid";
@@ -12,6 +12,10 @@ import { setRequestLocale } from "next-intl/server";
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
