@@ -10,6 +10,10 @@
     font-weight: var(--primitive-weight-regular);
     line-height: var(--primitive-leading-normal);
     color: var(--color-foreground);
+
+    // ADR-008: kerning + standard ligatures by default; OS-level legibility hint.
+    font-feature-settings: "kern", "liga";
+    text-rendering: optimizeLegibility;
   }
 
   // ── Heading scale (fluid via semantic --text-* tokens) ────────────────────
@@ -87,3 +91,30 @@
     font-size: var(--primitive-text-sm);
   }
 } // close @layer base
+
+// ── Utility classes (ADR-008) ────────────────────────────────────────────────
+// `.accent` — opt-in Lora italic for accent words (yacht names, Hero accent
+// word, quote marks, eyebrow). Use via <Accent> component or directly.
+// `.tabular` — vertical-aligned digits for prices and numeric tables.
+@layer utilities {
+  .accent {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: var(--primitive-weight-regular);
+    // Lora baseline runs slightly looser than Manrope — pull it in.
+    letter-spacing: -0.005em;
+  }
+
+  .accent--upright {
+    font-style: normal;
+  }
+
+  .accent--medium {
+    font-weight: var(--primitive-weight-medium);
+  }
+
+  .tabular {
+    font-feature-settings: "tnum", "lnum";
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+}

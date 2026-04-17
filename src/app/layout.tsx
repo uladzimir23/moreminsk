@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { lora, manrope } from "./fonts";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={`${manrope.variable} ${lora.variable}`}>
       <body>{children}</body>
     </html>
   );
