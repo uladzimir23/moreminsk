@@ -1,0 +1,39 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100%;
+}
+
+.stage {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.stepTitle {
+  font-family: var(--font-manrope);
+  font-size: var(--text-xl);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--color-foreground);
+  line-height: var(--primitive-leading-tight);
+}
+
+.stepLead {
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+  line-height: var(--primitive-leading-relaxed);
+}
+
+.stub {
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--color-foreground) 4%, transparent);
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+  text-align: center;
+}

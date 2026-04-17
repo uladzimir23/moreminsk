@@ -1,0 +1,35 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block-end: var(--space-md);
+}
+
+.label {
+  font-size: var(--text-xs);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  white-space: nowrap;
+}
+
+.track {
+  position: relative;
+  flex: 1 1 auto;
+  block-size: 0.25rem;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklch, var(--color-foreground) 8%, transparent);
+  overflow: hidden;
+}
+
+.fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: inherit;
+  background: var(--color-primary);
+  transition: inline-size var(--duration-base) var(--ease-out);
+}
