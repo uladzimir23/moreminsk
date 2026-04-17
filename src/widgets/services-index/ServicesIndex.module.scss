@@ -1,0 +1,129 @@
+@use "@/shared/design-system/mixins" as *;
+
+.root {
+  padding-block: var(--space-2xl) var(--space-3xl);
+  background: var(--color-background);
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 75rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 75rem);
+  }
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  margin-block-start: var(--space-xl);
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-2xl);
+  background: var(--color-surface);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform var(--duration-fast) var(--ease-spring),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  @include focus-ring;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: var(--radius-lg);
+  background: color-mix(in oklch, var(--color-primary) 10%, transparent);
+  color: var(--color-primary);
+}
+
+.icon {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--primitive-weight-semibold);
+  letter-spacing: var(--primitive-tracking-tight);
+  color: var(--color-foreground);
+}
+
+.utp {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-start: auto;
+  padding-block-start: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-foreground);
+}
+
+.price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.priceValue {
+  font-weight: var(--primitive-weight-semibold);
+  font-size: var(--text-lg);
+  color: var(--color-foreground);
+}
+
+.priceLabel,
+.priceSuffix {
+  color: var(--color-foreground-muted);
+  font-size: var(--text-xs);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--color-primary);
+  font-weight: var(--primitive-weight-medium);
+}
+
+.moreIcon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}

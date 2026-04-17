@@ -1,0 +1,275 @@
+@use "@/shared/design-system/mixins" as *;
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: var(--space-3xl) var(--space-2xl);
+  background: var(--color-background);
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inline-size: 28rem;
+    block-size: 28rem;
+    inset-block-start: -10rem;
+    inset-inline-end: -8rem;
+    border-radius: 50%;
+    background: var(--color-primary-soft);
+    filter: blur(6rem);
+    opacity: 0.5;
+    pointer-events: none;
+
+    @include dark-mode {
+      background: var(--color-accent-soft);
+      opacity: 0.35;
+    }
+  }
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 68rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 68rem);
+  }
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-block-end: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+}
+
+.breadcrumbLink {
+  color: var(--color-foreground-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  @include focus-ring($offset: 0.125rem);
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  margin-block-end: var(--space-md);
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklch, var(--color-primary) 12%, transparent);
+  color: var(--color-primary);
+}
+
+.heroIcon {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.h1 {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--text-4xl);
+  font-weight: var(--primitive-weight-bold);
+  line-height: var(--primitive-leading-tight);
+  letter-spacing: var(--primitive-tracking-tight);
+  color: var(--color-foreground);
+  text-wrap: balance;
+
+  @include respond-to("md") {
+    font-size: var(--text-5xl);
+  }
+}
+
+.utp {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--text-lg);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+  max-inline-size: 44rem;
+  text-wrap: pretty;
+}
+
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-block-size: var(--btn-height-lg);
+  padding-inline: var(--space-xl);
+  border: 0;
+  border-radius: var(--btn-radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--primitive-weight-semibold);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition:
+    transform var(--duration-fast) var(--ease-spring),
+    background var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-accent-hover);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  @include focus-ring;
+}
+
+.heroCtaIcon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.section {
+  padding-block: var(--space-2xl);
+  background: var(--color-background);
+
+  &.alt {
+    background: var(--color-surface-alt);
+  }
+}
+
+.sectionTitle {
+  margin: 0 0 var(--space-md);
+  font-size: var(--text-2xl);
+  font-weight: var(--primitive-weight-semibold);
+  color: var(--color-foreground);
+
+  @include respond-to("md") {
+    font-size: var(--text-3xl);
+  }
+}
+
+// Price table: sticky first column on mobile horizontal scroll.
+.priceTableWrap {
+  overflow-x: auto;
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+}
+
+.priceTable {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+
+  th,
+  td {
+    padding-block: var(--space-sm);
+    padding-inline: var(--space-md);
+    text-align: start;
+    border-block-end: 0.0625rem solid var(--color-border-hairline);
+    white-space: nowrap;
+  }
+
+  thead th {
+    font-size: var(--text-xs);
+    font-weight: var(--primitive-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-foreground-muted);
+    background: var(--color-surface-alt);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td {
+    border-block-end: 0;
+  }
+
+  tbody th {
+    font-weight: var(--primitive-weight-semibold);
+    color: var(--color-foreground);
+  }
+
+  .stickyCol {
+    position: sticky;
+    inset-inline-start: 0;
+    background: var(--color-surface);
+    z-index: 1;
+  }
+
+  thead .stickyCol {
+    background: var(--color-surface-alt);
+  }
+
+  .price {
+    font-weight: var(--primitive-weight-semibold);
+    color: var(--color-foreground);
+  }
+}
+
+.yachtList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.yachtChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding-block: 0.5rem;
+  padding-inline: var(--space-md);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  @include focus-ring;
+}
+
+.finalCta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-lg);
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--radius-3xl);
+  background: var(--color-surface);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.finalCtaTitle {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: var(--primitive-weight-bold);
+  color: var(--color-foreground);
+  text-wrap: balance;
+}
+
+.finalCtaLead {
+  margin: 0;
+  max-inline-size: 32rem;
+  font-size: var(--text-base);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+}
