@@ -7,13 +7,13 @@ import { WizardNav } from "./ui/WizardNav";
 import { ContactStep } from "./ui/steps/ContactStep";
 import { DateTimeStep } from "./ui/steps/DateTimeStep";
 import { PackageStep } from "./ui/steps/PackageStep";
+import { SummaryStep } from "./ui/steps/SummaryStep";
 import { YachtStep } from "./ui/steps/YachtStep";
 
 const TOTAL_STEPS = 5;
 
-type StubStepNum = 5 | 6;
+type StubStepNum = 6;
 const STUB_TITLES: Record<StubStepNum, string> = {
-  5: "Проверьте детали",
   6: "Заявка отправлена",
 };
 
@@ -36,7 +36,8 @@ function renderStep(step: WizardStep) {
   if (step === 2) return <DateTimeStep />;
   if (step === 3) return <PackageStep />;
   if (step === 4) return <ContactStep />;
-  return <StubStep step={step} />;
+  if (step === 5) return <SummaryStep />;
+  return <StubStep step={6} />;
 }
 
 export function BookingForm() {
