@@ -202,22 +202,29 @@
   );
 }
 
-// Crisp hero copy at the right side of the slide.
+// Crisp hero copy at the right side of the slide — sized to the slide's
+// full height in its own (portrait) proportions, so it's never cropped.
 .heroImg {
   position: absolute;
   z-index: 2;
   right: 0;
   top: 0;
-  bottom: 0;
-  width: 52%;
-  object-fit: cover;
-  object-position: center;
-  mask-image: linear-gradient(to right, transparent 0%, black 32%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 32%);
+  height: 100%;
+  width: auto;
+  max-width: 62%;
+  object-fit: contain;
+  object-position: right center;
+  mask-image: linear-gradient(to right, transparent 0%, black 38%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 38%);
   pointer-events: none;
 
   @media (max-width: 900px) {
     width: 100%;
+    height: auto;
+    max-width: none;
+    bottom: 0;
+    top: auto;
+    object-position: center bottom;
     mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%);
   }
