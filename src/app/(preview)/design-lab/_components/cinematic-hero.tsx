@@ -58,7 +58,7 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       // so it visibly dims «behind» the incoming content.
       const reveal = clamp((current - 0.375) / 0.5);
       video.style.transform = `scale(${scale})`;
-      video.style.filter = `brightness(${1 - reveal * 0.55})`;
+      video.style.filter = `brightness(${1 - reveal * 0.82})`;
 
       // Headline leaves fast, well before the pause.
       if (content) {
