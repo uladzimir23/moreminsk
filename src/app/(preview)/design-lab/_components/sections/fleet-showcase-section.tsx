@@ -106,10 +106,23 @@ export function FleetShowcaseSection() {
 
         <div className={styles.gallery}>
           <div className={styles.heroFrame}>
+            {/* Blurred bg layer — same photo, object-fit: cover, fills letterbox */}
             {photos.map((url, i) => (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
-                key={url}
+                key={`hero-bg-${url}`}
+                src={url}
+                alt=""
+                className={i === activePhotoIdx ? styles.heroBgActive : styles.heroBg}
+                loading={i === 0 ? "eager" : "lazy"}
+                aria-hidden="true"
+              />
+            ))}
+            {/* Crisp fg layer — object-fit: contain, no crop */}
+            {photos.map((url, i) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                key={`hero-fg-${url}`}
                 src={url}
                 alt={`Яхта ${activeYacht.name} на Минском море — фото ${i + 1}`}
                 className={i === activePhotoIdx ? styles.imgActive : styles.img}
