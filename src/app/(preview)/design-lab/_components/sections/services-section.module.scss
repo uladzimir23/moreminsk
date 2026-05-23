@@ -80,7 +80,9 @@
 .head {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  // 1440 = 1280 + 2×80 — so the centering offset cancels the inline padding
+  // and the title's left edge lines up with the fleet section's header.
+  max-width: 1440px;
   margin: 0 auto 32px;
   padding: 0 clamp(24px, 6vw, 80px);
   display: grid;
