@@ -1,3 +1,4 @@
+import { ContactMap } from "./contact-map";
 import styles from "./contacts-section.module.scss";
 
 export function ContactsSection() {
@@ -48,12 +49,7 @@ export function ContactsSection() {
           </li>
         </ul>
 
-        <div className={styles.map} aria-label="Карта — Минское море, Ждановичи">
-          <span className={styles.mapStamp}>Карта</span>
-          <p className={styles.mapHint}>
-            Здесь сядет click-to-load Яндекс-карта на координаты 54.0011 / 27.4032
-          </p>
-        </div>
+        <ContactMap />
       </div>
     </section>
   );
