@@ -1,17 +1,45 @@
-// Full-bleed CTA — sky-tinted background, large editorial headline, primary
-// button + phone link. Decorative hairline horizon line repeats the hero motif.
+// Full-bleed CTA — dark editorial with an ambient blurred photo backdrop
+// (matches fleet/services/gallery). Hairline horizon line repeats the motif.
 
 .section {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   padding: clamp(100px, 16vh, 180px) clamp(24px, 6vw, 80px);
-  border-top: 1px solid rgba(128, 128, 128, 0.16);
-  background: linear-gradient(
-    to bottom,
-    var(--color-background) 0%,
-    color-mix(in srgb, var(--color-accent) 6%, var(--color-background)) 55%,
-    color-mix(in srgb, var(--color-accent) 14%, var(--color-background)) 100%
-  );
+  background: #0a0a0a; // fallback before backdrop paints
+  color: white;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    filter: blur(70px) brightness(0.4) saturate(1.15);
+  }
+}
+.backdropOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.3) 45%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 50% 50%,
+      color-mix(in srgb, var(--color-accent) 20%, transparent) 0%,
+      transparent 70%
+    );
 }
 
 .horizon {
@@ -20,7 +48,8 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  background: color-mix(in srgb, var(--color-accent) 80%, transparent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 50%, transparent);
   mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
   -webkit-mask-image: linear-gradient(
     to right,
@@ -34,6 +63,7 @@
 
 .inner {
   position: relative;
+  z-index: 1;
   max-width: 880px;
   margin: 0 auto;
   text-align: center;
@@ -48,7 +78,7 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-foreground-muted);
+  color: rgba(255, 255, 255, 0.65);
   margin: 0;
 }
 .title {
@@ -57,19 +87,21 @@
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.04em;
-  color: var(--color-foreground);
+  color: white;
+  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
 }
 .accent {
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: var(--color-accent);
+  color: color-mix(in srgb, var(--color-accent) 80%, white);
 }
 .sub {
   margin: 0;
   font-size: clamp(1rem, 1.4vw, 1.125rem);
   line-height: 1.6;
-  color: var(--color-foreground-muted);
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
   max-width: 540px;
 }
 
@@ -123,7 +155,7 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--color-foreground);
+  color: white;
   text-decoration: none;
   position: relative;
   font-feature-settings: "tnum", "lnum";
@@ -135,7 +167,7 @@
     left: 24px;
     right: 24px;
     height: 1px;
-    background: var(--color-foreground);
+    background: white;
     transform-origin: left;
     transform: scaleX(0);
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
