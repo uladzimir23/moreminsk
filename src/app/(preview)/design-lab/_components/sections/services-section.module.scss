@@ -1,28 +1,43 @@
-// Editorial services list — 5 services, each card shows name + UTP + price
-// + packages. Layout breaks to two columns on wide screens (3+2), single
-// column on narrow.
+// Services section — horizontal scroll-snap "chapters". Each service is
+// a full-bleed editorial slide with its own yacht photo as a blurred
+// dimmed backdrop, overlaid with eyebrow → big title → UTP → package
+// cards → CTA. Snap-scrolling between slides feels like flipping a
+// magazine spread. Arrows + number indicators handle desktop nav;
+// touch-swipe handles mobile.
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .section {
-  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px);
+  padding: clamp(80px, 12vh, 140px) 0;
   border-top: 1px solid var(--color-border-hairline);
-  background: var(--color-surface-alt);
+  background: var(--color-background);
 }
 
 .head {
   max-width: 1280px;
   margin: 0 auto;
+  padding: 0 clamp(24px, 6vw, 80px);
   display: grid;
   gap: 8px;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 .eyebrow {
+  margin: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-foreground-muted);
-  margin: 0;
 }
 .title {
   margin: 0;
@@ -40,119 +55,313 @@
   color: var(--color-accent);
 }
 
-.list {
-  max-width: 1280px;
+// ── Slider rail ──────────────────────────────────────────────────────────
+
+.rail {
+  position: relative;
+  max-width: 1440px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
+  padding: 0 clamp(16px, 4vw, 48px);
 }
 
-.card {
+.track {
   display: flex;
-  flex-direction: column;
   gap: 16px;
-  padding: 28px;
-  background: var(--color-card);
-  border: 1px solid var(--color-border-hairline);
-  text-decoration: none;
-  color: inherit;
-  transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 
-  &:hover {
-    border-color: var(--color-accent);
-    transform: translateY(-2px);
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
-.cardHead {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.name {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--color-foreground);
-}
-.utp {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.55;
-  color: var(--color-foreground-muted);
+// Each slide is a full-width chapter with a peek of the next on desktop
+// (so user knows there's more to scroll to).
+.slide {
+  position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--color-border-hairline);
+  background: #0a0a0a;
+
+  @media (min-width: 900px) {
+    flex-basis: 88%;
+  }
+  @media (min-width: 1200px) {
+    flex-basis: 82%;
+  }
 }
 
-.packages {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+// Blurred photo backdrop — service's mood image.
+.bg {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  filter: blur(36px) brightness(0.45) saturate(1.1);
+  z-index: 0;
+}
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      105deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.35) 50%,
+      rgba(0, 0, 0, 0.2) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 100% 100%,
+      color-mix(in srgb, var(--color-accent) 25%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+// Crisp foreground photo — sits at the right side of the slide.
+// On narrow viewports it disappears, the backdrop carries the visual.
+.heroImg {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  object-fit: cover;
+  object-position: center;
+  mask-image: linear-gradient(to right, transparent 0%, black 30%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%);
+  pointer-events: none;
+  filter: drop-shadow(0 12px 36px rgba(0, 0, 0, 0.5));
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+// Content overlay — left half on desktop, full width on mobile.
+.content {
+  position: relative;
+  z-index: 3;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  padding: clamp(32px, 6vw, 64px);
+  max-width: 560px;
+  color: white;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.chapterNumber {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+.serviceName {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: white;
+  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.55);
+}
+.serviceAccent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-accent) 80%, white);
+}
+.serviceUtp {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+  max-width: 440px;
+}
+
+// Package cards row — translucent glass tiles
+.packages {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  margin: 4px 0 4px;
+  padding: 0;
+  list-style: none;
 }
 .pkg {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 0;
-  border-top: 1px solid var(--color-border-hairline);
-  font-size: 0.875rem;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  min-width: 130px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 
-  &:first-child {
-    border-top: 0;
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-accent);
   }
 }
 .pkgName {
-  color: var(--color-foreground);
-  font-weight: 500;
-}
-.pkgMeta {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 12px;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.pkgPrice {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum", "lnum";
+}
+.pkgDuration {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-foreground-muted);
-  font-feature-settings: "tnum", "lnum";
-}
-.pkgPrice {
-  color: var(--color-accent);
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
 }
 
-.foot {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-border-hairline);
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 14px 26px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  svg {
+    transition: transform 0.2s ease;
+  }
+  &:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+// ── Controls ─────────────────────────────────────────────────────────────
+
+.controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 24px;
+  max-width: 1440px;
+  margin: 24px auto 0;
+  padding: 0 clamp(16px, 4vw, 48px);
+}
 
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dot,
+.dotActive {
+  position: relative;
+  background: transparent;
+  border: 0;
+  padding: 6px 4px;
+  cursor: pointer;
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  letter-spacing: 0.18em;
   color: var(--color-foreground-muted);
+  transition: color 0.2s ease;
+  font-feature-settings: "tnum", "lnum";
 
-  .arrow {
-    transition:
-      transform 0.2s ease,
-      color 0.2s ease;
+  &:hover {
+    color: var(--color-foreground);
   }
+}
+.dotActive {
+  color: var(--color-foreground);
 
-  .card:hover & .arrow {
-    transform: translateX(2px);
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: var(--color-accent);
+  }
+}
+
+.arrows {
+  display: flex;
+  gap: 8px;
+}
+.arrow {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-hairline);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-accent);
     color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  svg {
+    width: 18px;
+    height: 18px;
   }
 }
