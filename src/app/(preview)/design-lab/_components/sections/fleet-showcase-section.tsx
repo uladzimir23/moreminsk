@@ -20,6 +20,23 @@ export function FleetShowcaseSection() {
 
   return (
     <section className={styles.section} id="fleet">
+      {/* Ambient backdrop — same photos as the hero stack, heavily blurred
+          and dimmed so the foreground reads white-on-dark while the active
+          yacht photo provides the atmosphere. */}
+      <div className={styles.backdrop} aria-hidden="true">
+        {photos.map((url, i) => (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            key={`bg-${url}`}
+            src={url}
+            alt=""
+            className={i === activePhotoIdx ? styles.backdropImgActive : styles.backdropImg}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+        ))}
+        <div className={styles.backdropOverlay} />
+      </div>
+
       <header className={styles.head}>
         <p className={styles.eyebrow}>01 · Флот</p>
         <h2 className={styles.title}>
