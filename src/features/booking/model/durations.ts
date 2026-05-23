@@ -18,7 +18,6 @@ export const DURATION_OPTIONS: readonly DurationItem[] = [
     labelEn: "Half-day (4h)",
     icon: Clock,
   },
-  { value: { kind: "hours", hours: 6 }, label: "6 часов", labelEn: "6 hours", icon: Clock },
   { value: { kind: "day" }, label: "День (8 часов)", labelEn: "Full day (8h)", icon: Sun },
   { value: { kind: "night" }, label: "Вечер / ночь", labelEn: "Evening / night", icon: Moon },
   {

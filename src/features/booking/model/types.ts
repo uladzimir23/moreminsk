@@ -5,7 +5,7 @@ export type YachtSlug = Yacht["slug"];
 export type ServiceSlug = Service["slug"];
 
 export type DurationOption =
-  | { kind: "hours"; hours: 1 | 2 | 3 | 4 | 6 }
+  | { kind: "hours"; hours: 1 | 2 | 3 | 4 }
   | { kind: "day" }
   | { kind: "night" }
   | { kind: "multi-day" };

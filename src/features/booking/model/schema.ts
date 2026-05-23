@@ -8,7 +8,7 @@ export const yachtStepSchema = z.object({
 const durationSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("hours"),
-    hours: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(6)]),
+    hours: z.union([z.literal(2), z.literal(3), z.literal(4)]),
   }),
   z.object({ kind: z.literal("day") }),
   z.object({ kind: z.literal("night") }),
@@ -40,25 +40,11 @@ export const packageStepSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("none") }),
   z.object({
     kind: z.literal("service"),
-    serviceSlug: z.enum([
-      "svadba",
-      "den-rozhdeniya",
-      "korporativ",
-      "svidanie",
-      "devichnik",
-      "fotosessiya",
-    ]),
+    serviceSlug: z.enum(["den-rozhdeniya", "korporativ", "svidanie", "devichnik", "fotosessiya"]),
   }),
   z.object({
     kind: z.literal("turnkey"),
-    serviceSlug: z.enum([
-      "svadba",
-      "den-rozhdeniya",
-      "korporativ",
-      "svidanie",
-      "devichnik",
-      "fotosessiya",
-    ]),
+    serviceSlug: z.enum(["den-rozhdeniya", "korporativ", "svidanie", "devichnik", "fotosessiya"]),
   }),
 ]);
 
