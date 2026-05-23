@@ -1,0 +1,456 @@
+// Scene hero — SVG illustration of a yacht on the horizon with a day/night
+// toggle. All scene colors / positions / opacities live in CSS variables
+// on .scene; .isNight overrides them. Every visual element has a long
+// transition so the swap reads as a smooth «time of day passing».
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: var(--star-base, 0.9);
+  }
+  50% {
+    opacity: calc(var(--star-base, 0.9) * 0.45);
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-30px);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
+  color: white;
+}
+
+// Day defaults
+.scene {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: var(--scene-sky-bottom);
+
+  --sky-top: #c9e5f5;
+  --sky-bottom: #f1f7fa;
+  --water-top: #4b9fc4;
+  --water-bottom: #265f7a;
+  --celestial-fill: #fcc868;
+  --celestial-glow: rgba(252, 200, 104, 0.55);
+  --shore-fill: #1f3848;
+  --reflection-fill: #fcc868;
+  --reflection-opacity: 0.4;
+  --stars-opacity: 0;
+  --sun-opacity: 1;
+  --moon-opacity: 0;
+  --cabin-glow-opacity: 0;
+  --headline-shadow: 0 2px 16px rgba(8, 24, 40, 0.35);
+  --scene-sky-bottom: var(--sky-bottom);
+}
+
+.isNight {
+  --sky-top: #050a18;
+  --sky-bottom: #142845;
+  --water-top: #0a1832;
+  --water-bottom: #02050d;
+  --celestial-fill: #f4f4f4;
+  --celestial-glow: rgba(220, 230, 245, 0.4);
+  --shore-fill: #060912;
+  --reflection-fill: #e8ecf0;
+  --reflection-opacity: 0.55;
+  --stars-opacity: 1;
+  --sun-opacity: 0;
+  --moon-opacity: 1;
+  --cabin-glow-opacity: 1;
+  --headline-shadow: 0 2px 24px rgba(0, 0, 0, 0.7);
+  --scene-sky-bottom: var(--sky-bottom);
+}
+
+.sceneSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// Every paintable element transitions when --is-night flips.
+.skyTop,
+.skyBottom,
+.waterTop,
+.waterBottom,
+.shore,
+.sun,
+.moon,
+.celestialGlow,
+.reflection,
+.cabinGlow,
+.starsLayer,
+.sunGroup,
+.moonGroup,
+.stars {
+  transition:
+    stop-color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    fill 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skyTop {
+  stop-color: var(--sky-top);
+}
+.skyBottom {
+  stop-color: var(--sky-bottom);
+}
+.waterTop {
+  stop-color: var(--water-top);
+}
+.waterBottom {
+  stop-color: var(--water-bottom);
+}
+.shore {
+  fill: var(--shore-fill);
+}
+.sun {
+  fill: var(--celestial-fill);
+}
+.moon {
+  fill: var(--celestial-fill);
+}
+.celestialGlow {
+  fill: var(--celestial-glow);
+}
+.reflection {
+  fill: var(--reflection-fill);
+  opacity: var(--reflection-opacity);
+}
+.cabinGlow {
+  fill: #ffcf72;
+  opacity: var(--cabin-glow-opacity);
+}
+
+.starsLayer {
+  opacity: var(--stars-opacity);
+}
+.sunGroup {
+  opacity: var(--sun-opacity);
+}
+.moonGroup {
+  opacity: var(--moon-opacity);
+}
+
+.star {
+  fill: white;
+  animation: twinkle 3s ease-in-out infinite;
+
+  &:nth-child(2) {
+    --star-base: 0.7;
+    animation-delay: 0.4s;
+  }
+  &:nth-child(3) {
+    --star-base: 0.85;
+    animation-delay: 1.1s;
+  }
+  &:nth-child(4) {
+    --star-base: 0.95;
+    animation-delay: 1.8s;
+  }
+  &:nth-child(5) {
+    --star-base: 0.6;
+    animation-delay: 0.7s;
+  }
+  &:nth-child(6) {
+    --star-base: 0.8;
+    animation-delay: 2.1s;
+  }
+  &:nth-child(7) {
+    --star-base: 0.9;
+    animation-delay: 0.2s;
+  }
+  &:nth-child(8) {
+    --star-base: 0.65;
+    animation-delay: 1.5s;
+  }
+  &:nth-child(9) {
+    --star-base: 0.9;
+    animation-delay: 2.6s;
+  }
+  &:nth-child(10) {
+    --star-base: 0.75;
+    animation-delay: 0.9s;
+  }
+  &:nth-child(11) {
+    --star-base: 0.85;
+    animation-delay: 1.7s;
+  }
+  &:nth-child(12) {
+    --star-base: 0.6;
+    animation-delay: 2.4s;
+  }
+}
+
+.waveGroup {
+  animation: wave 8s ease-in-out infinite;
+}
+.wave1 {
+  stroke: rgba(255, 255, 255, 0.18);
+}
+.wave2 {
+  stroke: rgba(255, 255, 255, 0.13);
+}
+.wave3 {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .waveGroup {
+    animation: none;
+  }
+  .skyTop,
+  .skyBottom,
+  .waterTop,
+  .waterBottom,
+  .shore,
+  .sun,
+  .moon,
+  .celestialGlow,
+  .reflection,
+  .cabinGlow,
+  .starsLayer,
+  .sunGroup,
+  .moonGroup {
+    transition: none;
+  }
+}
+
+// ── Day/Night toggle ──────────────────────────────────────────────────────
+
+.toggle {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 10;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+  animation: fadeUp 0.6s ease 0.15s both;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+  &:active {
+    transform: scale(0.94);
+  }
+}
+.toggleIcon {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.toggleSun {
+  opacity: var(--sun-opacity);
+  transform: rotate(0deg) scale(1);
+}
+.toggleMoon {
+  opacity: var(--moon-opacity);
+  transform: rotate(0deg) scale(1);
+}
+.isNight .toggleSun {
+  transform: rotate(-180deg) scale(0.6);
+}
+.isNight .toggleMoon {
+  transform: rotate(0deg) scale(1);
+}
+.toggleMoon {
+  transform: rotate(180deg) scale(0.6);
+}
+.isNight .toggleMoon {
+  transform: rotate(0deg) scale(1);
+}
+
+// ── Stamp + content ──────────────────────────────────────────────────────
+
+.stamp {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+.stampDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+.content {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 4;
+  padding: 0 32px clamp(80px, 12vh, 140px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  text-shadow: var(--headline-shadow);
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+.headline {
+  margin: 0;
+  font-size: clamp(2.5rem, 6.5vw, 4.75rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: white;
+  text-shadow: var(--headline-shadow);
+  animation: fadeUp 0.7s ease 0.45s both;
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-accent) 75%, white);
+}
+.sub {
+  margin: 0;
+  max-width: 540px;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: var(--headline-shadow);
+  animation: fadeUp 0.7s ease 0.6s both;
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 6px;
+  animation: fadeUp 0.7s ease 0.75s both;
+}
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  svg {
+    transition: transform 0.2s ease;
+  }
+  &:hover svg {
+    transform: translateX(4px);
+  }
+}
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  padding: 16px 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: white;
+  background: transparent;
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 12px;
+    left: 8px;
+    right: 8px;
+    height: 1px;
+    background: white;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+}

@@ -1,0 +1,139 @@
+// Contacts — two-column on desktop (info left, map placeholder right).
+// Map placeholder is a styled box; later we wire click-to-load Yandex maps.
+
+.section {
+  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px) clamp(60px, 8vh, 100px);
+  border-top: 1px solid var(--color-border-hairline);
+  background: var(--color-background);
+}
+
+.head {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  gap: 8px;
+  margin-bottom: 48px;
+}
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  margin: 0;
+}
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--color-foreground);
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+.grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) 1.1fr;
+  gap: 48px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid var(--color-border-hairline);
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+.itemLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  padding-top: 2px;
+}
+.itemValue {
+  color: var(--color-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  a {
+    color: var(--color-foreground);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border-hairline);
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+  }
+}
+
+.map {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.mapStamp {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.mapHint {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  padding: 24px;
+  text-align: center;
+  max-width: 280px;
+}

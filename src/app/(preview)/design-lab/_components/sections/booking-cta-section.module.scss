@@ -1,0 +1,146 @@
+// Full-bleed CTA — sky-tinted background, large editorial headline, primary
+// button + phone link. Decorative hairline horizon line repeats the hero motif.
+
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(100px, 16vh, 180px) clamp(24px, 6vw, 80px);
+  border-top: 1px solid var(--color-border-hairline);
+  background: linear-gradient(
+    to bottom,
+    var(--color-background) 0%,
+    color-mix(in srgb, var(--color-accent) 6%, var(--color-background)) 55%,
+    color-mix(in srgb, var(--color-accent) 14%, var(--color-background)) 100%
+  );
+}
+
+.horizon {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-accent) 70%, transparent);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 20%,
+    black 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  margin: 0;
+}
+.title {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--color-foreground);
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+.sub {
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-foreground-muted);
+  max-width: 540px;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 8px;
+}
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  border: 0;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  svg {
+    transition: transform 0.2s ease;
+  }
+  &:hover svg {
+    transform: translateX(4px);
+  }
+}
+.btnPhone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  background: transparent;
+  border: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-foreground);
+  text-decoration: none;
+  position: relative;
+  font-feature-settings: "tnum", "lnum";
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 12px;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: var(--color-foreground);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  &:hover::after {
+    transform: scaleX(1);
+  }
+}

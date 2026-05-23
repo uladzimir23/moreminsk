@@ -7,3 +7,8 @@ out/**
 # overrides pandoc's default standalone-template styles. Different constraints,
 # different rules.
 docs/**
+
+# Design-lab routes are visual sandboxes for proposing direction (ADR-009 era).
+# Free hand with hex literals, px, gradients, !important — until a chosen variant
+# is promoted to a DS-conformant component.
+src/app/(preview)/**
