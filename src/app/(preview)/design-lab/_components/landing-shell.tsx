@@ -10,13 +10,17 @@ import { ServicesSection } from "./sections/services-section";
 
 type LandingShellProps = {
   hero: ReactNode;
+  // When the hero is a pinned/200vh scroll hero (cinematic), the content
+  // block is pulled up 100vh with a higher z-index so it rises OVER the
+  // sticky hero as the hero dissolves. Plain heroes leave this off.
+  overlapHero?: boolean;
 };
 
 // Standard landing composition for design-lab variants: hero (per variant)
 // + 5 real content sections. Photos are scraped from moreminsk.by (see
 // _data/scraped-photos.json), yacht and service data comes from production
 // src/shared/content/*.ts.
-export function LandingShell({ hero }: LandingShellProps) {
+export function LandingShell({ hero, overlapHero = false }: LandingShellProps) {
   return (
     <div className={styles.shell} id="top">
       <LandingHeader />
@@ -27,11 +31,13 @@ export function LandingShell({ hero }: LandingShellProps) {
 
       {hero}
 
-      <FleetShowcaseSection />
-      <ServicesSection />
-      <GallerySection />
-      <BookingCTASection />
-      <ContactsSection />
+      <div className={overlapHero ? styles.overlap : undefined}>
+        <FleetShowcaseSection />
+        <ServicesSection />
+        <GallerySection />
+        <BookingCTASection />
+        <ContactsSection />
+      </div>
     </div>
   );
 }

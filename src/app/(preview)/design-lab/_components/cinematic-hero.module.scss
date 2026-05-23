@@ -23,11 +23,16 @@
   font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
 }
 
-// Pinned variant — tall scroll runway with a sticky inner that holds the
-// hero. The video scales as you scroll the runway (JS lerp-driven).
+// Pinned variant — 200vh wrapper with a sticky inner. The sticky hero
+// holds the top of the viewport for 100vh of scroll; meanwhile the next
+// section (pulled up with a negative margin + higher z-index in the
+// landing shell) rises UP over it. The video scales + the hero dissolves
+// and parallaxes up underneath as the next section covers it — no black
+// gap, because the opaque next section is what fills the screen.
 .pinnedSection {
   position: relative;
-  height: 185vh;
+  z-index: 0;
+  height: 200vh;
   background: #000;
   color: white;
   font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
@@ -39,6 +44,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 1;
+  will-change: opacity, transform;
 }
 
 .video {

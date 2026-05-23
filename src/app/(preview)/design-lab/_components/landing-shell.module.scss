@@ -7,6 +7,15 @@
   font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
+// Pulls the content block up over the pinned hero's 100vh overlap runway
+// so the first section rises over the dissolving hero (see CinematicHero
+// pinned). Higher z-index keeps the opaque section above the sticky hero.
+.overlap {
+  position: relative;
+  z-index: 2;
+  margin-top: -100vh;
+}
+
 // Floats at bottom-left so it never collides with hero-internal stamps
 // (which all sit top-left) or scene toggles (top-right).
 .backBar {

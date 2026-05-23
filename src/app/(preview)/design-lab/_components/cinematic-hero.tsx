@@ -12,6 +12,7 @@ type CinematicHeroProps = {
 
 export function CinematicHero({ pinned = false }: CinematicHeroProps) {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const stickyRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
 
@@ -20,9 +21,10 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const section = sectionRef.current;
+    const sticky = stickyRef.current;
     const video = videoRef.current;
     const content = contentRef.current;
-    if (!section || !video) return;
+    if (!section || !video || !sticky) return;
 
     let raf = 0;
     let current = 0; // applied progress (lerped)
@@ -41,13 +43,23 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       current += (target - current) * 0.07;
       if (Math.abs(target - current) < 0.0004) current = target;
 
-      const scale = 1 + current * 0.34;
+      // Video zooms in gently across the whole runway.
+      const scale = 1 + current * 0.2;
       video.style.transform = `scale(${scale})`;
 
+      // Headline fades + rises early (gone by ~0.35).
       if (content) {
-        content.style.opacity = String(1 - clamp(current * 1.5));
-        content.style.transform = `translateY(${current * -64}px)`;
+        content.style.opacity = String(1 - clamp(current * 2.8));
+        content.style.transform = `translateY(${current * -70}px)`;
       }
+
+      // As the next section rises over the hero (z-index above), the still-
+      // visible upper band of the hero dissolves and parallaxes up — so the
+      // video fades «in place» behind the incoming section, no black gap.
+      const fade = clamp((current - 0.2) / 0.7);
+      sticky.style.opacity = String(1 - fade);
+      sticky.style.transform = `translateY(${-current * 80}px)`;
+
       raf = requestAnimationFrame(render);
     };
 
@@ -150,7 +162,9 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
   if (pinned) {
     return (
       <section ref={sectionRef} className={styles.pinnedSection}>
-        <div className={styles.sticky}>{inner}</div>
+        <div className={styles.sticky} ref={stickyRef}>
+          {inner}
+        </div>
       </section>
     );
   }
