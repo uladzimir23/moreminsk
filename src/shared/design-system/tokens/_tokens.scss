@@ -1,8 +1,13 @@
 // ─── Design Tokens — Primitive → Semantic → Component ─────────────────────
 // All values live here as CSS custom properties. Zero hardcode elsewhere.
 //
-// Architecture ported from flex-glass@a33fc70. Palette, theme classes
-// (.light-theme / .dark-theme) and motion ladder — per ADR-006.
+// Architecture ported from flex-glass@a33fc70. Theme classes
+// (.light-theme / .dark-theme) and motion ladder — per ADR-006 §2-§4 (still valid).
+// Palette + radii — per ADR-009 (Editorial Minimalism + Sky-500 accent, 2026-05-23).
+//
+// Palette migration policy: sea-*/sunset-*/sand-* primitive tokens are kept as
+// DEPRECATED below — semantic slots no longer point at them, but components that
+// still hardcode --primitive-color-sea-500 etc. won't break until they're swept.
 //
 // Unit policy:
 //   • Primitive layer — static rem (1rem = 16px, based on html { font-size: 100% }).
@@ -20,22 +25,22 @@
 @property --color-primary {
   syntax: "<color>";
   inherits: true;
-  initial-value: #0a4d7a;
+  initial-value: #0a0a0a;
 }
 @property --color-accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #e2956a;
+  initial-value: #0ea5e9;
 }
 @property --color-background {
   syntax: "<color>";
   inherits: true;
-  initial-value: #faf7f2;
+  initial-value: #ffffff;
 }
 @property --color-foreground {
   syntax: "<color>";
   inherits: true;
-  initial-value: #1b2230;
+  initial-value: #0a0a0a;
 }
 @property --gradient-angle {
   syntax: "<angle>";
@@ -53,7 +58,36 @@
     --primitive-color-white: #ffffff;
     --primitive-color-black: #000000;
 
-    // Sea (premium navy — ADR-006)
+    // ── Active palette (ADR-009 — Editorial Minimalism + Sky-500) ──────────
+
+    // Sky — single cool accent. Tailwind sky scale.
+    --primitive-color-sky-50: #f0f9ff;
+    --primitive-color-sky-100: #e0f2fe;
+    --primitive-color-sky-200: #bae6fd;
+    --primitive-color-sky-300: #7dd3fc;
+    --primitive-color-sky-400: #38bdf8;
+    --primitive-color-sky-500: #0ea5e9; // ★ accent / CTA (light theme)
+    --primitive-color-sky-600: #0284c7; // for inline text (AA 4.6:1 on white)
+    --primitive-color-sky-700: #0369a1;
+    --primitive-color-sky-800: #075985;
+    --primitive-color-sky-900: #0c4a6e;
+
+    // Slate / neutral — cool gray-near-black scale for text + surfaces.
+    --primitive-color-slate-50: #fafafa;
+    --primitive-color-slate-100: #f5f5f5;
+    --primitive-color-slate-200: #e5e5e5; // hairline border (light)
+    --primitive-color-slate-300: #d4d4d4;
+    --primitive-color-slate-400: #a3a3a3;
+    --primitive-color-slate-500: #737373;
+    --primitive-color-slate-600: #525252; // muted body text (light)
+    --primitive-color-slate-700: #404040;
+    --primitive-color-slate-800: #262626;
+    --primitive-color-slate-900: #171717; // dark theme surface
+    --primitive-color-slate-950: #0a0a0a; // ★ foreground (light) / background (dark)
+
+    // ── DEPRECATED legacy palette (ADR-006 navy + coral) ───────────────────
+    // Kept until all components are swept off direct primitive-token references.
+    // No semantic slot points here anymore — see :where(.light-theme) below.
     --primitive-color-sea-50: #eff5f9;
     --primitive-color-sea-100: #d6e4ef;
     --primitive-color-sea-200: #a8c4d8;
@@ -64,16 +98,12 @@
     --primitive-color-sea-700: #06324f;
     --primitive-color-sea-800: #04253b;
     --primitive-color-sea-900: #0e1620;
-
-    // Sunset (warm CTA accent — ADR-006)
     --primitive-color-sunset-50: #fbf1ea;
     --primitive-color-sunset-100: #f5dcc9;
     --primitive-color-sunset-300: #ecb593;
     --primitive-color-sunset-500: #e2956a;
     --primitive-color-sunset-600: #c47a51;
     --primitive-color-sunset-700: #a26240;
-
-    // Sand (warm off-white neutrals — ADR-006)
     --primitive-color-sand-50: #faf7f2;
     --primitive-color-sand-100: #f1ece3;
     --primitive-color-sand-200: #e4dfd5;
@@ -214,10 +244,12 @@
     --text-xl: var(--primitive-text-xl);
     --text-2xl: var(--primitive-text-2xl);
     --text-3xl: var(--primitive-text-3xl);
-    --text-4xl: clamp(1.875rem, 1.75rem + 0.625vw, 2.25rem);
-    --text-5xl: clamp(2.25rem, 2rem + 1.25vw, 3rem);
-    --text-6xl: clamp(3rem, 2.75rem + 1.25vw, 3.75rem);
-    --text-7xl: clamp(3.75rem, 3.5rem + 1.25vw, 4.5rem);
+    // Editorial scale (ADR-009) — H1 reaches further than ADR-008 default to
+    // carry the «крупный заголовок на белом» editorial weight.
+    --text-4xl: clamp(1.875rem, 1.75rem + 0.625vw, 2.5rem);
+    --text-5xl: clamp(2.25rem, 1.875rem + 1.875vw, 3.5rem);
+    --text-6xl: clamp(2.75rem, 2.125rem + 3.125vw, 4.75rem);
+    --text-7xl: clamp(3.25rem, 2.25rem + 5vw, 6rem);
 
     --space-xs: var(--primitive-space-1);
     --space-sm: var(--primitive-space-2);
@@ -227,7 +259,8 @@
     --space-2xl: clamp(2rem, 1.667rem + 1.667vw, 3rem);
     --space-3xl: clamp(3rem, 2.667rem + 1.667vw, 4rem);
     --space-4xl: clamp(4rem, 3.667rem + 1.667vw, 5rem);
-    --space-section: clamp(5rem, 4.667rem + 1.667vw, 6rem);
+    // Editorial section gap (ADR-009) — пуще воздуха между секциями.
+    --space-section: clamp(6rem, 4.5rem + 4.5vw, 9rem);
 
     --radius-sm: var(--primitive-radius-sm);
     --radius-md: var(--primitive-radius-md);
@@ -274,49 +307,56 @@
     --appbar-height: 3.5rem;
     --bottomnav-height: 3.5rem;
 
-    --btn-height-sm: 2rem;
-    --btn-height-md: 2.375rem;
-    --btn-height-lg: 2.875rem;
-    --btn-padding-x-sm: var(--primitive-space-3);
-    --btn-padding-x-md: var(--primitive-space-4);
-    --btn-padding-x-lg: var(--primitive-space-6);
-    --btn-radius: var(--radius-full);
+    // Editorial geometry (ADR-009) — sharp rectangles, no capsule.
+    --btn-height-sm: 2.25rem;
+    --btn-height-md: 2.75rem;
+    --btn-height-lg: 3.25rem;
+    --btn-padding-x-sm: var(--primitive-space-4);
+    --btn-padding-x-md: var(--primitive-space-6);
+    --btn-padding-x-lg: var(--primitive-space-8);
+    --btn-radius: var(--primitive-radius-none); // 0 — rectangular per ADR-009 §1
     --btn-font-weight: var(--primitive-weight-medium);
 
-    --input-height-sm: 2rem;
-    --input-height-md: 2.5rem;
-    --input-height-lg: 3rem;
+    --input-height-sm: 2.25rem;
+    --input-height-md: 2.75rem;
+    --input-height-lg: 3.25rem;
     --input-padding-x: var(--primitive-space-4);
-    --input-radius: var(--radius-lg);
+    --input-radius: var(--primitive-radius-sm); // 4px — minimal radius for tactile feel
 
-    --card-padding: var(--primitive-space-6);
-    --card-radius: var(--primitive-radius-2xl);
+    --card-padding: var(--primitive-space-8);
+    --card-radius: var(--primitive-radius-sm); // 4px — editorial, was 24px in ADR-005
   }
 
-  // ── Semantic: Light Theme (ADR-006) ──────────────────────────────────────
+  // ── Semantic: Light Theme (ADR-009 — Editorial Minimalism + Sky-500) ─────
   // :root sets defaults, .light-theme is the explicit sync-pattern selector
   // applied to <html> + <body>. Either path yields identical palette.
+  //
+  // Roles:
+  //   --color-primary   = near-black (text, navigation, primary button fill)
+  //   --color-accent    = sky-500    (CTA fill, focus ring, active states)
+  //   --color-accent-text = sky-600  (inline links — needs 4.5:1 contrast)
   :root,
   :where(.light-theme) {
     color-scheme: light;
 
-    --color-background: var(--primitive-color-sand-50);
+    --color-background: #ffffff;
     --color-surface: #ffffff;
-    --color-surface-alt: var(--primitive-color-sand-100);
-    --color-foreground: var(--primitive-color-sand-900);
-    --color-foreground-muted: var(--primitive-color-sand-700);
+    --color-surface-alt: var(--primitive-color-slate-50);
+    --color-foreground: var(--primitive-color-slate-950); // #0a0a0a
+    --color-foreground-muted: var(--primitive-color-slate-600); // #525252
     --color-foreground-subtle: color-mix(in oklch, var(--color-foreground) 40%, transparent);
 
-    --color-primary: var(--primitive-color-sea-500);
-    --color-primary-hover: var(--primitive-color-sea-600);
-    --color-primary-active: var(--primitive-color-sea-700);
-    --color-primary-soft: var(--primitive-color-sea-50);
+    --color-primary: var(--primitive-color-slate-950); // near-black, was sea-500 navy
+    --color-primary-hover: var(--primitive-color-slate-800);
+    --color-primary-active: var(--primitive-color-slate-700);
+    --color-primary-soft: var(--primitive-color-slate-50);
     --color-on-primary: #ffffff;
 
-    --color-accent: var(--primitive-color-sunset-500);
-    --color-accent-hover: var(--primitive-color-sunset-600);
-    --color-accent-active: var(--primitive-color-sunset-700);
-    --color-accent-soft: var(--primitive-color-sunset-50);
+    --color-accent: var(--primitive-color-sky-500); // #0ea5e9 — was sunset coral
+    --color-accent-hover: var(--primitive-color-sky-600);
+    --color-accent-active: var(--primitive-color-sky-700);
+    --color-accent-soft: var(--primitive-color-sky-50);
+    --color-accent-text: var(--primitive-color-sky-600); // inline-link variant, AA 4.6:1 on white
     --color-on-accent: #ffffff;
 
     --color-success: var(--primitive-color-success);
@@ -324,15 +364,15 @@
     --color-destructive: var(--primitive-color-error);
     --color-on-status: #ffffff;
 
-    --color-border: var(--primitive-color-sand-200);
-    --color-border-hairline: color-mix(in oklch, var(--color-foreground) 8%, transparent);
-    --color-border-strong: color-mix(in oklch, var(--color-foreground) 16%, transparent);
-    --color-ring: var(--primitive-color-sea-400);
+    --color-border: var(--primitive-color-slate-200);
+    --color-border-hairline: var(--primitive-color-slate-200); // crisp 1px, not color-mix
+    --color-border-strong: var(--primitive-color-slate-400);
+    --color-ring: var(--primitive-color-sky-500);
 
     --color-card: var(--color-surface);
     --color-card-foreground: var(--color-foreground);
-    --color-card-border: var(--color-border);
-    --color-card-shadow: var(--shadow-sm);
+    --color-card-border: var(--color-border-hairline);
+    --color-card-shadow: none; // editorial = плоско, no resting shadow on light
 
     --color-input-background: var(--color-surface);
     --color-input-foreground: var(--color-foreground);
@@ -340,28 +380,30 @@
     --color-input-border: var(--color-border);
     --color-input-border-focus: var(--color-ring);
 
-    --color-overlay: color-mix(in oklch, var(--primitive-color-sand-900) 45%, transparent);
+    --color-overlay: color-mix(in oklch, var(--primitive-color-slate-950) 35%, transparent);
 
-    // Materials (iOS-style translucent layers — ADR-005)
-    --material-thin-bg: rgb(255 255 255 / 0.55);
-    --material-regular-bg: rgb(255 255 255 / 0.72);
-    --material-thick-bg: rgb(255 255 255 / 0.92);
+    // Materials — solid fills (frosted glass removed per ADR-009 §2).
+    // Compat: appbar/bottomnav/sheet still read these tokens; they now resolve
+    // to opaque surfaces with no backdrop-filter required at the consumer.
+    --material-thin-bg: var(--color-surface);
+    --material-regular-bg: var(--color-surface);
+    --material-thick-bg: var(--color-surface);
 
-    // Gradients (light)
+    // Gradients — kept for legacy hero accents; sky-driven now.
     --gradient-primary: linear-gradient(
       var(--gradient-angle),
-      var(--primitive-color-sea-500) 0%,
-      var(--primitive-color-sea-700) 100%
+      var(--primitive-color-slate-950) 0%,
+      var(--primitive-color-slate-800) 100%
     );
     --gradient-accent: linear-gradient(
       var(--gradient-angle),
-      var(--primitive-color-sunset-500) 0%,
-      var(--primitive-color-sunset-700) 100%
+      var(--primitive-color-sky-400) 0%,
+      var(--primitive-color-sky-700) 100%
     );
     --gradient-sunset: linear-gradient(
       var(--gradient-angle),
-      var(--primitive-color-sunset-300) 0%,
-      var(--primitive-color-sea-500) 100%
+      var(--primitive-color-sky-300) 0%,
+      var(--primitive-color-sky-600) 100%
     );
 
     // Compat aliases for flex-glass-ported base/mixins/typography files.
@@ -370,59 +412,66 @@
     --color-primary-foreground: var(--color-on-primary);
   }
 
-  // ── Semantic: Dark Theme (ADR-006) ───────────────────────────────────────
+  // ── Semantic: Dark Theme (ADR-009 — Editorial Minimalism on near-black) ──
   :where(.dark-theme) {
     color-scheme: dark;
 
-    --color-background: var(--primitive-color-sea-900);
-    --color-surface: #16202e;
-    --color-surface-alt: #1d2a3b;
-    --color-foreground: #e8eef3;
-    --color-foreground-muted: #94a3b8;
+    --color-background: var(--primitive-color-slate-950); // #0a0a0a, was navy sea-900
+    --color-surface: var(--primitive-color-slate-900); // #171717
+    --color-surface-alt: var(--primitive-color-slate-800); // #262626
+    --color-foreground: var(--primitive-color-slate-50); // #fafafa
+    --color-foreground-muted: var(--primitive-color-slate-400); // #a3a3a3
     --color-foreground-subtle: color-mix(in oklch, var(--color-foreground) 35%, transparent);
 
-    --color-primary: #5ba8d6;
-    --color-primary-hover: #7dbce0;
-    --color-primary-active: #a0cee8;
-    --color-primary-soft: color-mix(in oklch, var(--color-primary) 15%, transparent);
-    --color-on-primary: var(--primitive-color-sea-900);
+    --color-primary: var(--primitive-color-slate-50); // near-white text/CTA
+    --color-primary-hover: var(--primitive-color-slate-200);
+    --color-primary-active: var(--primitive-color-slate-300);
+    --color-primary-soft: color-mix(in oklch, var(--color-primary) 12%, transparent);
+    --color-on-primary: var(--primitive-color-slate-950);
 
-    --color-accent: #eba77e;
-    --color-accent-hover: #f0b89a;
-    --color-accent-active: #f5c9b5;
-    --color-accent-soft: color-mix(in oklch, var(--color-accent) 15%, transparent);
-    --color-on-accent: var(--primitive-color-sea-900);
+    --color-accent: var(--primitive-color-sky-400); // #38bdf8 — brighter on dark
+    --color-accent-hover: var(--primitive-color-sky-300);
+    --color-accent-active: var(--primitive-color-sky-200);
+    --color-accent-soft: color-mix(in oklch, var(--color-accent) 18%, transparent);
+    --color-accent-text: var(--primitive-color-sky-400); // ≥4.5:1 on near-black
+    --color-on-accent: var(--primitive-color-slate-950);
 
     --color-success: color-mix(in oklch, var(--primitive-color-success) 70%, white);
     --color-warning: color-mix(in oklch, var(--primitive-color-warning) 80%, white);
     --color-destructive: color-mix(in oklch, var(--primitive-color-error) 70%, white);
 
-    --color-border: #2a3a4f;
-    --color-border-hairline: color-mix(in oklch, var(--color-foreground) 12%, transparent);
-    --color-border-strong: color-mix(in oklch, var(--color-foreground) 24%, transparent);
-    --color-ring: #7dbce0;
+    --color-border: var(--primitive-color-slate-800);
+    --color-border-hairline: var(--primitive-color-slate-800);
+    --color-border-strong: var(--primitive-color-slate-700);
+    --color-ring: var(--primitive-color-sky-400);
 
-    --color-card-shadow: 0 4px 24px rgb(0 0 0 / 0.4);
-    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.3);
-    --shadow-md: 0 4px 12px rgb(0 0 0 / 0.4);
-    --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.5);
+    // Dark mode keeps subtle shadow для отделения surface от background.
+    --color-card-shadow: 0 1px 0 rgb(255 255 255 / 0.04);
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
+    --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.55);
 
     --color-overlay: color-mix(in oklch, black 65%, transparent);
 
-    // Materials (dark — «вечерняя яхта»)
-    --material-thin-bg: rgb(14 22 32 / 0.55);
-    --material-regular-bg: rgb(14 22 32 / 0.72);
-    --material-thick-bg: rgb(14 22 32 / 0.92);
+    // Materials — solid fills (no backdrop-filter — ADR-009 §2).
+    --material-thin-bg: var(--color-surface);
+    --material-regular-bg: var(--color-surface);
+    --material-thick-bg: var(--color-surface);
 
     --gradient-primary: linear-gradient(
       var(--gradient-angle),
-      var(--primitive-color-sea-700) 0%,
-      var(--primitive-color-sea-900) 100%
+      var(--primitive-color-slate-50) 0%,
+      var(--primitive-color-slate-200) 100%
+    );
+    --gradient-accent: linear-gradient(
+      var(--gradient-angle),
+      var(--primitive-color-sky-300) 0%,
+      var(--primitive-color-sky-600) 100%
     );
     --gradient-sunset: linear-gradient(
       var(--gradient-angle),
-      var(--primitive-color-sunset-600) 0%,
-      var(--primitive-color-sea-700) 100%
+      var(--primitive-color-sky-400) 0%,
+      var(--primitive-color-slate-950) 100%
     );
   }
 } // close @layer tokens

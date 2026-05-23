@@ -1,8 +1,13 @@
 ---
 date: 2026-04-17
-status: accepted
+status: superseded
+superseded-by: ADR-009
+superseded-date: 2026-05-23
 tags: [adr, design, ds, ios]
 ---
+
+> ⚠ **Superseded by [[ADR-009 Editorial Minimalism + Sky-blue Accent]]** (2026-05-23).
+> Заказчик пивотнул визуальное направление: вместо iOS Liquid Glass — editorial minimalism с прямыми линиями. См. ADR-009 для конкретного отображения этой ADR-005: §1 (materials), §2 (capsule geometry), §4 (multi-layer shadows) — заменены; §7 spring micro-interactions, §11 Lucide iconography, §12 skeletons — сохранены.
 
 # ADR-005 — iOS-style Design Language
 

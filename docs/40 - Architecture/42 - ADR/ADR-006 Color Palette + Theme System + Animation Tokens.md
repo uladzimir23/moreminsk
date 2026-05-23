@@ -1,8 +1,13 @@
 ---
 date: 2026-04-17
-status: accepted
+status: superseded
+superseded-by: ADR-009
+superseded-date: 2026-05-23
 tags: [adr, design-system, theme, color, animation]
 ---
+
+> ⚠ **Палитра superseded by [[ADR-009 Editorial Minimalism + Sky-blue Accent]]** (2026-05-23).
+> §1 (navy + sunset coral палитра) — заменена на белый + near-black + sky-500. §2 (theme system архитектура `.light-theme` / `.dark-theme`, anti-FOUC, useTheme hook), §3 (animation tokens — easings + durations ladder), §4 (Framer Motion only, без GSAP) — **сохранены**, по-прежнему в силе.
 
 # ADR-006 — Color Palette + Theme System + Animation Tokens
 
