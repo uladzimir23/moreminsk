@@ -1,0 +1,9 @@
+node_modules/**
+.next/**
+out/**
+
+# Print stylesheets for PDF reports (pandoc → Chrome headless) live outside the
+# site DS — fixed px sizing maps cleanly to A4 mm at print DPI, and !important
+# overrides pandoc's default standalone-template styles. Different constraints,
+# different rules.
+docs/**

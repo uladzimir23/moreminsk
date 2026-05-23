@@ -1,0 +1,808 @@
+/* Style — light theme в стиле sandbox/showcase-alchemy.
+   Токены ported из ~/Documents/core-tech-orch/sandbox/showcase-alchemy/src/styles/tokens.scss
+   Использование: pandoc → HTML → Chrome headless print-to-pdf */
+
+@page {
+  size: A4;
+  margin: 2.2cm 2cm;
+}
+
+:root {
+  --bg-body: #fdfdfe;
+  --panel-bg: #f8f8fb;
+  --text-main: #09090b;
+  --text-muted: #52525b;
+  --glass-bg: rgba(0, 0, 0, 0.04);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+
+  --hud-accent: #06b6d4;
+  --hud-accent-strong: #0891b2;
+
+  --color-indigo-500: #6366f1;
+  --color-violet-500: #8b5cf6;
+  --color-rose-500: #f43f5e;
+  --color-amber-500: #f59e0b;
+  --color-sky-500: #0ea5e9;
+  --color-emerald-500: #10b981;
+  --color-zinc-500: #71717a;
+
+  --status-accepted: var(--color-emerald-500);
+  --status-proposed: var(--color-amber-500);
+  --status-superseded: var(--color-zinc-500);
+
+  --font-sans: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-tech: 'Rajdhani', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 10.5pt;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Cover page (first H1) */
+h1.title, header h1 {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 36pt;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 0 0 0.5em;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}
+
+/* Pandoc puts subtitle in <p class="subtitle"> or similar; date/author also */
+.subtitle {
+  font-size: 13pt;
+  color: var(--text-muted);
+  font-weight: 300;
+  margin-bottom: 1.5em;
+}
+
+.date, .author {
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 0;
+}
+
+/* Body sections */
+h1 {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 22pt;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 1.4em 0 0.6em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid var(--hud-accent);
+  page-break-after: avoid;
+  page-break-before: auto;
+}
+
+h1::before {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  background-color: var(--hud-accent);
+  border-radius: 50%;
+  margin-right: 0.4em;
+  vertical-align: middle;
+  transform: translateY(-0.15em);
+}
+
+h2 {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin: 1.3em 0 0.5em;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 11pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--hud-accent-strong);
+  margin: 1.2em 0 0.4em;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin: 1em 0 0.3em;
+}
+
+p {
+  margin: 0 0 0.7em;
+  color: var(--text-main);
+}
+
+p:has(+ ul), p:has(+ ol), p:has(+ table) {
+  margin-bottom: 0.4em;
+}
+
+strong {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+em {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Inline code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  padding: 0.1em 0.4em;
+  border-radius: 0.3em;
+  color: var(--hud-accent-strong);
+  white-space: nowrap;
+}
+
+/* Code blocks */
+pre {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--hud-accent);
+  border-radius: 0.5em;
+  padding: 0.85em 1em;
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 0.85em 0;
+  page-break-inside: avoid;
+}
+
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--text-main);
+  white-space: pre;
+}
+
+/* Lists */
+ul, ol {
+  margin: 0.5em 0 1em;
+  padding-left: 1.4em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+li::marker {
+  color: var(--hud-accent);
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 9pt;
+  page-break-inside: auto;
+}
+
+table thead {
+  background-color: var(--glass-bg);
+}
+
+table th {
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--hud-accent-strong);
+  padding: 0.65em 0.8em;
+  text-align: left;
+  border-bottom: 2px solid var(--hud-accent);
+}
+
+table td {
+  padding: 0.55em 0.8em;
+  border-bottom: 1px solid var(--glass-border);
+  vertical-align: top;
+  color: var(--text-main);
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: rgba(0, 0, 0, 0.018);
+}
+
+table tbody tr:hover {
+  background-color: var(--glass-bg);
+}
+
+/* Status badges inline (when text contains accepted/proposed/superseded) */
+td:has(> :is(em):only-child) em {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Blockquote */
+blockquote {
+  margin: 1em 0;
+  padding: 0.7em 1.1em;
+  border-left: 3px solid var(--color-indigo-500);
+  background-color: var(--glass-bg);
+  color: var(--text-main);
+  font-style: italic;
+  border-radius: 0 0.4em 0.4em 0;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+/* Horizontal rule (use as section separator) */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--glass-border);
+  margin: 2em 0;
+}
+
+/* Links */
+a {
+  color: var(--hud-accent-strong);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--hud-accent);
+}
+
+/* TOC styling (pandoc default class) */
+nav#TOC, .toc {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.6em;
+  padding: 1.5em 1.8em;
+  margin: 1.5em 0 2em;
+  page-break-inside: avoid;
+  page-break-after: always;  /* content starts на page 2 — TOC stays on page 1 */
+}
+
+nav#TOC::before, .toc::before {
+  content: 'Содержание';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--hud-accent);
+  margin-bottom: 0.8em;
+}
+
+nav#TOC ul, .toc ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+nav#TOC ul ul, .toc ul ul {
+  padding-left: 1.2em;
+  font-size: 0.92em;
+}
+
+nav#TOC li, .toc li {
+  margin-bottom: 0.2em;
+  border-bottom: 0;
+}
+
+nav#TOC a, .toc a {
+  border-bottom: 0;
+  color: var(--text-main);
+}
+
+nav#TOC a:hover, .toc a:hover {
+  color: var(--hud-accent);
+}
+
+/* Cover page header block — pandoc <header id="title-block-header"> */
+/* TOC теперь на page 1 below title — see nav#TOC page-break-after: always ниже */
+#title-block-header {
+  padding: 3em 0 1.5em;
+  border-bottom: 0;
+}
+
+#title-block-header h1 {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0.8em;
+}
+
+#title-block-header h1::before {
+  content: 'moreminsk · ревью для заказчика';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.4em;
+  color: var(--hud-accent);
+  background-color: transparent;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  margin: 0 0 1em;
+  padding: 0;
+  transform: none;
+}
+
+/* Page break utility — добавляется через MD HTML */
+.page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+/* Avoid orphans/widows */
+p, li {
+  orphans: 3;
+  widows: 3;
+}
+
+/* Section icon prefix conventions — emojis в headings */
+h2:has(> code:first-child),
+h3:has(> code:first-child) {
+  /* Inline code в headings без heavy bg */
+}
+
+h2 code, h3 code {
+  font-size: 0.8em;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+
+/* ============================================================
+   Glossary — definition lists (pandoc <dl><dt><dd>)
+   Markdown:
+     SDD
+     :   Spec-Driven Development. Каждая стадия pipeline-а...
+   ============================================================ */
+dl {
+  margin: 1em 0 1.2em;
+  padding: 1em 1.4em 1.2em;
+  background-color: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--hud-accent);
+  border-radius: 0 0.5em 0.5em 0;
+  page-break-inside: auto;
+}
+
+dl dt {
+  font-family: var(--font-mono);
+  font-size: 9pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--hud-accent-strong);
+  margin-top: 0.85em;
+  margin-bottom: 0.25em;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+dl dt:first-of-type {
+  margin-top: 0;
+}
+
+dl dd {
+  margin: 0 0 0.55em 0;
+  padding-left: 1.2em;
+  color: var(--text-main);
+  border-left: 1px solid var(--glass-border);
+}
+
+dl dd p {
+  margin: 0 0 0.4em;
+}
+
+dl dd p:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Callout boxes — pandoc fenced divs
+   Markdown:
+     ::: {.callout .note}
+     Текст замечания.
+     :::
+   Variants: .note .info .warn .success .danger
+   ============================================================ */
+.callout {
+  margin: 1em 0;
+  padding: 0.85em 1.1em;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--text-muted);
+  background-color: var(--glass-bg);
+  border-radius: 0 0.5em 0.5em 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.callout::before {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 7.8pt;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  margin-bottom: 0.45em;
+  font-weight: 700;
+}
+
+.callout > p { margin: 0 0 0.4em; }
+.callout > p:last-child { margin-bottom: 0; }
+.callout > ul:last-child,
+.callout > ol:last-child { margin-bottom: 0; }
+
+.callout.note {
+  border-left-color: var(--color-indigo-500);
+}
+.callout.note::before {
+  content: '› Заметка';
+  color: var(--color-indigo-500);
+}
+
+.callout.info {
+  border-left-color: var(--color-sky-500);
+}
+.callout.info::before {
+  content: '› Информация';
+  color: var(--color-sky-500);
+}
+
+.callout.warn {
+  border-left-color: var(--color-amber-500);
+  background-color: rgba(245, 158, 11, 0.06);
+}
+.callout.warn::before {
+  content: '⚠ Внимание';
+  color: var(--color-amber-500);
+}
+
+.callout.success {
+  border-left-color: var(--color-emerald-500);
+  background-color: rgba(16, 185, 129, 0.06);
+}
+.callout.success::before {
+  content: '✓ Готово';
+  color: var(--color-emerald-500);
+}
+
+.callout.danger {
+  border-left-color: var(--color-rose-500);
+  background-color: rgba(244, 63, 94, 0.06);
+}
+.callout.danger::before {
+  content: '✗ Блокер';
+  color: var(--color-rose-500);
+}
+
+/* ============================================================
+   Inline status badges
+   Markdown (pandoc bracketed_spans):
+     [ACCEPTED]{.badge .accepted}
+   Variants: .accepted .proposed .deferred .superseded
+             .active .blocked .tbd
+   ============================================================ */
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  padding: 0.22em 0.6em;
+  border-radius: 0.35em;
+  vertical-align: 0.08em;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+  line-height: 1;
+}
+
+.badge.accepted   { color: var(--color-emerald-500); }
+.badge.proposed   { color: var(--color-amber-500); }
+.badge.deferred   { color: var(--color-zinc-500); }
+.badge.superseded { color: var(--color-zinc-500); text-decoration: line-through; }
+.badge.active     { color: var(--hud-accent-strong); }
+.badge.blocked    { color: var(--color-rose-500); }
+.badge.tbd        { color: var(--color-violet-500); }
+
+/* Soft-fill variant — для bg-вариантов в плотных таблицах */
+.badge.fill {
+  border: 0;
+  color: var(--bg-body);
+  background-color: currentColor;
+}
+.badge.fill.accepted   { background-color: var(--color-emerald-500); color: white; }
+.badge.fill.proposed   { background-color: var(--color-amber-500);   color: white; }
+.badge.fill.blocked    { background-color: var(--color-rose-500);    color: white; }
+
+/* ============================================================
+   Cover page — subtitle + tag pills
+   ============================================================ */
+#title-block-header p.subtitle {
+  font-family: var(--font-sans);
+  font-size: 14pt;
+  color: var(--text-muted);
+  font-weight: 300;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  margin: 0 0 2em;
+  max-width: 36em;
+}
+
+#title-block-header p.author,
+#title-block-header p.date {
+  margin-top: 0.4em;
+}
+
+/* ============================================================
+   Footnotes — pandoc renders [^1] → numbered + .footnotes section
+   ============================================================ */
+.footnotes {
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--glass-border);
+  font-size: 9pt;
+  color: var(--text-muted);
+}
+
+.footnotes ol {
+  padding-left: 1.4em;
+}
+
+a.footnote-ref {
+  font-size: 0.7em;
+  vertical-align: super;
+  border-bottom: 0;
+  color: var(--hud-accent);
+}
+
+/* ============================================================
+   Print-friendly long URLs — показать href после текста ссылки,
+   только если внешняя (http) ссылка. Внутренние/wiki — без URL.
+   ============================================================ */
+@media print {
+  a[href^="http"]:not(.no-print-url)::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    color: var(--text-muted);
+    word-break: break-all;
+  }
+  /* TOC, footnote-refs, wiki-links и nav-links не показывают URL */
+  nav#TOC a::after,
+  .toc a::after,
+  a.footnote-ref::after,
+  a.footnote-back::after,
+  a:not([href^="http"])::after {
+    content: '' !important;
+  }
+}
+
+/* Wiki-links (pandoc +wikilinks_title_before_pipe) — стилизуем как
+   ссылки внутри документации, чтобы было видно reference */
+a[data-wikilink],
+a[href]:not([href^="http"]):not([href^="mailto:"]):not([href^="#"]) {
+  border-bottom-style: dotted;
+  color: var(--color-indigo-500);
+}
+
+/* ============================================================
+   Auto-generated footer (вставляется render-report-pdf.sh)
+   ============================================================ */
+footer.meta-footer {
+  margin-top: 4em;
+  padding: 1em 0 0;
+  border-top: 1px solid var(--glass-border);
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  page-break-inside: avoid;
+}
+
+footer.meta-footer code {
+  background: transparent;
+  border: 0;
+  color: var(--hud-accent-strong);
+  padding: 0;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: inherit;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Loop-report visual components (2026-05-14)
+   Used by .claude/agents/loop-report-generator.md outputs.
+   ============================================================ */
+
+/* Hero thumbnail — phone-mockup-framed screenshot на title page */
+.hero-frame {
+  width: 240px;
+  margin: 28px auto 18px;
+  padding: 8px;
+  background: #0a0c14;
+  border-radius: 30px;
+  box-shadow: 0 24px 56px -16px rgba(0, 0, 0, 0.22),
+              0 6px 16px -6px rgba(0, 0, 0, 0.12);
+  page-break-inside: avoid;
+}
+.hero-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 22px;
+  background: #fff;
+}
+
+/* Status badge — large pass/fail indicator */
+.status-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 16px 0 22px;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 22pt;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  page-break-inside: avoid;
+}
+.status-badge .icon {
+  font-size: 26pt;
+  line-height: 1;
+}
+.status-badge.success { color: var(--color-emerald-500); }
+.status-badge.failure { color: var(--color-rose-500); }
+.status-badge.no-progress { color: var(--color-amber-500); }
+
+/* Quick stats — 4-column metric grid */
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 12px 0 28px;
+  page-break-inside: avoid;
+}
+.quick-stats .stat {
+  padding: 12px 6px;
+  background: var(--panel-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  text-align: center;
+}
+.quick-stats .stat-value {
+  font-family: var(--font-tech);
+  font-size: 18pt;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.quick-stats .stat-label {
+  font-family: var(--font-mono);
+  font-size: 7.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Pattern chip — small colored pill для mechanic pattern (A-F) */
+.pattern-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 8.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  border-radius: 4px;
+  color: #fff;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+.pattern-chip.pattern-a { background: #5ac8fa; }
+.pattern-chip.pattern-b { background: #34c759; }
+.pattern-chip.pattern-c { background: #ff453a; }
+.pattern-chip.pattern-d { background: #bf5af2; }
+.pattern-chip.pattern-e { background: #ffcc00; color: #1a1a1f; }
+.pattern-chip.pattern-f { background: #ff9f0a; }
+.pattern-chip.pattern-unknown { background: var(--color-zinc-500); }
+
+/* Scene-row — screenshot grid, ровно 4 картинки в ряд по ширине A4.
+   Каждая ячейка = (100% − 3 × gap) / 4. Pandoc разворачивает
+   ![alt](url) внутри fenced-div как <figure><img><figcaption>,
+   поэтому таргетим figure. Между картинками в MD — пустая строка,
+   иначе всё схлопывается в одну <figure>.
+   Variant .three — для рядов из 3 (desktop-секция). */
+.scene-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0.8em 0 1.2em;
+  page-break-inside: avoid;
+}
+.scene-row > figure {
+  flex: 0 0 calc(25% - 9px);
+  min-width: 0;  /* override default min-width:auto — иначе интринсик-ширина картинки распирает ячейку */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.scene-row.three > figure {
+  flex: 0 0 calc(33.333% - 8px);
+}
+.scene-row figure img {
+  width: 100% !important;
+  max-width: 100% !important;
+  /* Обрезаем full_page-скриншоты до «выше складки»:
+     mobile (390×844) → aspect 1:2.16; desktop (1440×900) → 1:0.625.
+     object-fit: cover оставляет визуально нативную ширину viewport,
+     position:top — обрезает низ, а не верх. */
+  aspect-ratio: 390 / 844;
+  height: auto;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.scene-row.three figure img {
+  aspect-ratio: 1440 / 900;
+}
+.scene-row figcaption {
+  font-family: var(--font-mono);
+  font-size: 7pt;
+  color: var(--text-muted);
+  line-height: 1.3;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
