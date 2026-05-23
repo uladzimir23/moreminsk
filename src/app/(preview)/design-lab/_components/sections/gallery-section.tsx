@@ -32,6 +32,21 @@ export function GallerySection() {
 
   return (
     <section className={styles.section} id="gallery">
+      {/* Ambient section backdrop — blurred copy of the active photo. */}
+      <div className={styles.backdrop} aria-hidden="true">
+        {GALLERY.map((shot, i) => (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            key={`section-bg-${shot.url}`}
+            src={shot.url}
+            alt=""
+            className={i === activeIdx ? styles.backdropImgActive : styles.backdropImg}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+        ))}
+        <div className={styles.backdropOverlay} />
+      </div>
+
       <div className={styles.head}>
         <p className={styles.eyebrow}>03 · Галерея</p>
         <h2 className={styles.title}>
