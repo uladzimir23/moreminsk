@@ -193,12 +193,14 @@
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(280px, 0.6fr) 1.4fr;
+  // minmax(0, …) lets the columns shrink below their content's min-size —
+  // without it the gallery's intrinsic width forces overflow on mobile.
+  grid-template-columns: minmax(280px, 0.6fr) minmax(0, 1.4fr);
   gap: clamp(24px, 4vw, 56px);
   align-items: start;
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -209,6 +211,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-width: 0;
 }
 .info > * {
   animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
@@ -363,6 +366,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
 // Hero photo frame — letterbox-blur viewer like the gallery.
