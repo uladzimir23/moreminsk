@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CinematicHero } from "./_components/cinematic-hero";
 import { HorizonHero } from "./_components/horizon-hero";
 import { SceneHero } from "./_components/scene-hero";
+import { SubmergedOptics } from "./_components/submerged-optics";
 import styles from "./page.module.scss";
 
 // Design-lab index — three hero variants stacked. Each variant is wrapped
@@ -26,6 +27,7 @@ const VARIANTS: ReadonlyArray<VariantMeta> = [
   { slug: "horizon", label: "Horizon · editorial", Hero: HorizonHero },
   { slug: "scene", label: "Scene · day/night", Hero: SceneHero },
   { slug: "cinematic", label: "Cinematic · video", Hero: CinematicHero },
+  { slug: "optics", label: "Optics · liquid glass", Hero: SubmergedOptics },
 ];
 
 export default function DesignLabPage() {
