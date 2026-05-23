@@ -1,17 +1,8 @@
-import { COVER_BY_YACHT } from "../../_data/photos";
 import styles from "./contacts-section.module.scss";
 
 export function ContactsSection() {
   return (
     <section className={styles.section} id="contact">
-      {/* Ambient blurred photo backdrop — MARIO, matches the dark editorial
-          treatment of the rest of the landing. */}
-      <div className={styles.backdrop} aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={COVER_BY_YACHT.mario} alt="" />
-        <div className={styles.backdropOverlay} />
-      </div>
-
       <div className={styles.head}>
         <p className={styles.eyebrow}>05 · Контакты</p>
         <h2 className={styles.title}>
