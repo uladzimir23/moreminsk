@@ -1,9 +1,19 @@
-// Editorial gallery — irregular grid (some tiles span 2 rows / 2 cols) to
-// avoid the «4×4 store catalog» look. Hover zooms image + reveals a small
-// yacht tag.
+// Gallery — single-viewer with letterbox blur. Each photo is shown at its
+// natural aspect (object-fit: contain) centered in a 16/9 frame; the
+// empty space around it is filled with a blurred + dimmed duplicate of the
+// same photo (object-fit: cover). Standard Instagram/Apple-Music pattern.
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 .section {
-  padding: clamp(80px, 12vh, 140px) 0 0;
+  padding: clamp(80px, 12vh, 140px) 0 clamp(60px, 8vh, 100px);
   border-top: 1px solid var(--color-border-hairline);
   background: var(--color-background);
 }
@@ -14,16 +24,16 @@
   padding: 0 clamp(24px, 6vw, 80px);
   display: grid;
   gap: 8px;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 .eyebrow {
+  margin: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-foreground-muted);
-  margin: 0;
 }
 .title {
   margin: 0;
@@ -41,110 +51,205 @@
   color: var(--color-accent);
 }
 
-// Mosaic — 6 columns, auto rows ~140px, tiles assigned spans for variety.
-.mosaic {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-auto-rows: 140px;
-  gap: 4px;
-  padding: 0 4px;
+// Viewer frame — full-width within container, 16/9 aspect.
+.viewer {
+  position: relative;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
 }
 
-.tile {
+.frame {
   position: relative;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
+  background: #0a0a0a; // fallback before blur paints
+  border: 1px solid var(--color-border-hairline);
+  isolation: isolate;
+}
+
+// Stacked layers: each photo has a blurred cover layer + a crisp contain
+// layer. Only the active one has opacity:1; the rest are 0.
+.bg,
+.bgActive {
+  position: absolute;
+  inset: -8%; // overscan for blur edges
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  filter: blur(50px) brightness(0.55) saturate(1.1);
+  transition: opacity 0.6s ease;
+  will-change: opacity;
+}
+.bg {
+  opacity: 0;
+}
+.bgActive {
+  opacity: 1;
+}
+
+.photo,
+.photoActive {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.5s ease;
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.5));
+}
+.photo {
+  opacity: 0;
+  pointer-events: none;
+}
+.photoActive {
+  opacity: 1;
+}
+
+// Soft dark gradient on top — keeps controls readable when the photo
+// happens to be bright in the corners.
+.controlsOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    transparent 18%,
+    transparent 82%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+// Prev / Next buttons — anchored to vertical center of the frame, glass.
+.nav {
+  position: absolute;
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+  transform: translateY(-50%);
+}
+.navPrev {
+  left: 16px;
+}
+.navNext {
+  right: 16px;
+}
+.nav:hover {
+  background: rgba(0, 0, 0, 0.65);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.nav:active {
+  transform: translateY(-50%) scale(0.94);
+}
+.nav svg {
+  width: 18px;
+  height: 18px;
+}
+
+// Bottom badges: yacht tag + counter.
+.tag {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  animation: fadeIn 0.4s ease both;
+}
+.tagDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+
+.counter {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  font-feature-settings: "tnum", "lnum";
+}
+
+// Thumbnail strip below the viewer.
+.thumbs {
+  max-width: 1440px;
+  margin: 12px auto 0;
+  padding: 0 clamp(16px, 4vw, 48px);
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+}
+.thumb,
+.thumbActive {
+  position: relative;
+  flex: 0 0 80px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 1px solid var(--color-border-hairline);
   background: var(--color-surface-alt);
   cursor: pointer;
-  isolation: isolate;
+  overflow: hidden;
+  scroll-snap-align: start;
+  transition:
+    opacity 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition:
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      filter 0.4s ease;
-  }
-
-  &:hover img {
-    transform: scale(1.06);
-    filter: brightness(1.05);
   }
 }
-.caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 12px 14px;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.65) 100%);
-  color: white;
-  font-family: var(--font-mono), monospace;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
-  pointer-events: none;
-
-  .tile:hover & {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.thumb {
+  opacity: 0.55;
 }
-
-// Span patterns — applied via nth-child so we don't need per-tile classes.
-// 16 tiles, cycle of 8 patterns. Result: variety without manual layout work.
-.tile:nth-child(8n + 1) {
-  grid-column: span 2;
-  grid-row: span 3;
+.thumb:hover {
+  opacity: 1;
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
 }
-.tile:nth-child(8n + 2) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.tile:nth-child(8n + 3) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.tile:nth-child(8n + 4) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-.tile:nth-child(8n + 5) {
-  grid-column: span 2;
-  grid-row: span 3;
-}
-.tile:nth-child(8n + 6) {
-  grid-column: span 4;
-  grid-row: span 2;
-}
-.tile:nth-child(8n + 7) {
-  grid-column: span 3;
-  grid-row: span 2;
-}
-.tile:nth-child(8n + 8) {
-  grid-column: span 3;
-  grid-row: span 2;
-}
-
-// Narrow viewports: collapse to a simpler 2-col mosaic, less acrobatics.
-@media (max-width: 768px) {
-  .mosaic {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 200px;
-  }
-  .tile:nth-child(n) {
-    grid-column: span 1;
-    grid-row: span 1;
-  }
-  .tile:nth-child(6n + 1) {
-    grid-column: span 2;
-    grid-row: span 1;
-  }
+.thumbActive {
+  opacity: 1;
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
