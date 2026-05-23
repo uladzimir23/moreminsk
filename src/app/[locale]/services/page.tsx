@@ -10,7 +10,7 @@ type Props = {
 export const metadata: Metadata = {
   title: "Услуги — аренда яхт Море Minsk",
   description:
-    "Свадьба, день рождения, корпоратив, свидание, девичник, фотосессия на яхте на Минском море. Цены от 200 BYN.",
+    "День рождения, корпоратив, свидание, девичник, фотосессия на яхте на Минском море. Цены от 150 BYN.",
 };
 
 export default async function ServicesPage({ params }: Props) {

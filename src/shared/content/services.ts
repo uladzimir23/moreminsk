@@ -1,36 +1,21 @@
 import type { Service } from "@/entities/service/model/types";
 
-// Цены и названия сверены с moreminsk.by 2026-04-17 (raw-media/scraped/facts.md).
-// «От X BYN» = почасовая ставка × 2 (минимум аренды). На сайте указана только почасовая.
-// suitableYachts обновлены под реальные типы: alfa — парусная, mario — моторная, bravo — парусная.
+// Цены и состав пакетов согласованы с заказчиком 2026-05-23.
+// «От X BYN» = минимальная видимая цена в карточке. Стандартные пакеты — 2 ч / 350 и 4 ч / 500.
+// «Свадьба» снята с сайта по решению заказчика. Все яхты доступны под любую услугу.
 export const SERVICES: ReadonlyArray<Service> = [
-  {
-    slug: "svadba",
-    h1: "Свадьба на яхте в Минске",
-    shortTitle: "Свадьба",
-    utp: "До 8 гостей на палубе BRAVO, фуршетный стол, фото-зона",
-    icon: "Heart",
-    fromPrice: 300,
-    packages: [
-      { name: "Церемония", duration: "2 ч", price: 300 },
-      { name: "Фотосессия + прогулка", duration: "3 ч", price: 450 },
-      { name: "Полный день", duration: "8 ч", price: 1200 },
-    ],
-    suitableYachts: ["alfa", "bravo"],
-  },
   {
     slug: "den-rozhdeniya",
     h1: "День рождения на яхте",
     shortTitle: "День рождения",
     utp: "До 8 гостей, аудиосистема и фуршетный столик на палубе",
     icon: "Cake",
-    fromPrice: 300,
+    fromPrice: 200,
     packages: [
-      { name: "Короткий", duration: "2 ч", price: 300 },
-      { name: "Полвечера", duration: "4 ч", price: 600 },
-      { name: "Весь вечер", duration: "6 ч", price: 900 },
+      { name: "Короткий", duration: "2 ч", price: 350 },
+      { name: "Полвечера", duration: "4 ч", price: 500 },
     ],
-    suitableYachts: ["alfa", "mario", "bravo"],
+    suitableYachts: ["eva", "alfa", "mario", "bravo"],
   },
   {
     slug: "korporativ",
@@ -38,11 +23,10 @@ export const SERVICES: ReadonlyArray<Service> = [
     shortTitle: "Корпоратив",
     utp: "Безнал и документы для юрлица, до 32 человек на 2–4 яхтах",
     icon: "Briefcase",
-    fromPrice: 600,
+    fromPrice: 200,
     packages: [
-      { name: "Тимбилдинг", duration: "4 ч, 1 яхта", price: 600 },
-      { name: "Регата", duration: "6 ч, 2+ яхты", price: 2400 },
-      { name: "Банкет на воде", duration: "день", price: 4800 },
+      { name: "Тимбилдинг", duration: "2 ч", price: 350 },
+      { name: "Регата", duration: "4 ч", price: 500 },
     ],
     suitableYachts: ["eva", "alfa", "mario", "bravo"],
   },
@@ -52,13 +36,13 @@ export const SERVICES: ReadonlyArray<Service> = [
     shortTitle: "Свидание",
     utp: "Камерная EVA с тиковой палубой — на двоих, закатный выход",
     icon: "Sparkles",
-    fromPrice: 300,
+    fromPrice: 150,
     packages: [
-      { name: "Закатный", duration: "2 ч", price: 300 },
-      { name: "Вечер с фотографом", duration: "3 ч", price: 450 },
-      { name: "Предложение руки", duration: "2 ч", price: 300 },
+      { name: "Закатный мини", duration: "1 ч", price: 150 },
+      { name: "Закатный", duration: "2 ч", price: 350 },
+      { name: "Вечер с фотографом", duration: "4 ч", price: 500 },
     ],
-    suitableYachts: ["eva", "alfa"],
+    suitableYachts: ["eva", "alfa", "mario", "bravo"],
   },
   {
     slug: "devichnik",
@@ -66,13 +50,12 @@ export const SERVICES: ReadonlyArray<Service> = [
     shortTitle: "Девичник",
     utp: "До 8 человек, аудиосистема, фуршетный стол на палубе",
     icon: "GlassWater",
-    fromPrice: 300,
+    fromPrice: 200,
     packages: [
-      { name: "Базовый", duration: "2 ч", price: 300 },
-      { name: "Закатный", duration: "3 ч", price: 450 },
-      { name: "Премиум + декор", duration: "4 ч", price: 700 },
+      { name: "Базовый", duration: "2 ч", price: 350 },
+      { name: "Премиум + декор", duration: "4 ч", price: 500 },
     ],
-    suitableYachts: ["alfa", "bravo"],
+    suitableYachts: ["eva", "alfa", "mario", "bravo"],
   },
   {
     slug: "fotosessiya",
@@ -82,10 +65,9 @@ export const SERVICES: ReadonlyArray<Service> = [
     icon: "Camera",
     fromPrice: 200,
     packages: [
-      { name: "Короткая", duration: "1 ч", price: 200 },
-      { name: "Полноценная", duration: "2 ч", price: 300 },
-      { name: "Свадебная / семейная", duration: "3 ч", price: 450 },
+      { name: "Короткая", duration: "2 ч", price: 350 },
+      { name: "Полноценная", duration: "4 ч", price: 500 },
     ],
-    suitableYachts: ["eva", "mario", "bravo"],
+    suitableYachts: ["eva", "alfa", "mario", "bravo"],
   },
 ];

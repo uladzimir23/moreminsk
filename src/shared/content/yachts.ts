@@ -28,7 +28,7 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     description:
       "Парусная яхта на 8 гостей. Стол в кают-компании, фуршетный столик на палубе — формат под день рождения, девичник или небольшой корпоратив.",
     features: ["Капитан", "Топливо", "Фуршетный стол", "Аудиосистема"],
-    suitableFor: ["birthday", "hen-party", "stag-party", "corporate", "wedding-small"],
+    suitableFor: ["birthday", "hen-party", "stag-party", "corporate"],
     gallery: [],
     mainImage: "/yachts/alfa-cover.jpg",
   },
@@ -54,9 +54,9 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     pricePerHour: 150,
     minHours: 2,
     description:
-      "Флагман флота: стол в кают-компании, фуршетный столик на палубе, самая большая площадь палубы во флоте. Для свадьбы, юбилея и ключевого корпоратива.",
+      "Флагман флота: стол в кают-компании, фуршетный столик на палубе, самая большая площадь палубы во флоте. Для юбилея, премиум-корпоратива и VIP-вечера.",
     features: ["Капитан", "Топливо", "Фуршетный стол", "Аудиосистема"],
-    suitableFor: ["wedding", "anniversary", "vip-corporate", "proposal"],
+    suitableFor: ["anniversary", "vip-corporate", "proposal"],
     gallery: [],
     mainImage: "/yachts/bravo-cover.jpg",
     badge: "flagship",
