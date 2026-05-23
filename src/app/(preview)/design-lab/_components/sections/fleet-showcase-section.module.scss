@@ -1,0 +1,327 @@
+// Fleet showcase — single-screen tabbed presentation. Tabs switch yacht;
+// thumbnails switch which photo within that yacht is highlighted. The hero
+// frame stacks all photos absolutely with opacity transitions (GPU-friendly
+// crossfade). The info column re-keys on yacht switch so a fadeUp animation
+// fires fresh each time.
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section {
+  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px) clamp(60px, 8vh, 100px);
+  border-top: 1px solid var(--color-border-hairline);
+  background: var(--color-background);
+}
+
+.head {
+  max-width: 1280px;
+  margin: 0 auto 32px;
+  display: grid;
+  gap: 8px;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--color-foreground);
+  max-width: 720px;
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+// Tab strip — 4 yacht names in Lora italic. Editorial typographic tabs;
+// active gets accent color + 2px underline.
+.tabs {
+  max-width: 1280px;
+  margin: 0 auto 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 4vw, 48px);
+  align-items: baseline;
+  border-bottom: 1px solid var(--color-border-hairline);
+  padding-bottom: 16px;
+}
+.tab,
+.tabActive {
+  position: relative;
+  background: transparent;
+  border: 0;
+  padding: 6px 0 12px;
+  cursor: pointer;
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--color-foreground-muted);
+  transition: color 0.2s ease;
+}
+.tab:hover {
+  color: var(--color-foreground);
+}
+.tabActive {
+  color: var(--color-foreground);
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -17px; // sits on top of the .tabs row bottom border
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent);
+  }
+}
+.tabBadge {
+  margin-left: 6px;
+  font-family: var(--font-mono), monospace;
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  vertical-align: middle;
+}
+
+// Body grid — info left, gallery right. Re-keys on yacht switch.
+.body {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.6fr) 1.4fr;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Left column: info ────────────────────────────────────────────────────
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.specs {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.yachtName {
+  margin: 0;
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-foreground);
+}
+.desc {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-foreground-muted);
+}
+.features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border-hairline);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.featureDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.priceBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border-hairline);
+  font-feature-settings: "tnum", "lnum";
+}
+.priceLabel,
+.priceSuffix {
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.priceValue {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 14px 24px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+  }
+  svg {
+    transition: transform 0.2s ease;
+  }
+  &:hover svg {
+    transform: translateX(4px);
+  }
+}
+
+// ── Right column: gallery (hero + thumbs) ────────────────────────────────
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Hero photo frame — fixed aspect, stacks photos absolutely so we can
+// crossfade between them by toggling opacity.
+.heroFrame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border-hairline);
+}
+.img,
+.imgActive {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease;
+}
+.img {
+  opacity: 0;
+  pointer-events: none;
+}
+.imgActive {
+  opacity: 1;
+}
+
+.counter {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: white;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  font-feature-settings: "tnum", "lnum";
+}
+
+// Thumbnail strip — horizontal scroll on overflow.
+.thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+.thumb,
+.thumbActive {
+  position: relative;
+  flex: 0 0 88px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 1px solid var(--color-border-hairline);
+  background: var(--color-surface-alt);
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+.thumb:hover {
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+.thumbActive {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}

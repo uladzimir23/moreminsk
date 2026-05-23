@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import styles from "./landing-shell.module.scss";
 import { BookingCTASection } from "./sections/booking-cta-section";
 import { ContactsSection } from "./sections/contacts-section";
-import { FleetSection } from "./sections/fleet-section";
+import { FleetShowcaseSection } from "./sections/fleet-showcase-section";
 import { GallerySection } from "./sections/gallery-section";
 import { ServicesSection } from "./sections/services-section";
 
@@ -24,7 +24,7 @@ export function LandingShell({ hero }: LandingShellProps) {
 
       {hero}
 
-      <FleetSection />
+      <FleetShowcaseSection />
       <ServicesSection />
       <GallerySection />
       <BookingCTASection />
