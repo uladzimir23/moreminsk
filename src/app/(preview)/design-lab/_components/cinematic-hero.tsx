@@ -1,9 +1,71 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import styles from "./cinematic-hero.module.scss";
 
-export function CinematicHero() {
-  return (
-    <div className={styles.hero}>
+type CinematicHeroProps = {
+  // When true the hero gets a tall scroll runway with a sticky inner; the
+  // video scales up + the content fades/rises as you scroll, smoothed by a
+  // lerp so it lags both directions. Used on the dedicated cinematic landing.
+  pinned?: boolean;
+};
+
+export function CinematicHero({ pinned = false }: CinematicHeroProps) {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!pinned) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const section = sectionRef.current;
+    const video = videoRef.current;
+    const content = contentRef.current;
+    if (!section || !video) return;
+
+    let raf = 0;
+    let current = 0; // applied progress (lerped)
+    let target = 0; // scroll-derived progress
+
+    const clamp = (v: number) => Math.min(1, Math.max(0, v));
+
+    const measure = () => {
+      const rect = section.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      target = scrollable > 0 ? clamp(-rect.top / scrollable) : 0;
+    };
+
+    const render = () => {
+      // Lerp toward target — the 0.07 factor is the «delay»/lag both ways.
+      current += (target - current) * 0.07;
+      if (Math.abs(target - current) < 0.0004) current = target;
+
+      const scale = 1 + current * 0.34;
+      video.style.transform = `scale(${scale})`;
+
+      if (content) {
+        content.style.opacity = String(1 - clamp(current * 1.5));
+        content.style.transform = `translateY(${current * -64}px)`;
+      }
+      raf = requestAnimationFrame(render);
+    };
+
+    measure();
+    render();
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [pinned]);
+
+  const inner = (
+    <>
       <video
+        ref={videoRef}
         className={styles.video}
         src="/design-lab/yacht-hero.mp4"
         poster="/design-lab/yacht-hero-poster.jpg"
@@ -22,7 +84,7 @@ export function CinematicHero() {
         <span>Live · Минское море</span>
       </div>
 
-      <div className={styles.content}>
+      <div className={styles.content} ref={contentRef}>
         <span className={styles.eyebrow}>Флот 2026 · 4 яхты под парусом и мотором</span>
 
         <h1 className={styles.headline}>
@@ -82,6 +144,16 @@ export function CinematicHero() {
         </span>
         <span className={styles.metaItem}>Видео — Минское море, июнь 2025</span>
       </div>
-    </div>
+    </>
   );
+
+  if (pinned) {
+    return (
+      <section ref={sectionRef} className={styles.pinnedSection}>
+        <div className={styles.sticky}>{inner}</div>
+      </section>
+    );
+  }
+
+  return <div className={styles.hero}>{inner}</div>;
 }

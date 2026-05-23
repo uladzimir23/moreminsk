@@ -23,6 +23,24 @@
   font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
 }
 
+// Pinned variant — tall scroll runway with a sticky inner that holds the
+// hero. The video scales as you scroll the runway (JS lerp-driven).
+.pinnedSection {
+  position: relative;
+  height: 185vh;
+  background: #000;
+  color: white;
+  font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
+}
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .video {
   position: absolute;
   inset: 0;
@@ -30,6 +48,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+  transform-origin: center center;
+  will-change: transform;
   z-index: 0;
 }
 

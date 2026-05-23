@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function CinematicLandingPage() {
-  return <LandingShell hero={<CinematicHero />} />;
+  return <LandingShell hero={<CinematicHero pinned />} />;
 }

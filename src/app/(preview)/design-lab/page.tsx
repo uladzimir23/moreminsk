@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 type VariantMeta = {
   slug: string;
   label: string;
-  Hero: () => React.ReactElement;
+  Hero: React.ComponentType;
 };
 
 const VARIANTS: ReadonlyArray<VariantMeta> = [
