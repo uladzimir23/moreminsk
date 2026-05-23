@@ -1,11 +1,14 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { LandingFooter } from "./landing-footer";
 import { LandingHeader } from "./landing-header";
 import styles from "./landing-shell.module.scss";
 import { BookingCTASection } from "./sections/booking-cta-section";
 import { ContactsSection } from "./sections/contacts-section";
+import { FaqSection } from "./sections/faq-section";
 import { FleetShowcaseSection } from "./sections/fleet-showcase-section";
 import { GallerySection } from "./sections/gallery-section";
+import { ReviewsSection } from "./sections/reviews-section";
 import { ServicesSection } from "./sections/services-section";
 
 type LandingShellProps = {
@@ -35,8 +38,11 @@ export function LandingShell({ hero, overlapHero = false }: LandingShellProps) {
         <FleetShowcaseSection />
         <ServicesSection />
         <GallerySection />
+        <ReviewsSection />
+        <FaqSection />
         <BookingCTASection />
         <ContactsSection />
+        <LandingFooter />
       </div>
     </div>
   );

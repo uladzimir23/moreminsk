@@ -6,7 +6,7 @@ export function BookingCTASection() {
       <div className={styles.horizon} aria-hidden="true" />
 
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>04 · Бронирование</p>
+        <p className={styles.eyebrow}>06 · Бронирование</p>
         <h2 className={styles.title}>
           Готовы <span className={styles.accent}>выйти в море?</span>
         </h2>
