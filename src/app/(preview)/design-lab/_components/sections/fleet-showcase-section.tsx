@@ -1,9 +1,11 @@
 "use client";
 
 import { YACHTS } from "@/shared/content/yachts";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./fleet-showcase-section.module.scss";
+
+const SWIPE_THRESHOLD = 40;
 
 const TYPE_LABEL = {
   sail: "Парусная",
@@ -47,6 +49,39 @@ export function FleetShowcaseSection() {
       document.body.style.overflow = prev;
     };
   }, [zoomed]);
+
+  // Touch swipe → page photos. didSwipe guards the frame's click (so a
+  // swipe doesn't also open the zoom view) and the lightbox's close.
+  const touchStartX = useRef<number | null>(null);
+  const didSwipe = useRef(false);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    didSwipe.current = false;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > SWIPE_THRESHOLD) {
+      didSwipe.current = true;
+      if (dx < 0) nextPhoto();
+      else prevPhoto();
+    }
+    touchStartX.current = null;
+  };
+  const handleFrameClick = () => {
+    if (didSwipe.current) {
+      didSwipe.current = false;
+      return;
+    }
+    setZoomed(true);
+  };
+  const handleLightboxClick = () => {
+    if (didSwipe.current) {
+      didSwipe.current = false;
+      return;
+    }
+    setZoomed(false);
+  };
 
   return (
     <section className={styles.section} id="fleet">
@@ -138,7 +173,9 @@ export function FleetShowcaseSection() {
           <button
             type="button"
             className={styles.heroFrame}
-            onClick={() => setZoomed(true)}
+            onClick={handleFrameClick}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
             aria-label={`Открыть фото ${activeYacht.name} крупно`}
           >
             {/* Blurred bg layer — same photo, object-fit: cover, fills letterbox */}
@@ -254,7 +291,9 @@ export function FleetShowcaseSection() {
           role="dialog"
           aria-modal="true"
           aria-label={`Фото яхты ${activeYacht.name}`}
-          onClick={() => setZoomed(false)}
+          onClick={handleLightboxClick}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

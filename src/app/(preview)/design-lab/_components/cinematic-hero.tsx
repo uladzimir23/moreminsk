@@ -54,7 +54,11 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       // there's no lifted-section black gap. It stays opaque underneath, so
       // while the next section fades in we see the video through it (no black).
       const scale = 1 + current * 0.26;
+      // The video darkens as the next section starts to reveal (reveal>0),
+      // so it visibly dims «behind» the incoming content.
+      const reveal = clamp((current - 0.375) / 0.5);
       video.style.transform = `scale(${scale})`;
+      video.style.filter = `brightness(${1 - reveal * 0.55})`;
 
       // Headline leaves fast, well before the pause.
       if (content) {
@@ -64,7 +68,6 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
 
       // Next section reveals via opacity as it rises over the opaque hero.
       if (nextBlock) {
-        const reveal = clamp((current - 0.375) / 0.5);
         nextBlock.style.opacity = String(reveal);
       }
 

@@ -59,7 +59,7 @@
   object-fit: cover;
   object-position: center;
   transform-origin: center center;
-  will-change: transform;
+  will-change: transform, filter;
   z-index: 0;
 }
 
