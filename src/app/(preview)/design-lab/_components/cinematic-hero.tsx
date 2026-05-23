@@ -43,22 +43,25 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       current += (target - current) * 0.07;
       if (Math.abs(target - current) < 0.0004) current = target;
 
-      // Video zooms in gently across the whole runway.
-      const scale = 1 + current * 0.2;
+      // Runway phases (scrollable = 160vh, progress = scrollY / 160vh):
+      //   0    → 0.14  headline fades + rises
+      //   0.14 → 0.375 «pure video» pause — just the footage, gently zooming
+      //   0.375 → ~0.9 next section rises over the hero; hero dissolves up
+      // Video zooms gently across the whole runway.
+      const scale = 1 + current * 0.22;
       video.style.transform = `scale(${scale})`;
 
-      // Headline fades + rises early (gone by ~0.35).
+      // Headline leaves fast, well before the pause.
       if (content) {
-        content.style.opacity = String(1 - clamp(current * 2.8));
-        content.style.transform = `translateY(${current * -70}px)`;
+        content.style.opacity = String(1 - clamp(current * 7));
+        content.style.transform = `translateY(${current * -60}px)`;
       }
 
-      // As the next section rises over the hero (z-index above), the still-
-      // visible upper band of the hero dissolves and parallaxes up — so the
-      // video fades «in place» behind the incoming section, no black gap.
-      const fade = clamp((current - 0.2) / 0.7);
+      // Hero stays fully visible through the pause, then dissolves + drifts
+      // up as the next section (z-index above) covers it from the bottom.
+      const fade = clamp((current - 0.375) / 0.5);
       sticky.style.opacity = String(1 - fade);
-      sticky.style.transform = `translateY(${-current * 80}px)`;
+      sticky.style.transform = `translateY(${-fade * 80}px)`;
 
       raf = requestAnimationFrame(render);
     };

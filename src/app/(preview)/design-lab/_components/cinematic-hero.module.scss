@@ -29,10 +29,13 @@
 // landing shell) rises UP over it. The video scales + the hero dissolves
 // and parallaxes up underneath as the next section covers it — no black
 // gap, because the opaque next section is what fills the screen.
+// 260vh = 100vh sticky + 60vh «pure video» pause (after the headline fades,
+// before the next section starts rising) + 100vh overlap runway where the
+// next section rises over the hero.
 .pinnedSection {
   position: relative;
   z-index: 0;
-  height: 200vh;
+  height: 260vh;
   background: #000;
   color: white;
   font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
