@@ -1,61 +1,73 @@
-// Full-bleed CTA — sky-tinted background, large editorial headline, primary
-// button + phone link. Decorative hairline horizon line repeats the hero motif.
+// Booking — light section, editorial pitch on the left + a real booking
+// form card on the right. Sky-tinted background + hairline horizon motif.
 
 .section {
   position: relative;
   overflow: hidden;
-  padding: clamp(100px, 16vh, 180px) clamp(24px, 6vw, 80px);
+  padding: clamp(80px, 14vh, 160px) clamp(24px, 6vw, 80px);
   border-top: 1px solid rgba(128, 128, 128, 0.16);
   background: linear-gradient(
     to bottom,
     var(--color-background) 0%,
-    color-mix(in srgb, var(--color-accent) 6%, var(--color-background)) 55%,
-    color-mix(in srgb, var(--color-accent) 14%, var(--color-background)) 100%
+    color-mix(in srgb, var(--color-accent) 6%, var(--color-background)) 70%,
+    color-mix(in srgb, var(--color-accent) 12%, var(--color-background)) 100%
   );
 }
 
 .horizon {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   right: 0;
   height: 1px;
-  background: color-mix(in srgb, var(--color-accent) 70%, transparent);
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
+  background: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  mask-image: linear-gradient(to right, transparent 0%, black 25%, black 75%, transparent 100%);
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 20%,
-    black 80%,
+    black 25%,
+    black 75%,
     transparent 100%
   );
   pointer-events: none;
 }
 
-.inner {
+.grid {
   position: relative;
-  max-width: 880px;
+  max-width: 1280px;
   margin: 0 auto;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+// ── Left: pitch ──────────────────────────────────────────────────────────
+
+.pitch {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 .eyebrow {
+  margin: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-foreground-muted);
-  margin: 0;
 }
 .title {
   margin: 0;
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 1.04;
   letter-spacing: -0.04em;
   color: var(--color-foreground);
 }
@@ -70,31 +82,168 @@
   font-size: clamp(1rem, 1.4vw, 1.125rem);
   line-height: 1.6;
   color: var(--color-foreground-muted);
-  max-width: 540px;
+  max-width: 460px;
 }
-
-.ctas {
+.points {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-  margin-top: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
-.btnPrimary {
+.point {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9375rem;
+  color: var(--color-foreground);
+}
+.pointDot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+.phone {
+  margin-top: 8px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 32px;
+  font-family: var(--font-mono), monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-foreground);
+  text-decoration: none;
+  font-feature-settings: "tnum", "lnum";
+  width: fit-content;
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+// ── Right: form card ─────────────────────────────────────────────────────
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-hairline);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.18);
+  padding: clamp(24px, 3vw, 36px);
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.input,
+.select {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+}
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23737373' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+// Duration chips (radio group styled as capsule-free chips).
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  position: relative;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  span {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-foreground);
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+  input:checked + span {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color: var(--color-accent-text, var(--color-accent));
+  }
+  input:focus-visible + span {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  margin-top: 4px;
   border: 0;
   background: var(--color-accent);
   color: var(--color-on-accent);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 32%, transparent);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -103,7 +252,7 @@
   &:hover {
     background: var(--color-accent-hover);
     transform: translateY(-2px);
-    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 50%, transparent);
+    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 45%, transparent);
   }
   svg {
     transition: transform 0.2s ease;
@@ -112,35 +261,73 @@
     transform: translateX(4px);
   }
 }
-.btnPhone {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 24px;
-  background: transparent;
-  border: 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-foreground);
-  text-decoration: none;
-  position: relative;
-  font-feature-settings: "tnum", "lnum";
+.note {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-foreground-subtle);
+  text-align: center;
+}
 
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 12px;
-    left: 24px;
-    right: 24px;
-    height: 1px;
-    background: var(--color-foreground);
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+// ── Success state ────────────────────────────────────────────────────────
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  padding: clamp(28px, 4vw, 48px) 8px;
+  animation: successIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.successIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  color: var(--color-accent);
+}
+.successTitle {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-foreground);
+}
+.successText {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-foreground-muted);
+  max-width: 340px;
+}
+.successReset {
+  margin-top: 6px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+@keyframes successIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
   }
-  &:hover::after {
-    transform: scaleX(1);
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .success {
+    animation: none;
   }
 }
