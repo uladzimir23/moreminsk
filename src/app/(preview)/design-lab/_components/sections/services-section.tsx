@@ -52,6 +52,25 @@ export function ServicesSection() {
 
   return (
     <section className={styles.section} id="services">
+      {/* Ambient section backdrop — blurred copy of the active service's
+          photo, so the whole section breathes its mood. */}
+      <div className={styles.backdrop} aria-hidden="true">
+        {SERVICES.map((service, i) => {
+          const mood = SERVICE_MOOD[service.slug];
+          return (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              key={`section-bg-${service.slug}`}
+              src={PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx]}
+              alt=""
+              className={i === activeIdx ? styles.backdropImgActive : styles.backdropImg}
+              loading={i === 0 ? "eager" : "lazy"}
+            />
+          );
+        })}
+        <div className={styles.backdropOverlay} />
+      </div>
+
       <header className={styles.head}>
         <p className={styles.eyebrow}>02 · Услуги</p>
         <h2 className={styles.title}>
@@ -143,6 +162,11 @@ export function ServicesSection() {
             );
           })}
         </div>
+
+        {/* Edge fades — gradient to section-dark + progressive blur so the
+            peeking neighbour slides recede softly (focus center). */}
+        <div className={`${styles.edge} ${styles.edgeLeft}`} aria-hidden="true" />
+        <div className={`${styles.edge} ${styles.edgeRight}`} aria-hidden="true" />
       </div>
 
       <div className={styles.controls}>
