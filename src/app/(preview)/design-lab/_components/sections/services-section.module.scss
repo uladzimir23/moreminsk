@@ -21,7 +21,6 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(80px, 12vh, 140px) 0;
-  border-top: 1px solid var(--color-border-hairline);
   background: #0a0a0a; // fallback before ambient backdrop paints
   color: white;
 }

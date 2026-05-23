@@ -24,6 +24,9 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     const sticky = stickyRef.current;
     const video = videoRef.current;
     const content = contentRef.current;
+    // The sibling after the hero is the landing content block (.overlap);
+    // we fade it in via opacity as it rises over the still-opaque hero.
+    const nextBlock = section?.nextElementSibling as HTMLElement | null;
     if (!section || !video || !sticky) return;
 
     let raf = 0;
@@ -46,9 +49,11 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       // Runway phases (scrollable = 160vh, progress = scrollY / 160vh):
       //   0    → 0.14  headline fades + rises
       //   0.14 → 0.375 «pure video» pause — just the footage, gently zooming
-      //   0.375 → ~0.9 next section rises over the hero; hero dissolves up
-      // Video zooms gently across the whole runway.
-      const scale = 1 + current * 0.22;
+      //   0.375 → ~0.95 next section fades in over the hero (opacity reveal)
+      // The hero itself never moves — only the video zooms (approaches), so
+      // there's no lifted-section black gap. It stays opaque underneath, so
+      // while the next section fades in we see the video through it (no black).
+      const scale = 1 + current * 0.26;
       video.style.transform = `scale(${scale})`;
 
       // Headline leaves fast, well before the pause.
@@ -57,11 +62,11 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
         content.style.transform = `translateY(${current * -60}px)`;
       }
 
-      // Hero stays fully visible through the pause, then dissolves + drifts
-      // up as the next section (z-index above) covers it from the bottom.
-      const fade = clamp((current - 0.375) / 0.5);
-      sticky.style.opacity = String(1 - fade);
-      sticky.style.transform = `translateY(${-fade * 80}px)`;
+      // Next section reveals via opacity as it rises over the opaque hero.
+      if (nextBlock) {
+        const reveal = clamp((current - 0.375) / 0.5);
+        nextBlock.style.opacity = String(reveal);
+      }
 
       raf = requestAnimationFrame(render);
     };

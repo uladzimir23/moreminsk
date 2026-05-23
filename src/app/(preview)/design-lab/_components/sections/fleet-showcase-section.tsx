@@ -1,7 +1,7 @@
 "use client";
 
 import { YACHTS } from "@/shared/content/yachts";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./fleet-showcase-section.module.scss";
 
@@ -14,9 +14,39 @@ const TYPE_LABEL = {
 export function FleetShowcaseSection() {
   const [activeYachtIdx, setActiveYachtIdx] = useState(0);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
 
   const activeYacht = YACHTS[activeYachtIdx];
   const photos = PHOTOS_BY_YACHT[activeYacht.slug as YachtSlug];
+
+  const nextPhoto = useCallback(() => {
+    setActivePhotoIdx((i) => (i + 1) % photos.length);
+  }, [photos.length]);
+  const prevPhoto = useCallback(() => {
+    setActivePhotoIdx((i) => (i - 1 + photos.length) % photos.length);
+  }, [photos.length]);
+
+  // Keyboard: arrows page through photos; arrows/esc also drive the zoom view.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === "ArrowRight") nextPhoto();
+      if (e.key === "ArrowLeft") prevPhoto();
+      if (e.key === "Escape") setZoomed(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [nextPhoto, prevPhoto]);
+
+  // Lock body scroll while zoomed.
+  useEffect(() => {
+    if (!zoomed) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [zoomed]);
 
   return (
     <section className={styles.section} id="fleet">
@@ -105,7 +135,12 @@ export function FleetShowcaseSection() {
         </aside>
 
         <div className={styles.gallery}>
-          <div className={styles.heroFrame}>
+          <button
+            type="button"
+            className={styles.heroFrame}
+            onClick={() => setZoomed(true)}
+            aria-label={`Открыть фото ${activeYacht.name} крупно`}
+          >
             {/* Blurred bg layer — same photo, object-fit: cover, fills letterbox */}
             {photos.map((url, i) => (
               /* eslint-disable-next-line @next/next/no-img-element */
@@ -129,10 +164,63 @@ export function FleetShowcaseSection() {
                 loading={i === 0 ? "eager" : "lazy"}
               />
             ))}
+
+            <span className={styles.zoomHint} aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="M21 21l-4.3-4.3M11 8v6M8 11h6" />
+              </svg>
+            </span>
             <span className={styles.counter} aria-live="polite">
               {String(activePhotoIdx + 1).padStart(2, "0")} /{" "}
               {String(photos.length).padStart(2, "0")}
             </span>
+          </button>
+
+          <div className={styles.frameNav} aria-hidden="true">
+            <button
+              type="button"
+              className={styles.frameArrow}
+              onClick={prevPhoto}
+              aria-label="Предыдущее фото"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={styles.frameArrow}
+              onClick={nextPhoto}
+              aria-label="Следующее фото"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
           </div>
 
           <div
@@ -157,6 +245,90 @@ export function FleetShowcaseSection() {
           </div>
         </div>
       </div>
+
+      {/* Zoom view — not a modal popup: the photo scales up + centers while
+          the page behind blurs (backdrop-filter on the fixed overlay). */}
+      {zoomed && (
+        <div
+          className={styles.lightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Фото яхты ${activeYacht.name}`}
+          onClick={() => setZoomed(false)}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className={styles.lightboxImg}
+            src={photos[activePhotoIdx]}
+            alt={`Яхта ${activeYacht.name} — фото ${activePhotoIdx + 1}`}
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          <button
+            type="button"
+            className={styles.lightboxClose}
+            onClick={() => setZoomed(false)}
+            aria-label="Закрыть"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.lightboxNav} ${styles.lightboxPrev}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              prevPhoto();
+            }}
+            aria-label="Предыдущее фото"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className={`${styles.lightboxNav} ${styles.lightboxNext}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              nextPhoto();
+            }}
+            aria-label="Следующее фото"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+
+          <span className={styles.lightboxCaption}>
+            <span className={styles.lightboxTag}>{activeYacht.name}</span>
+            {String(activePhotoIdx + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}
+          </span>
+        </div>
+      )}
     </section>
   );
 }

@@ -5,7 +5,7 @@
   position: relative;
   overflow: hidden;
   padding: clamp(100px, 16vh, 180px) clamp(24px, 6vw, 80px);
-  border-top: 1px solid var(--color-border-hairline);
+  border-top: 1px solid rgba(128, 128, 128, 0.16);
   background: linear-gradient(
     to bottom,
     var(--color-background) 0%,
