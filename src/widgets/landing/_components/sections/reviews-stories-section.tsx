@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useState } from "react";
 import { STORY_GROUPS } from "../../_data/stories";
 import styles from "./reviews-stories-section.module.scss";
@@ -83,10 +84,7 @@ export function ReviewsStoriesSection() {
   return (
     <section className={styles.section} id="reviews">
       <div className={styles.head}>
-        <p className={styles.eyebrow}>04 · Отзывы</p>
-        <h2 className={styles.title}>
-          Истории <span className={styles.accent}>с воды.</span>
-        </h2>
+        <SectionHeader eyebrow="04 · Отзывы" title="Истории" accent="с воды." tone="media" />
       </div>
 
       <div className={styles.highlights}>

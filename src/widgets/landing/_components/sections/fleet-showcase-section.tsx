@@ -1,6 +1,7 @@
 "use client";
 
 import { YACHTS } from "@/shared/content/yachts";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./fleet-showcase-section.module.scss";
@@ -102,12 +103,14 @@ export function FleetShowcaseSection() {
         <div className={styles.backdropOverlay} />
       </div>
 
-      <header className={styles.head}>
-        <p className={styles.eyebrow}>01 · Флот</p>
-        <h2 className={styles.title}>
-          Четыре яхты — выбирайте <span className={styles.accent}>настроение.</span>
-        </h2>
-      </header>
+      <div className={styles.head}>
+        <SectionHeader
+          eyebrow="01 · Флот"
+          title="Четыре яхты — выбирайте"
+          accent="настроение."
+          tone="media"
+        />
+      </div>
 
       <div className={styles.tabs} role="tablist" aria-label="Выбор яхты">
         {YACHTS.map((yacht, i) => (
