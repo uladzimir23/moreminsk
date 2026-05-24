@@ -123,9 +123,6 @@
 
 .track {
   display: flex;
-  gap: clamp(16px, 2vw, 32px);
-  // padding centers the first/last slide and sets the peek width.
-  padding-inline: 9vw;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -137,48 +134,20 @@
   }
 }
 
+// Full-width slides — one fills the viewport, no peek. Every slide is
+// structurally identical, so the content lands in the same place each page.
 .slide {
   position: relative;
-  flex: 0 0 82vw;
-  scroll-snap-align: center;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
   isolation: isolate;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  aspect-ratio: 21 / 9;
   background: #0a0a0a;
 
   @media (max-width: 900px) {
-    flex-basis: 86vw;
     aspect-ratio: 4 / 5;
   }
-}
-
-// Edge fade — gradient to section-dark + progressive blur via mask.
-// Two stacked effects: the gradient darkens the peeking slide, the
-// backdrop-filter (masked to fade inward) softens it.
-.edge {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: clamp(60px, 12vw, 220px);
-  z-index: 5;
-  pointer-events: none;
-}
-.edgeLeft {
-  left: 0;
-  background: linear-gradient(to right, #0a0a0a 0%, rgba(10, 10, 10, 0.4) 45%, transparent 100%);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  mask-image: linear-gradient(to right, black 0%, black 35%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 0%, black 35%, transparent 100%);
-}
-.edgeRight {
-  right: 0;
-  background: linear-gradient(to left, #0a0a0a 0%, rgba(10, 10, 10, 0.4) 45%, transparent 100%);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  mask-image: linear-gradient(to left, black 0%, black 35%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, black 0%, black 35%, transparent 100%);
 }
 
 // Blurred photo backdrop inside each slide.
@@ -231,22 +200,39 @@
   }
 }
 
+// Full-slide flex container — centers an inner column whose left edge lines
+// up with the section header (same 1440 gutter), so the text sits in the
+// exact same spot on every slide.
 .content {
-  position: relative;
+  position: absolute;
+  inset: 0;
   z-index: 3;
-  height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 16px;
-  padding: clamp(28px, 5vw, 64px);
-  max-width: 560px;
+  align-items: center;
   color: white;
-  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   @media (max-width: 900px) {
-    justify-content: flex-end;
-    max-width: none;
+    align-items: flex-end;
+  }
+}
+.contentInner {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vh, 56px) clamp(24px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  > * {
+    max-width: 560px;
+  }
+
+  @media (max-width: 900px) {
+    > * {
+      max-width: none;
+    }
   }
 }
 .chapterNumber {

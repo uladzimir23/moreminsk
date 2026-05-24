@@ -112,61 +112,58 @@ export function ServicesSection() {
                 />
 
                 <div className={styles.content}>
-                  <p className={styles.chapterNumber}>
-                    {String(i + 1).padStart(2, "0")} · {service.shortTitle}
-                  </p>
-                  <h3 className={styles.serviceName}>
-                    {service.shortTitle.split(" ").length > 1 ? (
-                      <>
-                        {service.shortTitle.split(" ").slice(0, -1).join(" ")}{" "}
-                        <span className={styles.serviceAccent}>
-                          {service.shortTitle.split(" ").slice(-1)[0]}.
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className={styles.serviceAccent}>{service.shortTitle}.</span>
-                      </>
-                    )}
-                  </h3>
-                  <p className={styles.serviceUtp}>{service.utp}</p>
+                  <div className={styles.contentInner}>
+                    <p className={styles.chapterNumber}>
+                      {String(i + 1).padStart(2, "0")} · {service.shortTitle}
+                    </p>
+                    <h3 className={styles.serviceName}>
+                      {service.shortTitle.split(" ").length > 1 ? (
+                        <>
+                          {service.shortTitle.split(" ").slice(0, -1).join(" ")}{" "}
+                          <span className={styles.serviceAccent}>
+                            {service.shortTitle.split(" ").slice(-1)[0]}.
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span className={styles.serviceAccent}>{service.shortTitle}.</span>
+                        </>
+                      )}
+                    </h3>
+                    <p className={styles.serviceUtp}>{service.utp}</p>
 
-                  <ul className={styles.packages}>
-                    {service.packages.map((pkg) => (
-                      <li key={pkg.name} className={styles.pkg}>
-                        <span className={styles.pkgName}>{pkg.name}</span>
-                        <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
-                        <span className={styles.pkgDuration}>{pkg.duration}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    <ul className={styles.packages}>
+                      {service.packages.map((pkg) => (
+                        <li key={pkg.name} className={styles.pkg}>
+                          <span className={styles.pkgName}>{pkg.name}</span>
+                          <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
+                          <span className={styles.pkgDuration}>{pkg.duration}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-                  <a href="#booking" className={styles.cta}>
-                    Забронировать {service.shortTitle.toLowerCase()}
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </a>
+                    <a href="#booking" className={styles.cta}>
+                      Забронировать {service.shortTitle.toLowerCase()}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </article>
             );
           })}
         </div>
-
-        {/* Edge fades — gradient to section-dark + progressive blur so the
-            peeking neighbour slides recede softly (focus center). */}
-        <div className={`${styles.edge} ${styles.edgeLeft}`} aria-hidden="true" />
-        <div className={`${styles.edge} ${styles.edgeRight}`} aria-hidden="true" />
       </div>
 
       <div className={styles.controls}>
