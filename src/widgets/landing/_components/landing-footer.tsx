@@ -4,6 +4,7 @@ import styles from "./landing-footer.module.scss";
 export function LandingFooter() {
   return (
     <footer className={styles.footer}>
+      <div className={styles.glow} aria-hidden="true" />
       <div className={styles.top}>
         <div className={styles.brandCol}>
           <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
@@ -47,7 +48,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        <nav className={styles.col} aria-label="Разделы">
+        <nav className={`${styles.col} ${styles.navCol}`} aria-label="Разделы">
           <p className={styles.colTitle}>Разделы</p>
           <a className={styles.link} href="#fleet">
             Флот
