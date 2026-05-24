@@ -52,6 +52,10 @@ export function LandingHeader() {
         </nav>
 
         <div className={styles.actions}>
+          {/* Mobile-only quick jump to the fleet (desktop has it in the nav). */}
+          <a href="#fleet" className={styles.fleetBtn}>
+            Яхты
+          </a>
           <a href="tel:+375296953636" className={styles.phone}>
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
           </a>
