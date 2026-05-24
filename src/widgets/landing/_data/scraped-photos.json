@@ -1,41 +1,38 @@
 {
   "eva": [
-    "https://static.tildacdn.biz/tild6633-3936-4434-b234-653633623139/Frame_160.jpg",
-    "https://static.tildacdn.biz/tild6238-3638-4538-b531-636465353236/Frame_153.jpg",
-    "https://static.tildacdn.biz/tild6330-3435-4439-a232-303437663031/Frame_72.jpg",
-    "https://static.tildacdn.biz/tild3638-6334-4130-a439-333066663233/Frame_75.jpg",
-    "https://static.tildacdn.biz/tild6661-6663-4231-b362-316137363932/Frame_74.jpg",
-    "https://static.tildacdn.biz/tild3031-6334-4535-b561-643432356336/Frame_80.jpg",
-    "https://static.tildacdn.biz/tild3436-6536-4563-a131-383638376638/Frame_157.jpg",
-    "https://static.tildacdn.biz/tild6261-6433-4239-a335-326232386364/Frame_83.jpg"
+    "/fleet/eva/Frame_160.jpg",
+    "/fleet/eva/Frame_153.jpg",
+    "/fleet/eva/Frame_72.jpg",
+    "/fleet/eva/Frame_75.jpg",
+    "/fleet/eva/Frame_74.jpg",
+    "/fleet/eva/Frame_80.jpg",
+    "/fleet/eva/Frame_157.jpg",
+    "/fleet/eva/Frame_83.jpg"
   ],
   "alfa": [
-    "https://static.tildacdn.biz/tild6637-3930-4236-a633-333533323261/Frame_97.jpg",
-    "https://static.tildacdn.biz/tild3665-3263-4435-b862-366337366665/Frame_94.jpg",
-    "https://static.tildacdn.biz/tild6565-3630-4863-b234-313865373836/Frame_102.jpg",
-    "https://static.tildacdn.biz/tild3766-6463-4934-a263-306239336331/Frame_93.jpg",
-    "https://static.tildacdn.biz/tild3763-3561-4266-b764-316235636530/Frame_98.jpg",
-    "https://static.tildacdn.biz/tild3137-6535-4735-a165-353866666465/Frame_99.jpg",
-    "https://static.tildacdn.biz/tild3166-6639-4239-b339-643161353833/Frame_105.jpg"
+    "/fleet/alfa/Frame_97.jpg",
+    "/fleet/alfa/Frame_94.jpg",
+    "/fleet/alfa/Frame_102.jpg",
+    "/fleet/alfa/Frame_93.jpg",
+    "/fleet/alfa/Frame_98.jpg",
+    "/fleet/alfa/Frame_99.jpg",
+    "/fleet/alfa/Frame_105.jpg"
   ],
   "mario": [
-    "https://static.tildacdn.biz/tild6163-3232-4730-a632-363234663665/IMG_2720_3.jpg",
-    "https://static.tildacdn.biz/tild6363-6364-4132-a361-613737613966/Frame_126.jpg",
-    "https://static.tildacdn.biz/tild6165-3034-4535-b566-383331343236/photo_2024-05-31_13-.jpg",
-    "https://static.tildacdn.biz/tild6335-6261-4562-b832-323363303931/IMG_2224.jpg",
-    "https://static.tildacdn.biz/tild3230-6139-4661-a666-316266613734/IMG_2973.jpg",
-    "https://static.tildacdn.biz/tild3564-6361-4639-b536-363563396264/Frame_120.jpg"
+    "/fleet/mario/IMG_2720_3.jpg",
+    "/fleet/mario/Frame_126.jpg",
+    "/fleet/mario/photo_2024-05-31_13-.jpg",
+    "/fleet/mario/IMG_2224.jpg",
+    "/fleet/mario/IMG_2973.jpg",
+    "/fleet/mario/Frame_120.jpg"
   ],
   "bravo": [
-    "https://static.tildacdn.biz/tild3530-3637-4139-a362-663866373035/Frame_132.jpg",
-    "https://static.tildacdn.biz/tild6664-6334-4866-a336-306561663836/Frame_133.jpg",
-    "https://static.tildacdn.biz/tild3665-6161-4462-b565-333764666661/IMG_5046.jpg",
-    "https://static.tildacdn.biz/tild6565-6332-4365-b930-613231613562/Frame_137.jpg",
-    "https://static.tildacdn.biz/tild3836-6363-4031-b732-653961633962/Frame_138.jpg",
-    "https://static.tildacdn.biz/tild3662-6334-4935-b566-313665316439/Frame_143.jpg"
+    "/fleet/bravo/Frame_132.jpg",
+    "/fleet/bravo/Frame_133.jpg",
+    "/fleet/bravo/IMG_5046.jpg",
+    "/fleet/bravo/Frame_137.jpg",
+    "/fleet/bravo/Frame_138.jpg",
+    "/fleet/bravo/Frame_143.jpg"
   ],
-  "home": [
-    "https://static.tildacdn.biz/tild6536-6434-4032-a432-313163356466/Frame_62.jpg",
-    "https://static.tildacdn.biz/tild3934-6464-4663-b230-313865356532/IMG_2720_3.jpg"
-  ]
+  "home": ["/fleet/home/Frame_62.jpg", "/fleet/home/IMG_2720_3.jpg"]
 }

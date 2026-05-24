@@ -1,9 +1,7 @@
-// Photos scraped from moreminsk.by (2026-05-23) — Tilda CDN serves these
-// without auth/referer/CORS restrictions, so the design-lab can hotlink
-// them directly. For production we'd copy into public/fleet/ and public/gallery/.
-//
-// Source: src/app/(preview)/design-lab/_data/scraped-photos.json
-// Scraper: see git log — curl + regex over Tilda gallery JSON blob.
+// Photos originally scraped from moreminsk.by (Tilda), now hosted locally in
+// public/fleet/<yacht>/ (optimised to ≤2000px, JPEG q80) so the site no longer
+// hotlinks a third-party CDN. Paths in scraped-photos.json are /fleet/... and
+// resolve from public/ under static export.
 
 import raw from "./scraped-photos.json";
 
