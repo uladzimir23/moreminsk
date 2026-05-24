@@ -1,6 +1,7 @@
 "use client";
 
 import { YACHTS } from "@/shared/content/yachts";
+import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
@@ -89,19 +90,7 @@ export function FleetShowcaseSection() {
       {/* Ambient backdrop — same photos as the hero stack, heavily blurred
           and dimmed so the foreground reads white-on-dark while the active
           yacht photo provides the atmosphere. */}
-      <div className={styles.backdrop} aria-hidden="true">
-        {photos.map((url, i) => (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            key={`bg-${url}`}
-            src={url}
-            alt=""
-            className={i === activePhotoIdx ? styles.backdropImgActive : styles.backdropImg}
-            loading={i === 0 ? "eager" : "lazy"}
-          />
-        ))}
-        <div className={styles.backdropOverlay} />
-      </div>
+      <AmbientBackdrop images={photos} activeIndex={activePhotoIdx} />
 
       <div className={styles.head}>
         <SectionHeader

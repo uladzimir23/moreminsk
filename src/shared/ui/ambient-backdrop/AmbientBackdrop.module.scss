@@ -1,0 +1,47 @@
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+// Overscan (-10% / 120%) hides the transparent edges the heavy blur leaves.
+.img,
+.imgActive {
+  position: absolute;
+  inset: -10%;
+  inline-size: 120%;
+  block-size: 120%;
+  object-fit: cover;
+  filter: blur(var(--blur-ambient)) brightness(0.4) saturate(1.15);
+  transition: opacity 0.8s ease;
+  will-change: opacity;
+}
+
+.img {
+  opacity: 0;
+}
+
+.imgActive {
+  opacity: 1;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    var(--media-scrim),
+    radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      color-mix(in srgb, var(--color-accent) 16%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .img,
+  .imgActive {
+    transition: none;
+  }
+}

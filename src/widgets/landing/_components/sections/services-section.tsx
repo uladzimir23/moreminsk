@@ -1,6 +1,7 @@
 "use client";
 
 import { SERVICES } from "@/shared/content/services";
+import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
@@ -55,22 +56,13 @@ export function ServicesSection() {
     <section className={styles.section} id="services">
       {/* Ambient section backdrop — blurred copy of the active service's
           photo, so the whole section breathes its mood. */}
-      <div className={styles.backdrop} aria-hidden="true">
-        {SERVICES.map((service, i) => {
+      <AmbientBackdrop
+        images={SERVICES.map((service) => {
           const mood = SERVICE_MOOD[service.slug];
-          return (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              key={`section-bg-${service.slug}`}
-              src={PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx]}
-              alt=""
-              className={i === activeIdx ? styles.backdropImgActive : styles.backdropImg}
-              loading={i === 0 ? "eager" : "lazy"}
-            />
-          );
+          return PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
         })}
-        <div className={styles.backdropOverlay} />
-      </div>
+        activeIndex={activeIdx}
+      />
 
       <SectionHeader
         eyebrow="02 · Услуги"
