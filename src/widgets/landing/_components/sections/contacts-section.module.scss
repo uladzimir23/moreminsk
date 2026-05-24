@@ -2,21 +2,21 @@
 // Map placeholder is a styled box; later we wire click-to-load Yandex maps.
 
 .section {
-  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px) clamp(60px, 8vh, 100px);
+  padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   border-top: 1px solid rgba(128, 128, 128, 0.16);
   background: var(--color-background);
 }
 
 .head {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   display: grid;
-  gap: 8px;
-  margin-bottom: 48px;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
 }
 .eyebrow {
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -39,13 +39,13 @@
 }
 
 .grid {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) 1.1fr;
-  gap: 48px;
+  grid-template-columns: minmax(17.5rem, 0.9fr) 1.1fr;
+  gap: 3rem;
 
-  @media (max-width: 900px) {
+  @media (max-width: 56.25rem) {
     grid-template-columns: 1fr;
   }
 }
@@ -60,9 +60,9 @@
 
 .item {
   display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 16px;
-  padding: 20px 0;
+  grid-template-columns: 6.875rem 1fr;
+  gap: 1rem;
+  padding: 1.25rem 0;
   border-top: 1px solid var(--color-border-hairline);
 
   &:first-child {
@@ -71,12 +71,12 @@
 }
 .itemLabel {
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-foreground-muted);
-  padding-top: 2px;
+  padding-top: 0.125rem;
 }
 .itemValue {
   color: var(--color-foreground);
@@ -84,7 +84,7 @@
   line-height: 1.55;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 
   a {
     color: var(--color-foreground);

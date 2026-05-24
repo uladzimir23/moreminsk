@@ -3,22 +3,22 @@
 .footer {
   background: #08090c;
   color: white;
-  padding: clamp(56px, 8vh, 88px) clamp(24px, 6vw, 80px) 32px;
+  padding: clamp(3.5rem, 8vh, 5.5rem) clamp(1.5rem, 6vw, 5rem) 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .top {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.4fr 1fr 1.2fr;
-  gap: clamp(32px, 5vw, 72px);
+  gap: clamp(2rem, 5vw, 4.5rem);
 
-  @media (max-width: 820px) {
+  @media (max-width: 51.25rem) {
     grid-template-columns: 1fr 1fr;
-    row-gap: 40px;
+    row-gap: 2.5rem;
   }
-  @media (max-width: 520px) {
+  @media (max-width: 32.5rem) {
     grid-template-columns: 1fr;
   }
 }
@@ -26,13 +26,13 @@
 .brandCol {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 320px;
+  gap: 1rem;
+  max-width: 20rem;
 }
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   font-weight: 600;
   font-size: 1.125rem;
   letter-spacing: -0.01em;
@@ -40,8 +40,8 @@
   text-decoration: none;
 }
 .brandMark {
-  width: 22px;
-  height: 22px;
+  width: 1.375rem;
+  height: 1.375rem;
   color: var(--color-accent);
 }
 .brandAccent {
@@ -57,15 +57,15 @@
 }
 .socials {
   display: flex;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
 }
 .social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: rgba(255, 255, 255, 0.8);
   transition:
@@ -79,20 +79,20 @@
     background: rgba(255, 255, 255, 0.04);
   }
   svg {
-    width: 18px;
-    height: 18px;
+    width: 1.125rem;
+    height: 1.125rem;
   }
 }
 
 .col {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0.875rem;
 }
 .colTitle {
-  margin: 0 0 2px;
+  margin: 0 0 0.125rem;
   font-family: var(--font-mono), monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -111,24 +111,24 @@
 }
 
 .bottom {
-  max-width: 1280px;
-  margin: clamp(48px, 6vh, 72px) auto 0;
-  padding-top: 24px;
+  max-width: 80rem;
+  margin: clamp(3rem, 6vh, 4.5rem) auto 0;
+  padding-top: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 0.75rem;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.4);
 }
 .legal {
   display: flex;
-  gap: 20px;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 .legalLink {

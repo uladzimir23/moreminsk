@@ -59,7 +59,7 @@
 }
 @keyframes waveScroll {
   to {
-    transform: translateX(-360px);
+    transform: translateX(-22.5rem);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -97,8 +97,8 @@
   top: var(--my);
   width: 46vw;
   height: 46vw;
-  max-width: 620px;
-  max-height: 620px;
+  max-width: 38.75rem;
+  max-height: 38.75rem;
   transform: translate(-50%, -50%);
   background: radial-gradient(
     circle,
@@ -106,7 +106,7 @@
     color-mix(in srgb, var(--color-accent) 16%, transparent) 35%,
     transparent 68%
   );
-  filter: blur(20px);
+  filter: blur(1.25rem);
   mix-blend-mode: screen;
   opacity: 0.7;
   transition:
@@ -140,8 +140,8 @@
 // Expanding ripple ring spawned on click (fine pointer).
 .ripple {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   border: 1.5px solid color-mix(in srgb, var(--color-accent) 70%, white);
@@ -150,8 +150,8 @@
 }
 @keyframes rippleOut {
   to {
-    width: 320px;
-    height: 320px;
+    width: 20rem;
+    height: 20rem;
     opacity: 0;
     border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
   }

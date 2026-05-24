@@ -4,7 +4,7 @@
 
 .section {
   position: relative;
-  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px);
+  padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem);
   background:
     radial-gradient(
       ellipse 80% 60% at 50% 0%,
@@ -16,15 +16,15 @@
 }
 
 .head {
-  max-width: 1280px;
-  margin: 0 auto 40px;
+  max-width: 80rem;
+  margin: 0 auto 2.5rem;
   display: grid;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .eyebrow {
   margin: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -48,13 +48,13 @@
 // ── Highlights row ───────────────────────────────────────────────────────
 
 .highlights {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   display: flex;
-  gap: clamp(18px, 3vw, 36px);
+  gap: clamp(1.125rem, 3vw, 2.25rem);
   overflow-x: auto;
   scrollbar-width: none;
-  padding-bottom: 8px;
+  padding-bottom: 0.5rem;
 
   &::-webkit-scrollbar {
     display: none;
@@ -65,18 +65,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   background: none;
   border: 0;
   cursor: pointer;
-  width: clamp(84px, 11vw, 104px);
+  width: clamp(5.25rem, 11vw, 6.5rem);
 }
 .ring {
   position: relative;
-  width: clamp(72px, 9vw, 92px);
-  height: clamp(72px, 9vw, 92px);
+  width: clamp(4.5rem, 9vw, 5.75rem);
+  height: clamp(4.5rem, 9vw, 5.75rem);
   border-radius: 50%;
-  padding: 3px;
+  padding: 0.1875rem;
   background: conic-gradient(from 135deg, #38bdf8, var(--color-accent), #0369a1, #38bdf8);
   transition: transform 0.2s ease;
 
@@ -103,7 +103,7 @@
 }
 .weeks {
   font-family: var(--font-mono), monospace;
-  font-size: 9.5px;
+  font-size: 0.59375rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   color: rgba(255, 255, 255, 0.45);
@@ -131,8 +131,8 @@
 }
 .igWordmark {
   position: absolute;
-  top: 22px;
-  left: 28px;
+  top: 1.375rem;
+  left: 1.75rem;
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-size: 1.5rem;
@@ -143,11 +143,11 @@
 }
 .close {
   position: absolute;
-  top: 20px;
-  right: 24px;
+  top: 1.25rem;
+  right: 1.5rem;
   z-index: 5;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,24 +161,24 @@
     color: white;
   }
   svg {
-    width: 26px;
-    height: 26px;
+    width: 1.625rem;
+    height: 1.625rem;
   }
 }
 
 .stage {
   display: flex;
   align-items: center;
-  gap: clamp(12px, 2vw, 28px);
+  gap: clamp(0.75rem, 2vw, 1.75rem);
   height: 100%;
-  padding: clamp(40px, 6vh, 72px) 0;
+  padding: clamp(2.5rem, 6vh, 4.5rem) 0;
 }
 
 // Dimmed adjacent group preview (the side peek in the reference).
 .peek {
   position: relative;
   flex: 0 0 auto;
-  width: clamp(120px, 14vw, 230px);
+  width: clamp(7.5rem, 14vw, 14.375rem);
   aspect-ratio: 9 / 16;
   border-radius: 12px;
   overflow: hidden;
@@ -199,13 +199,13 @@
     filter: brightness(0.85);
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 56.25rem) {
     display: none;
   }
 }
 .peekMeta {
   position: absolute;
-  bottom: 14px;
+  bottom: 0.875rem;
   left: 0;
   right: 0;
   text-align: center;
@@ -218,14 +218,14 @@
 }
 .peekWeeks {
   font-family: var(--font-mono), monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   color: rgba(255, 255, 255, 0.7);
 }
 
 .arrow {
   flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,11 +244,11 @@
     pointer-events: none;
   }
   svg {
-    width: 18px;
-    height: 18px;
+    width: 1.125rem;
+    height: 1.125rem;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 56.25rem) {
     display: none;
   }
 }
@@ -257,7 +257,7 @@
 .story {
   position: relative;
   flex: 0 0 auto;
-  height: min(88vh, 760px);
+  height: min(88vh, 47.5rem);
   aspect-ratio: 9 / 16;
   max-width: 92vw;
   border-radius: 14px;
@@ -289,16 +289,16 @@
 // Progress segments.
 .progress {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
+  top: 0.625rem;
+  left: 0.625rem;
+  right: 0.625rem;
   z-index: 4;
   display: flex;
-  gap: 4px;
+  gap: 0.25rem;
 }
 .bar {
   flex: 1 1 0;
-  height: 2.5px;
+  height: 0.15625rem;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.35);
   overflow: hidden;
@@ -331,18 +331,18 @@
 // Header.
 .storyHead {
   position: absolute;
-  top: 24px;
-  left: 10px;
-  right: 10px;
+  top: 1.5rem;
+  left: 0.625rem;
+  right: 0.625rem;
   z-index: 4;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   pointer-events: none;
 }
 .headAvatar {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   object-fit: cover;
   border: 1.5px solid rgba(255, 255, 255, 0.8);
@@ -361,7 +361,7 @@
 .headControls {
   margin-left: auto;
   display: flex;
-  gap: 14px;
+  gap: 0.875rem;
   pointer-events: auto;
   color: rgba(255, 255, 255, 0.9);
 
@@ -373,8 +373,8 @@
     display: flex;
   }
   svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
 
@@ -410,8 +410,8 @@
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 5px 12px 5px 8px;
+  gap: 0.25rem;
+  padding: 0.3125rem 0.75rem 0.3125rem 0.5rem;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 6px;
   font-size: 0.9375rem;
@@ -442,7 +442,7 @@
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
+  padding: 0.4375rem 0.875rem;
   background: rgba(255, 255, 255, 0.92);
   border-radius: 6px;
   font-size: 0.875rem;
@@ -452,7 +452,7 @@
 .reaction {
   top: 22%;
   right: 8%;
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   background: rgba(255, 255, 255, 0.92);
   border-radius: 8px;
   font-size: 0.9375rem;
@@ -465,10 +465,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 70%;
-  padding: 16px;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
   border-radius: 14px;
   text-align: center;
   color: white;
@@ -476,8 +476,8 @@
   font-weight: 600;
 }
 .pollBar {
-  margin-top: 12px;
-  height: 36px;
+  margin-top: 0.75rem;
+  height: 2.25rem;
   border-radius: 8px;
   background: white;
   display: flex;
@@ -493,7 +493,7 @@
   transform: translateX(-50%);
   width: 88%;
   text-align: center;
-  padding: 10px 14px;
+  padding: 0.625rem 0.875rem;
   background: rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   font-size: 0.8125rem;
@@ -506,18 +506,18 @@
 // Reply bar.
 .reply {
   position: absolute;
-  bottom: 14px;
-  left: 12px;
-  right: 12px;
+  bottom: 0.875rem;
+  left: 0.75rem;
+  right: 0.75rem;
   z-index: 4;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .replyInput {
   flex: 1 1 auto;
-  height: 44px;
-  padding: 0 16px;
+  height: 2.75rem;
+  padding: 0 1rem;
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   background: transparent;
@@ -542,8 +542,8 @@
   display: flex;
 
   svg {
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
 

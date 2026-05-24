@@ -7,7 +7,7 @@
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(1rem);
   }
   to {
     opacity: 1;
@@ -19,7 +19,7 @@
 @keyframes fleetGalleryIn {
   from {
     opacity: 0;
-    transform: translateX(24px) scale(0.985);
+    transform: translateX(1.5rem) scale(0.985);
   }
   to {
     opacity: 1;
@@ -31,7 +31,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px) clamp(60px, 8vh, 100px);
+  padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   background: #0a0a0a; // fallback before backdrop image paints
   color: white;
 }
@@ -41,15 +41,15 @@
 .head {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
-  margin: 0 auto 32px;
+  max-width: 80rem;
+  margin: 0 auto 2rem;
   display: grid;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .eyebrow {
   margin: 0;
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -62,7 +62,7 @@
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: white;
-  max-width: 720px;
+  max-width: 45rem;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
 }
 .accent {
@@ -77,21 +77,21 @@
 .tabs {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
-  margin: 0 auto 28px;
+  max-width: 80rem;
+  margin: 0 auto 1.75rem;
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(20px, 4vw, 48px);
+  gap: clamp(1.25rem, 4vw, 3rem);
   align-items: baseline;
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-  padding-bottom: 16px;
+  padding-bottom: 1rem;
 }
 .tab,
 .tabActive {
   position: relative;
   background: transparent;
   border: 0;
-  padding: 6px 0 12px;
+  padding: 0.375rem 0 0.75rem;
   cursor: pointer;
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
@@ -112,19 +112,19 @@
   &::after {
     content: "";
     position: absolute;
-    bottom: -17px; // sits on top of the .tabs row bottom border
+    bottom: -1.0625rem; // sits on top of the .tabs row bottom border
     left: 0;
     right: 0;
-    height: 2px;
+    height: 0.125rem;
     background: var(--color-accent);
     box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 65%, transparent);
   }
 }
 .tabBadge {
-  margin-left: 6px;
+  margin-left: 0.375rem;
   font-family: var(--font-mono), monospace;
   font-style: normal;
-  font-size: 9px;
+  font-size: 0.5625rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -137,16 +137,16 @@
 .body {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   display: grid;
   // minmax(0, …) lets the columns shrink below their content's min-size —
   // without it the gallery's intrinsic width forces overflow on mobile.
-  grid-template-columns: minmax(280px, 0.6fr) minmax(0, 1.4fr);
-  gap: clamp(24px, 4vw, 56px);
+  grid-template-columns: minmax(17.5rem, 0.6fr) minmax(0, 1.4fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: start;
 
-  @media (max-width: 900px) {
+  @media (max-width: 56.25rem) {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -157,7 +157,7 @@
 .info {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.125rem;
   min-width: 0;
 }
 .info > * {
@@ -194,7 +194,7 @@
 .specs {
   margin: 0;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -224,27 +224,27 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 10px;
+  gap: 0.5rem 0.625rem;
 }
 .feature {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
   font-family: var(--font-mono), monospace;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.85);
 }
 .featureDot {
-  width: 4px;
-  height: 4px;
+  width: 0.25rem;
+  height: 0.25rem;
   border-radius: 50%;
   background: var(--color-accent);
   box-shadow: 0 0 6px var(--color-accent);
@@ -253,15 +253,15 @@
 .priceBlock {
   display: flex;
   align-items: baseline;
-  gap: 6px;
-  padding-top: 14px;
+  gap: 0.375rem;
+  padding-top: 0.875rem;
   border-top: 1px solid rgba(255, 255, 255, 0.18);
   font-feature-settings: "tnum", "lnum";
 }
 .priceLabel,
 .priceSuffix {
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -278,9 +278,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 4px;
-  padding: 14px 24px;
+  gap: 0.625rem;
+  margin-top: 0.25rem;
+  padding: 0.875rem 1.5rem;
   background: var(--color-accent);
   color: var(--color-on-accent);
   font-size: 0.875rem;
@@ -297,14 +297,14 @@
 
   &:hover {
     background: var(--color-accent-hover);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
     box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
   svg {
     transition: transform 0.2s ease;
   }
   &:hover svg {
-    transform: translateX(4px);
+    transform: translateX(0.25rem);
   }
 }
 
@@ -312,7 +312,7 @@
 .gallery {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0.75rem;
   min-width: 0;
 }
 
@@ -329,7 +329,7 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: #0a0a0a; // fallback before bg layer paints
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   isolation: isolate;
   cursor: zoom-in;
@@ -343,17 +343,17 @@
 // Magnifier badge that hints the frame is clickable for zoom.
 .zoomHint {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 1rem;
+  left: 1rem;
   z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: white;
   opacity: 0;
@@ -366,12 +366,12 @@
 // Prev/next arrows under the frame (page through the yacht's photos).
 .frameNav {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   justify-content: flex-end;
 }
 .frameArrow {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -387,11 +387,11 @@
   &:hover {
     border-color: var(--color-accent);
     background: rgba(255, 255, 255, 0.14);
-    transform: translateY(-2px);
+    transform: translateY(-0.125rem);
   }
   svg {
-    width: 18px;
-    height: 18px;
+    width: 1.125rem;
+    height: 1.125rem;
   }
 }
 .heroBg,
@@ -401,7 +401,7 @@
   width: 116%;
   height: 116%;
   object-fit: cover;
-  filter: blur(40px) brightness(0.55) saturate(1.1);
+  filter: blur(2.5rem) brightness(0.55) saturate(1.1);
   transition: opacity 0.6s ease;
   will-change: opacity;
 }
@@ -419,7 +419,7 @@
   height: 100%;
   object-fit: contain;
   transition: opacity 0.4s ease;
-  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 0.5rem 1.5rem rgba(0, 0, 0, 0.4));
 }
 .img {
   opacity: 0;
@@ -431,15 +431,15 @@
 
 .counter {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  padding: 6px 10px;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.375rem 0.625rem;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
   color: white;
   font-family: var(--font-mono), monospace;
-  font-size: 10.5px;
+  font-size: 0.65625rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   font-feature-settings: "tnum", "lnum";
@@ -448,15 +448,15 @@
 // Thumbnail strip
 .thumbs {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
   overflow-x: auto;
   scrollbar-width: thin;
-  padding-bottom: 4px;
+  padding-bottom: 0.25rem;
 }
 .thumb,
 .thumbActive {
   position: relative;
-  flex: 0 0 88px;
+  flex: 0 0 5.5rem;
   aspect-ratio: 4 / 3;
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -481,7 +481,7 @@
 .thumb:hover {
   opacity: 1;
   border-color: rgba(255, 255, 255, 0.45);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 .thumbActive {
   opacity: 1;
@@ -520,15 +520,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(24px, 6vw, 80px);
+  padding: clamp(1.5rem, 6vw, 5rem);
   background: rgba(8, 10, 14, 0.72);
-  backdrop-filter: blur(24px) saturate(1.2);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  backdrop-filter: blur(1.5rem) saturate(1.2);
+  -webkit-backdrop-filter: blur(1.5rem) saturate(1.2);
   cursor: zoom-out;
   animation: lightboxBackdropIn 0.3s ease both;
 }
 .lightboxImg {
-  max-width: min(92vw, 1200px);
+  max-width: min(92vw, 75rem);
   max-height: 88vh;
   object-fit: contain;
   cursor: default;
@@ -538,10 +538,10 @@
 
 .lightboxClose {
   position: absolute;
-  top: clamp(16px, 3vw, 32px);
-  right: clamp(16px, 3vw, 32px);
-  width: 48px;
-  height: 48px;
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  width: 3rem;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -560,8 +560,8 @@
     transform: rotate(90deg);
   }
   svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
 
@@ -569,8 +569,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 52px;
-  height: 52px;
+  width: 3.25rem;
+  height: 3.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -587,30 +587,30 @@
     border-color: var(--color-accent);
   }
   svg {
-    width: 22px;
-    height: 22px;
+    width: 1.375rem;
+    height: 1.375rem;
   }
 }
 .lightboxPrev {
-  left: clamp(12px, 3vw, 40px);
+  left: clamp(0.75rem, 3vw, 2.5rem);
 }
 .lightboxNext {
-  right: clamp(12px, 3vw, 40px);
+  right: clamp(0.75rem, 3vw, 2.5rem);
 }
 
 .lightboxCaption {
   position: absolute;
-  bottom: clamp(16px, 3vw, 32px);
+  bottom: clamp(1rem, 3vw, 2rem);
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 16px;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   font-feature-settings: "tnum", "lnum";

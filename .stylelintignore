@@ -12,8 +12,3 @@ docs/**
 # Free hand with hex literals, px, gradients, !important — until a chosen variant
 # is promoted to a DS-conformant component.
 src/app/(preview)/**
-
-# Promoted-but-not-yet-DS-cleaned landing (cinematic). Ported from the lab as-is
-# per the migration plan; px/!important/hex pending conversion to tokens (P2).
-# See docs/40 - Architecture/Design Lab — Production Migration.md
-src/widgets/landing/**
