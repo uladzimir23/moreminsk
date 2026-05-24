@@ -1,13 +1,16 @@
 // Landing-shell scaffolding — just the back-bar and the page background.
 // All content sits in dedicated section components imported by the shell.
 
-// The page content is a lifting card over a fixed footer: it sits above the
-// footer (z-index 1) and reserves --footer-h of space below so scrolling to
-// the end lifts the card and reveals the footer beneath. overflow: clip (not
-// hidden) rounds the bottom corners without breaking the pinned hero's sticky.
-.shell {
+// Every page is a lifting card over the fixed footer: sits above it (z-index
+// 1) and reserves --footer-h of space below, so scrolling to the end lifts
+// the card and reveals the footer beneath. overflow: clip (not hidden)
+// rounds the bottom corners without breaking the home page's sticky hero.
+// Applied at the layout level to <div class=page> wrapping {children}, so
+// every route gets the reveal — not just the home page.
+.page {
   position: relative;
   z-index: 1;
+  min-block-size: 100vh;
   margin-block-end: var(--footer-h, 22rem);
   overflow: clip;
   border-end-start-radius: clamp(1rem, 3vw, 2rem);
@@ -16,6 +19,13 @@
   color: var(--color-foreground);
   font-family: var(--font-manrope), system-ui, sans-serif;
   box-shadow: 0 2rem 4rem rgb(0 0 0 / 0.45);
+}
+
+// Home-only — just the page background swatch (everything else moved to .page).
+.shell {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
 // Pulls the content block up over the pinned hero's 100vh overlap runway

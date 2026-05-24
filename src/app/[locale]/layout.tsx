@@ -1,6 +1,7 @@
 import { type Locale, routing } from "@/i18n/routing";
 import { LandingFooter } from "@/widgets/landing/_components/landing-footer";
 import { LandingHeader } from "@/widgets/landing/_components/landing-header";
+import shell from "@/widgets/landing/_components/landing-shell.module.scss";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -25,7 +26,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <NextIntlClientProvider locale={typedLocale}>
       <Providers>
         <LandingHeader />
-        {children}
+        <div className={shell.page}>{children}</div>
         <LandingFooter />
       </Providers>
     </NextIntlClientProvider>
