@@ -30,7 +30,10 @@
 .section {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+  // clip (not hidden) still contains the ambient backdrop + slide-in overscan,
+  // but does NOT create a scroll container — so the mobile sticky tab strip
+  // keeps working relative to the page.
+  overflow: clip;
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   background: var(--media-bg-deep); // fallback before backdrop image paints
   color: white;
@@ -86,6 +89,39 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   padding-bottom: 1rem;
 }
+
+// Mobile: pin the yacht selector under the fixed header while the fleet
+// section scrolls — switching yachts never needs scrolling back up. Bleeds to
+// the section edges with a glass backdrop so content slides under it cleanly.
+@media (max-width: 56.25rem) {
+  .tabs {
+    position: sticky;
+    top: 3.125rem; // = scrolled mobile header height
+    z-index: 100;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-block-end: 1.25rem;
+    margin-inline: calc(-1 * clamp(1.5rem, 6vw, 5rem));
+    padding-block: 0.625rem 0.75rem;
+    padding-inline: clamp(1.5rem, 6vw, 5rem);
+    gap: clamp(1rem, 4vw, 2rem);
+    background: color-mix(in srgb, var(--media-bg) 90%, transparent);
+    backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+    -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+    border-block-end-color: var(--media-hairline);
+  }
+  .tab,
+  .tabActive {
+    flex: none; // don't shrink — keep each name on one line, scroll instead
+    padding-block: 0 0.25rem;
+  }
+  // Keep the active underline inside the scroll box (negative bottom clips).
+  .tabActive::after {
+    inset-block-end: 0;
+  }
+}
+
 .tab,
 .tabActive {
   position: relative;
