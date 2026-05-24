@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useState } from "react";
 import { GALLERY } from "../../_data/photos";
 import styles from "./gallery-section.module.scss";
@@ -47,12 +48,13 @@ export function GallerySection() {
         <div className={styles.backdropOverlay} />
       </div>
 
-      <div className={styles.head}>
-        <p className={styles.eyebrow}>03 · Галерея</p>
-        <h2 className={styles.title}>
-          Атмосфера <span className={styles.accent}>на воде.</span>
-        </h2>
-      </div>
+      <SectionHeader
+        eyebrow="03 · Галерея"
+        title="Атмосфера"
+        accent="на воде."
+        tone="media"
+        framed
+      />
 
       <div className={styles.viewer}>
         <div className={styles.frame}>

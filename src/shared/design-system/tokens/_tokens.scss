@@ -325,6 +325,56 @@
 
     --card-padding: var(--primitive-space-8);
     --card-radius: var(--primitive-radius-sm); // 4px — editorial, was 24px in ADR-005
+
+    // ── Editorial «media» layer (ADR-011) ──────────────────────────────────
+    // Dark sections that sit over photos/video/effects are always-dark
+    // regardless of the light/dark theme — so these are theme-independent.
+    // Foreground text is a white scale; surfaces are deep ink; glass + blur
+    // for floating chrome. Used by the landing widgets (fleet/services/
+    // gallery/reviews/faq/booking/contacts ambient sections).
+    --media-bg: #0a0f16; // primary dark section canvas
+    --media-bg-deep: #0a0a0a; // deepest (video letterbox, fallbacks)
+    --media-bg-elevated: #0c1620; // slightly lifted (reviews/gradient tops)
+
+    --on-media: #ffffff; // primary text on media
+    --on-media-strong: rgb(255 255 255 / 0.92);
+    --on-media-muted: rgb(255 255 255 / 0.7); // body / secondary
+    --on-media-subtle: rgb(255 255 255 / 0.5); // captions / meta
+    --on-media-faint: rgb(255 255 255 / 0.4);
+
+    --media-hairline: rgb(255 255 255 / 0.12); // dividers on dark
+    --media-hairline-strong: rgb(255 255 255 / 0.3);
+
+    --media-glass-bg: rgb(255 255 255 / 0.06); // glass tiles/cards
+    --media-glass-bg-hover: rgb(255 255 255 / 0.12);
+    --media-glass-border: rgb(255 255 255 / 0.18);
+
+    // Accent tinted for use on dark media (brighter than light-theme accent).
+    --on-media-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
+
+    // Blur ladder for ambient/glass/edge effects.
+    --blur-ambient: 70px; // section backdrop photo
+    --blur-frame: 40px; // letterbox / per-card backdrop
+    --blur-glass: 12px; // glass chrome (header, tiles)
+    --blur-edge: 5px; // edge-fade softening
+
+    // Dark overlay washes layered over ambient photos (keep content legible).
+    --media-scrim: linear-gradient(
+      180deg,
+      rgb(0 0 0 / 0.55) 0%,
+      rgb(0 0 0 / 0.3) 45%,
+      rgb(0 0 0 / 0.6) 100%
+    );
+
+    // Editorial eyebrow (mono, wide-tracked label «NN · Раздел»).
+    --eyebrow-size: 0.6875rem; // 11px
+    --eyebrow-tracking: 0.28em;
+    --eyebrow-weight: var(--primitive-weight-semibold);
+
+    // Section vertical rhythm for the landing.
+    --section-pad-block: clamp(5rem, 4rem + 5vw, 8.75rem);
+    --section-gutter: clamp(1.5rem, 0.5rem + 5vw, 5rem); // matches 24→80px
+    --section-max: 90rem; // 1440px content cap
   }
 
   // ── Semantic: Light Theme (ADR-009 — Editorial Minimalism + Sky-500) ─────
