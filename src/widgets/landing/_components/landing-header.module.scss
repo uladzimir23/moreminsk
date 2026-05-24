@@ -39,6 +39,10 @@
 }
 
 .brand {
+  // Above the burger menu overlay (z-index 300) so the real logo stays put
+  // when the menu opens — no duplicate logo, no vertical jump.
+  position: relative;
+  z-index: 305;
   color: white;
   text-decoration: none;
 }

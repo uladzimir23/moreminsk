@@ -1,6 +1,5 @@
 "use client";
 
-import { Logo } from "@/shared/ui/logo/Logo";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import styles from "./landing-menu.module.scss";
@@ -126,10 +125,6 @@ export function LandingMenu() {
             animate="open"
             exit="closed"
           >
-            <div className={styles.overlayHead}>
-              <Logo />
-            </div>
-
             <motion.nav className={styles.nav} variants={list} aria-label="Меню">
               {LINKS.map((l, i) => (
                 <motion.a
