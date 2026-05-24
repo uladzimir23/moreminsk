@@ -255,7 +255,11 @@
   .video {
     display: none;
   }
-  .hero {
-    background: #000 url("/design-lab/yacht-hero-poster.jpg") center / cover no-repeat;
+  // Show the poster instead of the moving video. Targets both modes — pinned
+  // (.sticky, used in production) and plain (.hero). --hero-poster-url is set
+  // inline so it carries the base path.
+  .hero,
+  .sticky {
+    background: black var(--hero-poster-url) center / cover no-repeat;
   }
 }

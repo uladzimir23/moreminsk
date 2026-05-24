@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { withBase } from "@/shared/lib/base-path";
+import { type CSSProperties, useEffect, useRef } from "react";
 import styles from "./cinematic-hero.module.scss";
 
 type CinematicHeroProps = {
@@ -11,6 +12,11 @@ type CinematicHeroProps = {
 };
 
 export function CinematicHero({ pinned = false }: CinematicHeroProps) {
+  const videoSrc = withBase("/design-lab/yacht-hero.mp4");
+  const videoPoster = withBase("/design-lab/yacht-hero-poster.jpg");
+  const reducedMotionPosterStyle = {
+    "--hero-poster-url": `url("${videoPoster}")`,
+  } as CSSProperties;
   const sectionRef = useRef<HTMLElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -90,8 +96,8 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       <video
         ref={videoRef}
         className={styles.video}
-        src="/design-lab/yacht-hero.mp4"
-        poster="/design-lab/yacht-hero-poster.jpg"
+        src={videoSrc}
+        poster={videoPoster}
         autoPlay
         muted
         loop
@@ -168,12 +174,15 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
   if (pinned) {
     return (
       <section ref={sectionRef} className={styles.pinnedSection}>
-        <div className={styles.sticky} ref={stickyRef}>
+        <div className={styles.sticky} ref={stickyRef} style={reducedMotionPosterStyle}>
           {inner}
         </div>
       </section>
     );
   }
-
-  return <div className={styles.hero}>{inner}</div>;
+  return (
+    <div className={styles.hero} style={reducedMotionPosterStyle}>
+      {inner}
+    </div>
+  );
 }

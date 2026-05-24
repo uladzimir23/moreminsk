@@ -1,5 +1,6 @@
 "use client";
 
+import { withBase } from "@/shared/lib/base-path";
 import { useEffect, useRef } from "react";
 import styles from "./cinematic-hero.module.scss";
 
@@ -11,6 +12,8 @@ type CinematicHeroProps = {
 };
 
 export function CinematicHero({ pinned = false }: CinematicHeroProps) {
+  const videoSrc = withBase("/design-lab/yacht-hero.mp4");
+  const videoPoster = withBase("/design-lab/yacht-hero-poster.jpg");
   const sectionRef = useRef<HTMLElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -90,8 +93,8 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       <video
         ref={videoRef}
         className={styles.video}
-        src="/design-lab/yacht-hero.mp4"
-        poster="/design-lab/yacht-hero-poster.jpg"
+        src={videoSrc}
+        poster={videoPoster}
         autoPlay
         muted
         loop
