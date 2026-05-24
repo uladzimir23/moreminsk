@@ -1,11 +1,35 @@
+"use client";
+
 import { FAQ } from "@/shared/content/faq";
+import { useState } from "react";
 import styles from "./faq-section.module.scss";
 
-// Show the first 6 «general» questions (per content/faq.ts convention);
-// a link points to the full /faq page.
+// First 6 «general» questions (per content/faq.ts convention).
 const GENERAL = FAQ.filter((f) => f.tags.includes("general")).slice(0, 6);
 
 export function FaqSection() {
+  // One active index drives both layouts: desktop side panel + mobile accordion.
+  const [active, setActive] = useState(0);
+
+  const toggle = (i: number) => setActive((cur) => (cur === i ? -1 : i));
+
+  const Chevron = () => (
+    <span className={styles.marker} aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </span>
+  );
+
+  const activeItem = active >= 0 ? GENERAL[active] : GENERAL[0];
+
   return (
     <section className={styles.section} id="faq">
       <div className={styles.inner}>
@@ -16,19 +40,39 @@ export function FaqSection() {
           </h2>
         </div>
 
-        {GENERAL.map((item) => (
-          <details key={item.id} className={styles.item}>
-            <summary className={styles.summary}>
-              {item.question}
-              <span className={styles.marker} aria-hidden="true" />
-            </summary>
-            <div className={styles.answer}>{item.answer}</div>
-          </details>
-        ))}
+        <div className={styles.grid}>
+          <ul className={styles.list}>
+            {GENERAL.map((item, i) => (
+              <li key={item.id} className={styles.item}>
+                <button
+                  type="button"
+                  className={i === active ? styles.qActive : styles.q}
+                  onClick={() => toggle(i)}
+                  aria-expanded={i === active}
+                >
+                  <span className={styles.num}>{String(i + 1).padStart(2, "0")}</span>
+                  <span className={styles.qText}>{item.question}</span>
+                  <Chevron />
+                </button>
+                <div
+                  className={`${styles.inlineAnswer} ${i === active ? styles.inlineAnswerOpen : ""}`}
+                >
+                  {item.answer}
+                </div>
+              </li>
+            ))}
+          </ul>
 
-        <a href="#contact" className={styles.footLink}>
-          Остались вопросы? Напишите нам →
-        </a>
+          <div className={styles.panel}>
+            <div className={styles.panelInner} key={active}>
+              <p className={styles.panelQ}>{activeItem.question}</p>
+              <p className={styles.panelA}>{activeItem.answer}</p>
+              <a href="#contact" className={styles.panelLink}>
+                Остались вопросы? Напишите →
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
