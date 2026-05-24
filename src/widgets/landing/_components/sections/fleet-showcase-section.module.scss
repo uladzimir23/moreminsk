@@ -120,15 +120,6 @@
   .tabsStuck {
     @include media-glass($glass: 90%);
   }
-  .tab,
-  .tabActive {
-    flex: none; // don't shrink — keep each name on one line, scroll instead
-    padding-block: 0 0.25rem;
-  }
-  // Keep the active underline inside the scroll box (negative bottom clips).
-  .tabActive::after {
-    inset-block-end: 0;
-  }
 }
 
 .tab,
@@ -175,6 +166,22 @@
   text-transform: uppercase;
   color: var(--color-accent);
   vertical-align: middle;
+}
+
+// Mobile tab tweaks — placed AFTER the base rules so they actually win. Each
+// name keeps its own line (flex:none) and the strip scrolls horizontally; the
+// underline is tucked right under the word instead of way down on the divider
+// (the old -1.0625rem stuck below the box and forced a vertical scroll).
+@media (max-width: 56.25rem) {
+  .tab,
+  .tabActive {
+    flex: none;
+    padding-block: 0 0.375rem;
+  }
+  .tabActive::after {
+    bottom: 0.125rem;
+    box-shadow: none;
+  }
 }
 
 // ── Body grid — info left, gallery right ─────────────────────────────────
