@@ -20,6 +20,14 @@
   filter: brightness(0.55) saturate(1.15);
 }
 
+// Procedural caustics — render at full strength; .shade dims it for legibility.
+.svgCaustics {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
 // Dark wash over the rippling photo so the section's content stays legible
 // + a faint accent tint to keep it on-brand.
 .shade {
