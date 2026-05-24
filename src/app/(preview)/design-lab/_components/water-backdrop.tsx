@@ -1,15 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { PHOTOS_BY_YACHT } from "../_data/photos";
 import styles from "./water-backdrop.module.scss";
 
 let RIPPLE_SEQ = 0;
 
 type Ripple = { id: number; x: number; y: number };
 
+type WaterBackdropProps = {
+  filterId?: string;
+  // Water texture to ripple. Defaults to a water-heavy scraped photo; swap
+  // for a dedicated water shot via this prop or a file in public/design-lab.
+  image?: string;
+};
+
 // Sits absolutely behind a dark section's content. Fine pointer → caustic
 // follows the cursor + clicks ripple; coarse/touch → it drifts by itself.
-export function WaterBackdrop({ filterId = "waterRipple" }: { filterId?: string }) {
+export function WaterBackdrop({
+  filterId = "waterRipple",
+  image = PHOTOS_BY_YACHT.eva[0],
+}: WaterBackdropProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const glowRef = useRef<HTMLDivElement | null>(null);
   const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -88,17 +99,16 @@ export function WaterBackdrop({ filterId = "waterRipple" }: { filterId?: string 
               yChannelSelector="G"
             />
           </filter>
-          <pattern id={`${filterId}-grid`} width="46" height="46" patternUnits="userSpaceOnUse">
-            <path className={styles.grid} d="M46 0 H0 V46" />
-          </pattern>
         </defs>
-        <rect
+        <image
+          href={image}
           width="100%"
           height="100%"
-          fill={`url(#${filterId}-grid)`}
+          preserveAspectRatio="xMidYMid slice"
           filter={`url(#${filterId})`}
         />
       </svg>
+      <div className={styles.shade} />
 
       <div className={`${styles.glow} ${styles.glowAuto}`} ref={glowRef} />
 

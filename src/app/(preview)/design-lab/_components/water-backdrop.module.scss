@@ -17,12 +17,26 @@
   inset: -6%;
   width: 112%;
   height: 112%;
-  opacity: 0.5;
+  filter: brightness(0.55) saturate(1.15);
 }
-.grid {
-  stroke: color-mix(in srgb, var(--color-accent) 55%, transparent);
-  stroke-width: 1;
-  fill: none;
+
+// Dark wash over the rippling photo so the section's content stays legible
+// + a faint accent tint to keep it on-brand.
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 30%,
+      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 15, 22, 0.82) 0%,
+      rgba(10, 15, 22, 0.7) 50%,
+      rgba(10, 15, 22, 0.88) 100%
+    );
 }
 
 // Caustic light — a soft radial glow positioned at --mx/--my.
