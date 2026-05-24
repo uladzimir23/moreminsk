@@ -6,7 +6,9 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px);
+  // Full-bleed (water backdrop spans edge-to-edge); the inner gutter below
+  // matches every other section header → title lands on the same 160px gutter.
+  padding-block: clamp(80px, 12vh, 140px);
   background: #0a0f16;
   color: white;
 }
@@ -16,6 +18,7 @@
   z-index: 1;
   max-width: 1440px;
   margin: 0 auto;
+  padding-inline: clamp(24px, 6vw, 80px);
 }
 
 .head {
