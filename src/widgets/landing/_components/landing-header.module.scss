@@ -3,6 +3,8 @@
 // alternating light/dark sections; white reads on the dark bar throughout).
 // Nav links collapse on mobile — they live in the bottom nav instead.
 
+@use "@/shared/design-system/mixins" as *;
+
 .header {
   position: fixed;
   inset-block-start: 0;
@@ -17,10 +19,8 @@
 }
 
 .scrolled {
-  background: color-mix(in srgb, var(--media-bg) 82%, transparent);
-  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
   border-block-end-color: var(--media-hairline);
+  @include media-glass($glass: 82%);
 }
 
 .bar {

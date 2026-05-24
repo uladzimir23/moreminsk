@@ -235,6 +235,22 @@
   }
 }
 
+// ── Media glass (ADR-011) ─────────────────────────────────────────────────
+// Dark glass for nav/overlay chrome over photos/video. Degrades gracefully:
+// browsers without backdrop-filter (older/embedded WebViews, blur disabled by
+// a privacy setting) get a near-opaque fallback so content never bleeds
+// through unblurred. When blur IS supported, the fill drops to $glass so the
+// scene shows through. $base is a dark token; $glass/$opaque are % of it.
+@mixin media-glass($blur: var(--blur-glass), $glass: 82%, $opaque: 96%, $base: var(--media-bg)) {
+  background: color-mix(in srgb, #{$base} #{$opaque}, transparent);
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: color-mix(in srgb, #{$base} #{$glass}, transparent);
+    backdrop-filter: blur(#{$blur}) saturate(1.4);
+    -webkit-backdrop-filter: blur(#{$blur}) saturate(1.4);
+  }
+}
+
 // ── Hover lift ────────────────────────────────────────────────────────────
 @mixin hover-lift($distance: -0.125rem, $shadow: true) {
   transition:

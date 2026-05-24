@@ -1,6 +1,8 @@
 // Mobile bottom nav — fixed editorial glass bar with a raised centre CTA.
 // Shown only on mobile; the desktop header carries navigation there.
 
+@use "@/shared/design-system/mixins" as *;
+
 .root {
   position: fixed;
   inset-block-end: 0;
@@ -11,10 +13,8 @@
   align-items: center;
   padding-block: 0.5rem;
   padding-block-end: calc(0.5rem + env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--media-bg) 88%, transparent);
-  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
   border-block-start: 1px solid var(--media-hairline);
+  @include media-glass($glass: 88%);
 
   @media (min-width: 56.25rem) {
     display: none;
