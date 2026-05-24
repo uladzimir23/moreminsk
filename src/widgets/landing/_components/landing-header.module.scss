@@ -1,82 +1,78 @@
-// Landing header — fixed top nav. Transparent over the hero, frosted dark
-// glass once scrolled. White text throughout (most sections are dark).
+// Landing header — fixed top bar. Transparent over the hero, crisp dark
+// editorial glass once scrolled. Always white text (sits over dark hero and
+// alternating light/dark sections; white reads on the dark bar throughout).
+// Nav links collapse on mobile — they live in the bottom nav instead.
 
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
   z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1rem clamp(1.25rem, 5vw, 4rem);
   color: white;
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
-    padding 0.3s ease,
     backdrop-filter 0.3s ease;
-  border-bottom: 1px solid transparent;
+  border-block-end: 1px solid transparent;
 }
+
 .scrolled {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  background: rgba(10, 10, 10, 0.55);
-  backdrop-filter: blur(1rem) saturate(1.4);
-  -webkit-backdrop-filter: blur(1rem) saturate(1.4);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--media-bg) 82%, transparent);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
+  border-block-end-color: var(--media-hairline);
+}
+
+.bar {
+  max-inline-size: var(--section-max);
+  margin-inline: auto;
+  padding: 1.125rem clamp(1.25rem, 5vw, 5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  transition: padding 0.3s ease;
+
+  .scrolled & {
+    padding-block: 0.8125rem;
+  }
 }
 
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
   color: white;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 1.0625rem;
-  letter-spacing: -0.01em;
 }
-.brandMark {
-  width: 1.375rem;
-  height: 1.375rem;
-  color: var(--color-accent);
-}
-.brandAccent {
-  font-family: var(--font-lora), Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-}
+
+// ── Desktop nav ────────────────────────────────────────────────────────────
 
 .nav {
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 2.4vw, 2.25rem);
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
 
-  @media (max-width: 51.25rem) {
+  @media (max-width: 56.25rem) {
     display: none;
   }
 }
+
 .link {
   position: relative;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 0.25rem 0;
+  padding-block: 0.25rem;
   transition: color 0.2s ease;
 
   &::after {
     content: "";
     position: absolute;
-    bottom: -0.125rem;
-    left: 0;
-    right: 0;
-    height: 0.0625rem;
+    inset-block-end: -0.125rem;
+    inset-inline: 0;
+    block-size: 0.0625rem;
     background: var(--color-accent);
     transform-origin: left;
     transform: scaleX(0);
@@ -90,29 +86,34 @@
   }
 }
 
+// ── Actions ──────────────────────────────────────────────────────────────
+
 .actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
+
 .phone {
   color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
   font-family: var(--font-mono), monospace;
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   font-feature-settings: "tnum", "lnum";
+  white-space: nowrap;
   transition: color 0.2s ease;
 
   &:hover {
     color: white;
   }
 
-  @media (max-width: 35rem) {
+  @media (max-width: 48rem) {
     display: none;
   }
 }
+
 .cta {
   display: inline-flex;
   align-items: center;
@@ -125,6 +126,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 0.2s ease,
@@ -133,5 +135,10 @@
   &:hover {
     background: var(--color-accent-hover);
     transform: translateY(-0.0625rem);
+  }
+
+  // On the smallest screens the bottom-nav «Заказать» covers this duty.
+  @media (max-width: 30rem) {
+    display: none;
   }
 }

@@ -102,11 +102,6 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       <div className={styles.overlay} aria-hidden="true" />
       <div className={styles.tint} aria-hidden="true" />
 
-      <div className={styles.stamp}>
-        <span className={styles.stampDot} aria-hidden="true" />
-        <span>Live · Минское море</span>
-      </div>
-
       <div className={styles.content} ref={contentRef}>
         <span className={styles.eyebrow}>Флот 2026 · 4 яхты под парусом и мотором</span>
 
