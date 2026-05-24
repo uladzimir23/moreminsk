@@ -7,22 +7,78 @@
   white-space: nowrap;
 }
 
-.mark {
+// ── Mark + ripple ──────────────────────────────────────────────────────────
+
+.markWrap {
+  position: relative;
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.mark {
+  position: relative;
+  z-index: 1;
   inline-size: 1.5rem;
   block-size: 1.5rem;
   color: var(--color-accent);
 }
 
+// Soft sky glow pinging out from behind the sail — two waves, half a cycle
+// apart, so the ripple reads as continuous shimmer rather than a lone ping.
+.ripple {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: auto;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  pointer-events: none;
+}
+
+.ripple::before,
+.ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 78%, transparent) 0%,
+    transparent 70%
+  );
+  animation: mm-logo-ripple 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.ripple::after {
+  animation-delay: 1.4s;
+}
+
+@keyframes mm-logo-ripple {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ripple {
+    display: none;
+  }
+}
+
+// ── Wordmark — lowercase, single font ───────────────────────────────────────
+
 .word {
   font-weight: var(--primitive-weight-semibold);
   font-size: 1.0625rem;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
   line-height: 1;
-}
-
-.accent {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: var(--primitive-weight-medium);
 }
