@@ -115,6 +115,19 @@
   opacity: 1;
 }
 
+// Mobile: fill the frame edge-to-edge in a taller portrait crop — no blurred
+// letterbox bars, the photo reads full-bleed by width and height.
+@media (max-width: 56.25rem) {
+  .frame {
+    aspect-ratio: 4 / 5;
+  }
+  .photo,
+  .photoActive {
+    object-fit: cover;
+    filter: none;
+  }
+}
+
 // Soft dark gradient on top — keeps controls readable when the photo
 // happens to be bright in the corners.
 .controlsOverlay {

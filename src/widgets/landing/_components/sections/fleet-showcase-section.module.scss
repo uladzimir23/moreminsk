@@ -429,6 +429,19 @@
   opacity: 1;
 }
 
+// Mobile: fill the frame edge-to-edge in a taller portrait crop — no blurred
+// letterbox bars, the photo reads full-bleed by width and height.
+@media (max-width: 56.25rem) {
+  .heroFrame {
+    aspect-ratio: 4 / 5;
+  }
+  .img,
+  .imgActive {
+    object-fit: cover;
+    filter: none;
+  }
+}
+
 .counter {
   position: absolute;
   bottom: 1rem;
