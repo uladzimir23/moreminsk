@@ -4,12 +4,16 @@
 
 .section {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px);
   background: #0a0f16;
   color: white;
 }
 
 .inner {
+  position: relative;
+  z-index: 1;
   max-width: 1440px;
   margin: 0 auto;
 }
