@@ -68,8 +68,16 @@ extends: ADR-009
   `--media-scrim`. DS-clean, вне stylelintignore. −105 строк нетто.
 - ⏳ `Lightbox`, `useCarousel` — механики у секций разные (paging+swipe / scroll-snap+IO
   / fullscreen stories), чистая единая абстракция не очевидна; извлекать точечно.
-- ⏳ Конверсия SCSS на токены (836 px → rem, 206 rgba → `--on-media-*`) → снять
-  `widgets/landing/**` из stylelintignore. Самый крупный остаток, посекционно.
+- ✅ **SCSS px → rem** (527 значений, 1rem = 16px → pixel-identical; px оставлен
+  только в border/outline/box-shadow/text-shadow). `unit-disallowed-list` был
+  единственным нарушением → `widgets/landing/**` **снят из stylelintignore**,
+  lint теперь его энфорсит. Билд static-export зелёный.
+- ✅ **Удалён мёртвый код** миграции: horizon-hero, scene-hero, submerged-optics,
+  старый fleet-section (только preview-копии использовались).
+- ✅ **Тёмные канвасы секций** (`#0a0f16/#0a0a0a/#0c1620`) → `--media-bg*` токены.
+- ⏳ **Рационализация цветов**: 29 различных white-opacity + 14 black-opacity
+  (текст/бордеры/glass) оставлены литералами — снэп к 5-ступенчатой `--on-media`
+  шкале изменит выверенный вид. Это осознанный дизайн-проход, не механический.
 - ⏳ Уборка мёртвого `.head/.eyebrow/.title/.accent` CSS в переведённых секциях.
 
 ## Связанные
