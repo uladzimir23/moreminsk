@@ -74,7 +74,6 @@
   color: var(--color-foreground-muted);
   background: color-mix(in srgb, var(--color-background) 70%, transparent);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   animation: fadeUp 0.6s ease 0.1s both;
 }
 .stampDot {

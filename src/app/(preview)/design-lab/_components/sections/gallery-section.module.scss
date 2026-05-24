@@ -192,7 +192,6 @@
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   color: white;
   cursor: pointer;
   transition:
@@ -227,7 +226,6 @@
   padding: 6px 12px;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;
@@ -254,7 +252,6 @@
   padding: 6px 12px;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   color: white;
   font-family: var(--font-mono), monospace;
   font-size: 10.5px;

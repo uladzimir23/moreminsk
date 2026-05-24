@@ -195,8 +195,9 @@
 // ── Glass effect ──────────────────────────────────────────────────────────
 // $opacity as percentage (e.g. 8%); blur in rem (scales with font-size).
 @mixin glass-effect($blur: 0.75rem, $opacity: 8%) {
+  // Standard only — Lightning CSS autoprefixes `-webkit-`. Writing both made
+  // its dedup keep only the prefixed alias (Chrome then drops the blur).
   backdrop-filter: blur($blur);
-  -webkit-backdrop-filter: blur($blur);
   background-color: color-mix(in oklch, white #{$opacity}, transparent);
   border: 1px solid color-mix(in oklch, white calc(#{$opacity} * 1.5), transparent);
 }
@@ -204,8 +205,8 @@
 // ── Glass card (dark) ─────────────────────────────────────────────────────
 // Uses tokens — adapts on theme switch.
 @mixin glass-card-dark($blur: 1rem) {
+  // Standard only — Lightning CSS autoprefixes `-webkit-` (see glass-effect).
   backdrop-filter: blur($blur);
-  -webkit-backdrop-filter: blur($blur);
   background: color-mix(in oklch, var(--primitive-color-slate-900) 70%, transparent);
   border: 1px solid color-mix(in oklch, white 8%, transparent);
   overflow: hidden;
@@ -246,8 +247,11 @@
 
   @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     background: color-mix(in srgb, #{$base} #{$glass}, transparent);
+    // Standard property only — Turbopack's Lightning CSS autoprefixes the
+    // `-webkit-` alias from this. Hand-writing both made its dedup pass keep
+    // ONLY `-webkit-backdrop-filter`, which Chrome ignores here (the unprefixed
+    // property is the one Chrome honours) → no blur. See ADR-011 / glass note.
     backdrop-filter: blur(#{$blur}) saturate(1.4);
-    -webkit-backdrop-filter: blur(#{$blur}) saturate(1.4);
   }
 }
 
