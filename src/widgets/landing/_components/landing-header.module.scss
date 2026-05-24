@@ -1,7 +1,8 @@
-// Landing header — fixed top bar. Transparent over the hero, crisp dark
-// editorial glass once scrolled. Always white text (sits over dark hero and
-// alternating light/dark sections; white reads on the dark bar throughout).
-// Nav links collapse on mobile — they live in the bottom nav instead.
+// Landing header — fixed top bar. Transparent over the hero, frosted glass
+// once scrolled. Two foreground regimes via local vars: over the (always-dark)
+// hero video the text is the white on-image scale; once frosted the glass +
+// text flip to the theme-aware «media paper» tokens (dark text in light theme,
+// white in dark). Nav links collapse on mobile — they live in the burger menu.
 
 @use "@/shared/design-system/mixins" as *;
 
@@ -10,7 +11,13 @@
   inset-block-start: 0;
   inset-inline: 0;
   z-index: 999;
-  color: white;
+
+  // Over the hero: white scale (the video is dark in both themes).
+  --hdr-fg: var(--on-image);
+  --hdr-fg-strong: var(--on-image-strong);
+  --hdr-fg-muted: var(--on-image-muted);
+
+  color: var(--hdr-fg);
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
@@ -19,14 +26,30 @@
 }
 
 .scrolled {
+  // Frosted: glass base + text follow the theme-aware paper tokens.
+  --hdr-fg: var(--on-media);
+  --hdr-fg-strong: var(--on-media-strong);
+  --hdr-fg-muted: var(--on-media-muted);
+
   border-block-end-color: var(--media-hairline);
   @include media-glass($glass: 82%);
+}
+
+// While the burger menu is open, the logo + «Яхты» button (z 305) sit ABOVE
+// the overlay (z 300), so the persistent chrome must adopt the overlay's
+// theme-aware fg — otherwise white-over-hero text vanishes on the light sheet.
+// :has on the expanded burger keeps this module-agnostic (the burger lives in
+// a sibling CSS module).
+.header:has(button[aria-expanded="true"]) {
+  --hdr-fg: var(--on-media);
+  --hdr-fg-strong: var(--on-media-strong);
+  --hdr-fg-muted: var(--on-media-muted);
 }
 
 .bar {
   // Full-bleed — the bar stretches edge to edge, content held off the sides
   // by the gutter only (no centred max-width).
-  padding: 1.125rem clamp(1.25rem, 5vw, 5rem);
+  padding: 1.125rem clamp(1.25rem, 1vw, 5rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -43,7 +66,7 @@
   // when the menu opens — no duplicate logo, no vertical jump.
   position: relative;
   z-index: 305;
-  color: white;
+  color: var(--hdr-fg);
   text-decoration: none;
 }
 
@@ -61,7 +84,7 @@
 
 .link {
   position: relative;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--hdr-fg-muted);
   text-decoration: none;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
@@ -83,7 +106,7 @@
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
   &:hover {
-    color: white;
+    color: var(--hdr-fg);
   }
   &:hover::after {
     transform: scaleX(1);
@@ -96,6 +119,14 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+// Theme + locale cluster — desktop only; on mobile it moves into the burger
+// menu footer (the actions row collapses to logo + «Яхты» + burger there).
+.controls {
+  @media (max-width: 56.25rem) {
+    display: none;
+  }
 }
 
 // Social links — pinned on the right after the phone number. Hidden on the
@@ -112,7 +143,7 @@
 
 .social {
   display: inline-flex;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--hdr-fg-muted);
   transition: color 0.2s ease;
 
   svg {
@@ -126,7 +157,7 @@
 }
 
 .phone {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--hdr-fg-strong);
   text-decoration: none;
   font-family: var(--font-mono), monospace;
   font-size: 0.75rem;
@@ -137,7 +168,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: white;
+    color: var(--hdr-fg);
   }
 
   @media (max-width: 48rem) {
@@ -186,7 +217,7 @@
   gap: 0.375rem;
   padding: 0.5rem 0.9375rem;
   border-radius: 999px;
-  color: white;
+  color: var(--hdr-fg);
   text-decoration: none;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
@@ -198,7 +229,7 @@
   transition: background-color 0.2s ease;
 
   &:active {
-    background: rgb(255 255 255 / 0.12);
+    background: color-mix(in srgb, currentColor 12%, transparent);
   }
 
   @media (max-width: 56.25rem) {
@@ -216,9 +247,9 @@
   padding: 0.0625rem;
   background: conic-gradient(
     from var(--fleet-angle),
-    rgb(255 255 255 / 0.28) 0deg 250deg,
+    color-mix(in srgb, currentColor 28%, transparent) 0deg 250deg,
     var(--color-accent) 312deg,
-    rgb(255 255 255 / 0.28) 360deg
+    color-mix(in srgb, currentColor 28%, transparent) 360deg
   );
   -webkit-mask:
     linear-gradient(black 0 0) content-box,

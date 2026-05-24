@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { LandingControls } from "./landing-controls";
 import styles from "./landing-menu.module.scss";
 
 const LINKS = [
@@ -165,6 +166,10 @@ export function LandingMenu() {
                   >
                     Забронировать
                   </motion.a>
+
+                  <motion.div className={styles.controls} variants={item}>
+                    <LandingControls />
+                  </motion.div>
 
                   <motion.div className={styles.foot} variants={item}>
                     <a href="tel:+375296953636" className={styles.phone}>

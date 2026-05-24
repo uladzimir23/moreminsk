@@ -2,6 +2,7 @@
 
 import { Logo } from "@/shared/ui/logo/Logo";
 import { useEffect, useRef, useState } from "react";
+import { LandingControls } from "./landing-controls";
 import styles from "./landing-header.module.scss";
 import { LandingMenu } from "./landing-menu";
 
@@ -107,6 +108,7 @@ export function LandingHeader() {
           <a href="#booking" className={styles.cta}>
             Забронировать
           </a>
+          <LandingControls className={styles.controls} />
           <LandingMenu />
         </div>
       </div>

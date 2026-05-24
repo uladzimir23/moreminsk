@@ -17,8 +17,15 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: white;
+  // Closed: follow the header fg (white over the hero, flips when frosted).
+  // Open: the burger becomes the X over the overlay, so it adopts the
+  // overlay's theme-aware fg (dark on the light sheet in light theme).
+  color: var(--hdr-fg, var(--on-image));
   cursor: pointer;
+
+  &[aria-expanded="true"] {
+    color: var(--on-media);
+  }
 
   @media (max-width: 56.25rem) {
     display: inline-flex;
@@ -52,6 +59,10 @@
   flex-direction: column;
   padding: 1.125rem clamp(1.25rem, 5vw, 5rem) clamp(1.5rem, 6vw, 2.5rem);
   color: var(--on-media);
+  // The overlay is portaled to <body>, outside the header — feed --hdr-fg the
+  // overlay fg so any --hdr-fg consumer rendered inside (LandingControls) flips
+  // with the sheet instead of falling back to white.
+  --hdr-fg: var(--on-media);
   overflow-y: auto;
   overscroll-behavior: contain;
 
@@ -123,7 +134,11 @@
   text-decoration: none;
 }
 
-// ── Footer block ─────────────────────────────────────────────────────────
+// ── Controls + footer block ────────────────────────────────────────────────
+
+.controls {
+  margin-block-start: 1.75rem;
+}
 
 .foot {
   display: flex;

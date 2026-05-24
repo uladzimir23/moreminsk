@@ -326,31 +326,24 @@
     --card-padding: var(--primitive-space-8);
     --card-radius: var(--primitive-radius-sm); // 4px — editorial, was 24px in ADR-005
 
-    // ── Editorial «media» layer (ADR-011) ──────────────────────────────────
-    // Dark sections that sit over photos/video/effects are always-dark
-    // regardless of the light/dark theme — so these are theme-independent.
-    // Foreground text is a white scale; surfaces are deep ink; glass + blur
-    // for floating chrome. Used by the landing widgets (fleet/services/
-    // gallery/reviews/faq/booking/contacts ambient sections).
-    --media-bg: #0a0f16; // primary dark section canvas
-    --media-bg-deep: #0a0a0a; // deepest (video letterbox, fallbacks)
-    --media-bg-elevated: #0c1620; // slightly lifted (reviews/gradient tops)
+    // ── On-image layer (ADR-011 rev) ───────────────────────────────────────
+    // Text & scrim that sit DIRECTLY over photos / the hero video. A photo
+    // doesn't change with the theme, so its overlay content stays a white
+    // scale on a dark scrim in BOTH light and dark themes — these are
+    // theme-INDEPENDENT. The theme-aware «paper» counterparts (--media-bg,
+    // --on-media*, --media-hairline*, --media-glass-*, --on-media-accent) live
+    // in the light/dark blocks below and flip with the theme.
+    --on-image: #ffffff; // primary text over a photo/video
+    --on-image-strong: rgb(255 255 255 / 0.92);
+    --on-image-muted: rgb(255 255 255 / 0.7); // body / secondary
+    --on-image-subtle: rgb(255 255 255 / 0.5); // captions / meta
+    --on-image-faint: rgb(255 255 255 / 0.4);
 
-    --on-media: #ffffff; // primary text on media
-    --on-media-strong: rgb(255 255 255 / 0.92);
-    --on-media-muted: rgb(255 255 255 / 0.7); // body / secondary
-    --on-media-subtle: rgb(255 255 255 / 0.5); // captions / meta
-    --on-media-faint: rgb(255 255 255 / 0.4);
+    --image-hairline: rgb(255 255 255 / 0.12); // dividers over a photo
+    --image-hairline-strong: rgb(255 255 255 / 0.3);
 
-    --media-hairline: rgb(255 255 255 / 0.12); // dividers on dark
-    --media-hairline-strong: rgb(255 255 255 / 0.3);
-
-    --media-glass-bg: rgb(255 255 255 / 0.06); // glass tiles/cards
-    --media-glass-bg-hover: rgb(255 255 255 / 0.12);
-    --media-glass-border: rgb(255 255 255 / 0.18);
-
-    // Accent tinted for use on dark media (brighter than light-theme accent).
-    --on-media-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
+    // Accent tuned for legibility over dark imagery (brighter than on paper).
+    --on-image-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
 
     // Blur ladder for ambient/glass/edge effects.
     --blur-ambient: 70px; // section backdrop photo
@@ -460,6 +453,30 @@
     --color-background-subtle: var(--color-surface);
     --color-background-muted: var(--color-surface-alt);
     --color-primary-foreground: var(--color-on-primary);
+
+    // ── Media «paper» (light theme) — theme-aware counterpart of the on-image
+    // layer. Editorial sections, cards and frosted chrome (header/menu/tabs)
+    // become light surfaces with dark text; the .dark-theme block mirrors
+    // these as deep ink + a white scale. Text over actual photos uses the
+    // on-image layer instead and stays white in both themes.
+    --media-bg: #ffffff; // section canvas / frosted-glass base
+    --media-bg-deep: var(--primitive-color-slate-100); // deepest (fallbacks)
+    --media-bg-elevated: var(--primitive-color-slate-50); // slightly lifted
+
+    --on-media: var(--color-foreground); // primary text on paper
+    --on-media-strong: color-mix(in srgb, var(--color-foreground) 92%, transparent);
+    --on-media-muted: var(--color-foreground-muted); // body / secondary
+    --on-media-subtle: var(--color-foreground-subtle); // captions / meta
+    --on-media-faint: color-mix(in srgb, var(--color-foreground) 40%, transparent);
+
+    --media-hairline: rgb(0 0 0 / 0.1); // dividers on light
+    --media-hairline-strong: rgb(0 0 0 / 0.2);
+
+    --media-glass-bg: rgb(0 0 0 / 0.04); // glass tiles/cards on light
+    --media-glass-bg-hover: rgb(0 0 0 / 0.07);
+    --media-glass-border: rgb(0 0 0 / 0.12);
+
+    --on-media-accent: var(--color-accent-text); // sky-600 — ≥4.5:1 on light
   }
 
   // ── Semantic: Dark Theme (ADR-009 — Editorial Minimalism on near-black) ──
@@ -523,5 +540,27 @@
       var(--primitive-color-sky-400) 0%,
       var(--primitive-color-slate-950) 100%
     );
+
+    // ── Media «paper» (dark theme) — deep-ink canvas + white text scale;
+    // mirrors the light-theme block. The on-image layer (base :root) stays
+    // white in both themes for content sitting over photos/video.
+    --media-bg: #0a0f16; // primary dark section canvas
+    --media-bg-deep: #0a0a0a; // deepest (video letterbox, fallbacks)
+    --media-bg-elevated: #0c1620; // slightly lifted (reviews/gradient tops)
+
+    --on-media: #ffffff; // primary text on paper
+    --on-media-strong: rgb(255 255 255 / 0.92);
+    --on-media-muted: rgb(255 255 255 / 0.7); // body / secondary
+    --on-media-subtle: rgb(255 255 255 / 0.5); // captions / meta
+    --on-media-faint: rgb(255 255 255 / 0.4);
+
+    --media-hairline: rgb(255 255 255 / 0.12); // dividers on dark
+    --media-hairline-strong: rgb(255 255 255 / 0.3);
+
+    --media-glass-bg: rgb(255 255 255 / 0.06); // glass tiles/cards
+    --media-glass-bg-hover: rgb(255 255 255 / 0.12);
+    --media-glass-border: rgb(255 255 255 / 0.18);
+
+    --on-media-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
   }
 } // close @layer tokens
