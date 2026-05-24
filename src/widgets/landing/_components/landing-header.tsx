@@ -56,6 +56,18 @@ export function LandingHeader() {
           {/* Mobile-only quick jump to the fleet (desktop has it in the nav). */}
           <a href="#fleet" className={styles.fleetBtn}>
             Яхты
+            <svg
+              className={styles.fleetArrow}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
           </a>
           <a href="tel:+375296953636" className={styles.phone}>
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36

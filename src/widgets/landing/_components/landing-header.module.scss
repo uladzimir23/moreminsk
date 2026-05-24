@@ -174,14 +174,17 @@
   }
 }
 
-// Mobile-only quick jump to the fleet — a ghost capsule on the right. Desktop
-// carries the fleet link in the nav, so it's hidden there.
+// Mobile-only quick jump to the fleet — a ghost capsule on the right with an
+// animated gradient ring + auto-nudging arrow. Desktop carries the fleet link
+// in the nav, so it's hidden there. z-index keeps it visible above the burger
+// overlay when the menu is open.
 .fleetBtn {
+  position: relative;
+  z-index: 305;
   display: none;
   align-items: center;
   gap: 0.375rem;
   padding: 0.5rem 0.9375rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   color: white;
   text-decoration: none;
@@ -191,9 +194,8 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   white-space: nowrap;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
+  isolation: isolate;
+  transition: background-color 0.2s ease;
 
   &:active {
     background: rgb(255 255 255 / 0.12);
@@ -201,5 +203,65 @@
 
   @media (max-width: 56.25rem) {
     display: inline-flex;
+  }
+}
+
+// Gradient ring — a bright accent segment travels around the capsule border.
+.fleetBtn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 0.0625rem;
+  background: conic-gradient(
+    from var(--fleet-angle),
+    rgb(255 255 255 / 0.28) 0deg 250deg,
+    var(--color-accent) 312deg,
+    rgb(255 255 255 / 0.28) 360deg
+  );
+  -webkit-mask:
+    linear-gradient(black 0 0) content-box,
+    linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(black 0 0) content-box,
+    linear-gradient(black 0 0);
+  mask-composite: exclude;
+  animation: fleet-ring 4s linear infinite;
+}
+
+@property --fleet-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes fleet-ring {
+  to {
+    --fleet-angle: 360deg;
+  }
+}
+
+.fleetArrow {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  animation: fleet-nudge 1.8s ease-in-out infinite;
+}
+
+@keyframes fleet-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0.1875rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fleetBtn::before,
+  .fleetArrow {
+    animation: none;
   }
 }
