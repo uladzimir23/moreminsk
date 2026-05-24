@@ -2,10 +2,13 @@
 
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
+import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
 
 const DURATIONS = ["2 часа", "4 часа", "День", "Вечер / ночь"];
+
+type Status = "idle" | "submitting" | "success" | "error";
 
 const POINTS = [
   "Перезвоним в течение 30 минут",
@@ -14,7 +17,43 @@ const POINTS = [
 ];
 
 export function BookingCTASection() {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+
+    const yachtVal = String(fd.get("yacht") ?? "any");
+    const serviceVal = String(fd.get("service") ?? "walk");
+    const payload = {
+      yacht:
+        yachtVal === "any"
+          ? "Любая / подберите"
+          : (YACHTS.find((y) => y.slug === yachtVal)?.name ?? yachtVal),
+      service:
+        serviceVal === "walk"
+          ? "Просто прогулка"
+          : (SERVICES.find((s) => s.slug === serviceVal)?.shortTitle ?? serviceVal),
+      duration: String(fd.get("duration") ?? ""),
+      date: String(fd.get("date") ?? ""),
+      name: String(fd.get("name") ?? "").trim(),
+      phone: String(fd.get("phone") ?? "").trim(),
+    };
+
+    setStatus("submitting");
+    try {
+      await submitBooking(payload);
+      setStatus("success");
+    } catch (err) {
+      setErrorMsg(
+        err instanceof BookingNotConfiguredError
+          ? "Онлайн-заявка ещё настраивается. Позвоните, пожалуйста, — ответим сразу."
+          : "Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.",
+      );
+      setStatus("error");
+    }
+  };
 
   return (
     <section className={styles.section} id="booking">
@@ -57,7 +96,7 @@ export function BookingCTASection() {
         </div>
 
         <div className={styles.card}>
-          {submitted ? (
+          {status === "success" ? (
             <div className={styles.success}>
               <span className={styles.successIcon} aria-hidden="true">
                 <svg
@@ -81,25 +120,19 @@ export function BookingCTASection() {
               <button
                 type="button"
                 className={styles.successReset}
-                onClick={() => setSubmitted(false)}
+                onClick={() => setStatus("idle")}
               >
                 ← Отправить ещё одну
               </button>
             </div>
           ) : (
-            <form
-              className={styles.form}
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
-            >
+            <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.fieldRow}>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="bk-yacht">
                     Яхта
                   </label>
-                  <select id="bk-yacht" className={styles.select} defaultValue="any">
+                  <select id="bk-yacht" name="yacht" className={styles.select} defaultValue="any">
                     <option value="any">Любая / подберите</option>
                     {YACHTS.map((y) => (
                       <option key={y.slug} value={y.slug}>
@@ -112,7 +145,12 @@ export function BookingCTASection() {
                   <label className={styles.label} htmlFor="bk-service">
                     Повод
                   </label>
-                  <select id="bk-service" className={styles.select} defaultValue="walk">
+                  <select
+                    id="bk-service"
+                    name="service"
+                    className={styles.select}
+                    defaultValue="walk"
+                  >
                     <option value="walk">Просто прогулка</option>
                     {SERVICES.map((s) => (
                       <option key={s.slug} value={s.slug}>
@@ -128,7 +166,7 @@ export function BookingCTASection() {
                 <div className={styles.chips}>
                   {DURATIONS.map((d, i) => (
                     <label key={d} className={styles.chip}>
-                      <input type="radio" name="duration" defaultChecked={i === 0} />
+                      <input type="radio" name="duration" value={d} defaultChecked={i === 0} />
                       <span>{d}</span>
                     </label>
                   ))}
@@ -140,7 +178,7 @@ export function BookingCTASection() {
                   <label className={styles.label} htmlFor="bk-date">
                     Дата
                   </label>
-                  <input id="bk-date" type="date" className={styles.input} />
+                  <input id="bk-date" name="date" type="date" className={styles.input} />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="bk-name">
@@ -148,6 +186,7 @@ export function BookingCTASection() {
                   </label>
                   <input
                     id="bk-name"
+                    name="name"
                     type="text"
                     className={styles.input}
                     placeholder="Как к вам обращаться"
@@ -162,6 +201,7 @@ export function BookingCTASection() {
                 </label>
                 <input
                   id="bk-phone"
+                  name="phone"
                   type="tel"
                   className={styles.input}
                   placeholder="+375 __ ___ __ __"
@@ -169,8 +209,17 @@ export function BookingCTASection() {
                 />
               </div>
 
-              <button type="submit" className={styles.submit}>
-                Отправить заявку
+              {status === "error" && (
+                <p className={styles.error} role="alert">
+                  {errorMsg}{" "}
+                  <a href="tel:+375296953636" className={styles.errorPhone}>
+                    +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
+                  </a>
+                </p>
+              )}
+
+              <button type="submit" className={styles.submit} disabled={status === "submitting"}>
+                {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
                 <svg
                   width="14"
                   height="14"
