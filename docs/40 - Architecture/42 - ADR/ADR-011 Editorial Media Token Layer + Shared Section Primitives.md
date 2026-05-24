@@ -58,10 +58,19 @@ extends: ADR-009
 
 - ✅ Media token layer в `_tokens.scss`.
 - ✅ `SectionHeader` tone/accent/framed (DS-clean).
-- ✅ Пруф: `gallery-section` шапка переведена на `<SectionHeader tone="media" framed>` — рендерится идентично, выровнено 160px, stylelint green.
-- ⏳ Перевести остальные 6 шапок (флот/услуги/отзывы/faq/booking/contacts) на `SectionHeader`.
-- ⏳ `AmbientBackdrop`, `Lightbox`, `useCarousel`.
-- ⏳ Конверсия SCSS на токены → снять `widgets/landing/**` из stylelintignore.
+- ✅ **5/7 шапок** на `SectionHeader tone="media"`: gallery (framed), services
+  (framed), faq (внутри `.inner`), fleet + reviews (внутри 1280-центр. `.head`).
+  Все выровнены на 160px @1600. Осталось: **contacts** (нужен editorial-on-light
+  тон — отложено до ре-скина внутренних страниц) + **booking** (шапка вшита в
+  pitch-колонку, не standalone).
+- ✅ **`AmbientBackdrop`** (`shared/ui`) — извлечён, заменил 3 копии `.backdrop*`
+  (gallery/services/fleet), blur через `--blur-ambient`, wash через
+  `--media-scrim`. DS-clean, вне stylelintignore. −105 строк нетто.
+- ⏳ `Lightbox`, `useCarousel` — механики у секций разные (paging+swipe / scroll-snap+IO
+  / fullscreen stories), чистая единая абстракция не очевидна; извлекать точечно.
+- ⏳ Конверсия SCSS на токены (836 px → rem, 206 rgba → `--on-media-*`) → снять
+  `widgets/landing/**` из stylelintignore. Самый крупный остаток, посекционно.
+- ⏳ Уборка мёртвого `.head/.eyebrow/.title/.accent` CSS в переведённых секциях.
 
 ## Связанные
 
