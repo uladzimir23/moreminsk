@@ -74,30 +74,21 @@
   }
 }
 
-// ── Wordmark — lowercase, single font ───────────────────────────────────────
-// Desktop: one inline line, Manrope. Mobile: stacked two lines in the mono,
-// wide-tracked style of the «Яхты» button, with «море» in the sky accent.
+// ── Wordmark ────────────────────────────────────────────────────────────────
+// Stacked two lines «минское» / «море» in the mono, wide-tracked style of the
+// «Яхты» button, «море» in the sky accent. Same on every screen.
 
 .word {
-  font-weight: var(--primitive-weight-semibold);
-  font-size: 1.0625rem;
-  letter-spacing: -0.005em;
-  line-height: 1;
-
-  @media (max-width: 56.25rem) {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    line-height: 1.1;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
 }
 
 .wordMore {
-  @media (max-width: 56.25rem) {
-    color: var(--color-accent);
-  }
+  color: var(--color-accent);
 }
