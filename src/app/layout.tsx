@@ -3,7 +3,7 @@ import { lora, manrope } from "./fonts";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Море Minsk — аренда яхт на Минском море",
+  title: "Минское море — аренда яхт на Минском море",
   description:
     "Парусные и моторные яхты в аренду на Минском водохранилище. Прогулки, мероприятия, пакеты под ключ.",
 };

@@ -19,7 +19,7 @@ export function ContactMap() {
         <iframe
           className={styles.frame}
           src={MAP_SRC}
-          title="Карта — Море Minsk, Ждановичи"
+          title="Карта — Минское море, Ждановичи"
           loading="lazy"
           allowFullScreen
         />

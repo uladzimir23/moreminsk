@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Контакты — Море Minsk",
+  title: "Контакты — Минское море",
   description:
     "Телефоны, Telegram, Viber, адрес причала в Ждановичах и часы работы. Ответим за 30 минут.",
 };

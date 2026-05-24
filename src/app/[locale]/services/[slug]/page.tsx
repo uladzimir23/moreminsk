@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const service = SERVICES.find((s) => s.slug === slug);
   if (!service) return {};
   return {
-    title: `${service.h1} — Море Minsk`,
+    title: `${service.h1} — Минское море`,
     description: service.utp,
   };
 }

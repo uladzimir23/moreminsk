@@ -8,9 +8,9 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Флот яхт — Море Minsk",
+  title: "Флот яхт — Минское море",
   description:
-    "Весь флот Море Minsk: три парусные (EVA, ALFA, BRAVO) и одна моторная (MARIO) яхта на 2–10 гостей. Цены от 150 BYN/час.",
+    "Весь флот Минское море: три парусные (EVA, ALFA, BRAVO) и одна моторная (MARIO) яхта на 2–10 гостей. Цены от 150 BYN/час.",
 };
 
 export default async function FleetPage({ params }: Props) {

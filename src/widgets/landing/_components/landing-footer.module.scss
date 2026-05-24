@@ -1,10 +1,15 @@
 // Landing footer — dark close to the page. Brand + nav + contacts + legal.
 
 .footer {
-  background: #08090c;
+  background: var(--media-bg-deep);
   color: white;
   padding: clamp(3.5rem, 8vh, 5.5rem) clamp(1.5rem, 6vw, 5rem) 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--media-hairline);
+
+  // Clear the fixed bottom nav on mobile (capsule CTA height + safe area).
+  @media (max-width: 56.25rem) {
+    padding-block-end: calc(5.5rem + env(safe-area-inset-bottom));
+  }
 }
 
 .top {

@@ -1,31 +1,13 @@
+import { Logo } from "@/shared/ui/logo/Logo";
 import styles from "./landing-footer.module.scss";
-
-const SailMark = () => (
-  <svg
-    className={styles.brandMark}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 2 L12 17" />
-    <path d="M12 4 L5 15 L12 15 Z" fill="currentColor" stroke="none" />
-    <path d="M3 18 L21 18" />
-    <path d="M5 18 Q12 22 19 18" />
-  </svg>
-);
 
 export function LandingFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.top}>
         <div className={styles.brandCol}>
-          <a href="#top" className={styles.brand}>
-            <SailMark />
-            Море&nbsp;<span className={styles.brandAccent}>Minsk</span>
+          <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
+            <Logo />
           </a>
           <p className={styles.tagline}>
             Аренда парусных и моторных яхт на Минском водохранилище. Прогулки, мероприятия,
@@ -101,7 +83,7 @@ export function LandingFooter() {
       </div>
 
       <div className={styles.bottom}>
-        <span>© 2026 Море Minsk. Все права защищены.</span>
+        <span>© 2026 Минское море. Все права защищены.</span>
         <span className={styles.legal}>
           <a className={styles.legalLink} href="#privacy">
             Политика конфиденциальности
