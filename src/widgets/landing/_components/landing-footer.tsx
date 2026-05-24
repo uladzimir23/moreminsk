@@ -1,10 +1,84 @@
+"use client";
+
+import { submitBooking } from "@/shared/lib/booking/submit";
 import { Logo } from "@/shared/ui/logo/Logo";
+import { useEffect, useRef, useState } from "react";
 import styles from "./landing-footer.module.scss";
 
+type QuickStatus = "idle" | "sending" | "done" | "error";
+
 export function LandingFooter() {
+  const footerRef = useRef<HTMLElement>(null);
+  const [quick, setQuick] = useState<QuickStatus>("idle");
+
+  // Publish the footer height as --footer-h so the page content reserves room
+  // to scroll past and reveal the fixed footer beneath it.
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const apply = () =>
+      document.documentElement.style.setProperty("--footer-h", `${el.offsetHeight}px`);
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const onQuick = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const phone = String(new FormData(e.currentTarget).get("phone") ?? "").trim();
+    setQuick("sending");
+    try {
+      await submitBooking({
+        yacht: "—",
+        service: "Быстрый звонок (футер)",
+        duration: "—",
+        date: "—",
+        name: "—",
+        phone,
+      });
+      setQuick("done");
+    } catch {
+      setQuick("error");
+    }
+  };
+
   return (
-    <footer className={styles.footer}>
+    <footer ref={footerRef} className={styles.footer}>
       <div className={styles.glow} aria-hidden="true" />
+
+      {/* Quick call-back capture — the first thing the reveal exposes. */}
+      <div className={styles.quickWrap}>
+        {quick === "done" ? (
+          <p className={styles.quickDone}>Спасибо — перезвоним в течение 30 минут.</p>
+        ) : (
+          <form className={styles.quick} onSubmit={onQuick}>
+            <span className={styles.quickLabel}>
+              Оставьте телефон — <span className={styles.quickAccent}>перезвоним за 30 минут</span>
+            </span>
+            <div className={styles.quickRow}>
+              <input
+                name="phone"
+                type="tel"
+                required
+                placeholder="+375 __ ___ __ __"
+                className={styles.quickInput}
+                aria-label="Телефон"
+              />
+              <button type="submit" className={styles.quickBtn} disabled={quick === "sending"}>
+                {quick === "sending" ? "Отправляем…" : "Жду звонка"}
+              </button>
+            </div>
+            {quick === "error" && (
+              <span className={styles.quickError}>
+                Не отправилось — позвоните, пожалуйста:{" "}
+                <a href="tel:+375296953636">+375 29 695 36 36</a>
+              </span>
+            )}
+          </form>
+        )}
+      </div>
+
       <div className={styles.top}>
         <div className={styles.brandCol}>
           <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
