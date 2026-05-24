@@ -1,5 +1,4 @@
 import { type Locale, routing } from "@/i18n/routing";
-import { LandingBottomNav } from "@/widgets/landing/_components/landing-bottom-nav";
 import { LandingFooter } from "@/widgets/landing/_components/landing-footer";
 import { LandingHeader } from "@/widgets/landing/_components/landing-header";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
@@ -28,7 +27,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         <LandingHeader />
         {children}
         <LandingFooter />
-        <LandingBottomNav />
       </Providers>
     </NextIntlClientProvider>
   );

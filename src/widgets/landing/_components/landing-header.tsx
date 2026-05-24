@@ -3,6 +3,7 @@
 import { Logo } from "@/shared/ui/logo/Logo";
 import { useEffect, useRef, useState } from "react";
 import styles from "./landing-header.module.scss";
+import { LandingMenu } from "./landing-menu";
 
 const NAV = [
   { href: "#fleet", label: "Флот" },
@@ -94,6 +95,7 @@ export function LandingHeader() {
           <a href="#booking" className={styles.cta}>
             Забронировать
           </a>
+          <LandingMenu />
         </div>
       </div>
     </header>
