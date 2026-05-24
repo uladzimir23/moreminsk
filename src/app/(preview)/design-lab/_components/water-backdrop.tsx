@@ -9,12 +9,28 @@ type Ripple = { id: number; x: number; y: number };
 
 type WaterBackdropProps = {
   filterId?: string;
-  // "caustics" — fully procedural sunlit-water highlights (feTurbulence +
-  // feSpecularLighting, the light follows the cursor). "photo" — ripple a
-  // real water photo via feDisplacementMap.
-  variant?: "caustics" | "photo";
+  // "caustics" — procedural sunlit-water highlights. "waves" — layered
+  // drifting sine waves (filled sea layers). "photo" — ripple a real
+  // water photo. All react to the cursor on desktop, drift on touch.
+  variant?: "caustics" | "waves" | "photo";
   image?: string;
 };
+
+// A horizontal sine as an SVG path, optionally closed to the bottom to fill.
+function wavePath(y: number, amp: number, seg = 180, width = 2400, bottom = 600): string {
+  const n = Math.ceil(width / seg) + 6;
+  let d = `M${-seg * 2} ${y} q ${seg / 2} ${-amp} ${seg} 0`;
+  for (let i = 0; i < n; i += 1) d += ` t ${seg} 0`;
+  d += ` L${width + seg * 2} ${bottom} L${-seg * 2} ${bottom} Z`;
+  return d;
+}
+
+const WAVE_LAYERS = [
+  { d: wavePath(120, 26), cls: "wave1" },
+  { d: wavePath(190, 30), cls: "wave2" },
+  { d: wavePath(270, 34), cls: "wave3" },
+  { d: wavePath(360, 40), cls: "wave4" },
+];
 
 export function WaterBackdrop({
   filterId = "waterRipple",
@@ -85,7 +101,7 @@ export function WaterBackdrop({
       return () => cancelAnimationFrame(raf);
     }
 
-    // ── Photo: caustic glow follows cursor + click ripples ───────────────
+    // ── Photo / waves: caustic glow follows cursor (photo also ripples) ──
     if (!fine || reduce) return;
     glowRef.current?.classList.remove(styles.glowAuto);
 
@@ -114,7 +130,7 @@ export function WaterBackdrop({
       ]);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onDown, { passive: true });
+    if (variant === "photo") window.addEventListener("pointerdown", onDown, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
@@ -159,6 +175,27 @@ export function WaterBackdrop({
           <rect width="100%" height="100%" filter={`url(#${filterId})`} />
         </svg>
         <div className={styles.shade} />
+      </div>
+    );
+  }
+
+  if (variant === "waves") {
+    return (
+      <div className={styles.root} ref={rootRef} aria-hidden="true">
+        <svg
+          className={styles.svgWaves}
+          viewBox="0 0 2400 620"
+          preserveAspectRatio="xMidYMax slice"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {WAVE_LAYERS.map((w) => (
+            <g key={w.cls} className={styles[w.cls]}>
+              <path d={w.d} />
+            </g>
+          ))}
+        </svg>
+        <div className={styles.shade} />
+        <div className={`${styles.glow} ${styles.glowAuto}`} ref={glowRef} />
       </div>
     );
   }

@@ -33,7 +33,7 @@ export function FaqSection() {
 
   return (
     <section className={styles.section} id="faq">
-      <WaterBackdrop filterId="faqWater" />
+      <WaterBackdrop filterId="faqWater" variant="waves" />
       <div className={styles.inner}>
         <div className={styles.head}>
           <p className={styles.eyebrow}>05 · Вопросы</p>

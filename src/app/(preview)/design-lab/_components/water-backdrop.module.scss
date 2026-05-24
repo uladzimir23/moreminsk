@@ -28,6 +28,49 @@
   height: 100%;
 }
 
+// Layered drifting sine waves (filled sea layers).
+.svgWaves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.wave1 path,
+.wave2 path,
+.wave3 path,
+.wave4 path {
+  fill: var(--color-accent);
+}
+.wave1 {
+  opacity: 0.1;
+  animation: waveScroll 11s linear infinite;
+}
+.wave2 {
+  opacity: 0.13;
+  animation: waveScroll 16s linear infinite reverse;
+}
+.wave3 {
+  opacity: 0.16;
+  animation: waveScroll 22s linear infinite;
+}
+.wave4 {
+  opacity: 0.22;
+  animation: waveScroll 30s linear infinite reverse;
+}
+@keyframes waveScroll {
+  to {
+    transform: translateX(-360px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave1,
+  .wave2,
+  .wave3,
+  .wave4 {
+    animation: none;
+  }
+}
+
 // Dark wash over the rippling photo so the section's content stays legible
 // + a faint accent tint to keep it on-brand.
 .shade {
