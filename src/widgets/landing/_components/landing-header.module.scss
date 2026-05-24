@@ -24,8 +24,8 @@
 }
 
 .bar {
-  max-inline-size: var(--section-max);
-  margin-inline: auto;
+  // Full-bleed — the bar stretches edge to edge, content held off the sides
+  // by the gutter only (no centred max-width).
   padding: 1.125rem clamp(1.25rem, 5vw, 5rem);
   display: flex;
   align-items: center;
@@ -92,6 +92,33 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+// Social links — pinned on the right after the phone number. Hidden on the
+// smaller screens (like the phone) so mobile stays the logo + «Яхты».
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  @media (max-width: 48rem) {
+    display: none;
+  }
+}
+
+.social {
+  display: inline-flex;
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 0.2s ease;
+
+  svg {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+  }
+
+  &:hover {
+    color: var(--color-accent);
+  }
 }
 
 .phone {
