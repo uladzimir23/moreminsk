@@ -21,7 +21,7 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0;
-  background: #0a0a0a; // fallback before ambient backdrop paints
+  background: var(--media-bg-deep); // fallback before ambient backdrop paints
   color: white;
 }
 
@@ -93,7 +93,7 @@
   isolation: isolate;
   overflow: hidden;
   aspect-ratio: 21 / 9;
-  background: #0a0a0a;
+  background: var(--media-bg-deep);
 
   @media (max-width: 56.25rem) {
     aspect-ratio: 4 / 5;

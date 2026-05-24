@@ -17,7 +17,7 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0 clamp(3.75rem, 8vh, 6.25rem);
-  background: #0a0a0a; // fallback before ambient backdrop paints
+  background: var(--media-bg-deep); // fallback before ambient backdrop paints
   color: white;
 }
 
