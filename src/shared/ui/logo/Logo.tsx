@@ -37,7 +37,12 @@ export function Logo({ markOnly = false, className }: Props) {
           />
         </svg>
       </span>
-      {!markOnly && <span className={styles.word}>минское море</span>}
+      {!markOnly && (
+        <span className={styles.word}>
+          <span className={styles.wordMinsk}>минское</span>{" "}
+          <span className={styles.wordMore}>море</span>
+        </span>
+      )}
     </span>
   );
 }
