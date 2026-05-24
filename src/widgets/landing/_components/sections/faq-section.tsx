@@ -1,6 +1,7 @@
 "use client";
 
 import { FAQ } from "@/shared/content/faq";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useState } from "react";
 import { WaterBackdrop } from "../water-backdrop";
 import styles from "./faq-section.module.scss";
@@ -35,12 +36,7 @@ export function FaqSection() {
     <section className={styles.section} id="faq">
       <WaterBackdrop filterId="faqWater" variant="waves" />
       <div className={styles.inner}>
-        <div className={styles.head}>
-          <p className={styles.eyebrow}>05 · Вопросы</p>
-          <h2 className={styles.title}>
-            Коротко о <span className={styles.accent}>главном.</span>
-          </h2>
-        </div>
+        <SectionHeader eyebrow="05 · Вопросы" title="Коротко о" accent="главном." tone="media" />
 
         <div className={styles.grid}>
           <ul className={styles.list}>

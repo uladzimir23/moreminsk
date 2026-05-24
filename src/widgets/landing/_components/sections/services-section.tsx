@@ -1,6 +1,7 @@
 "use client";
 
 import { SERVICES } from "@/shared/content/services";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./services-section.module.scss";
@@ -71,12 +72,13 @@ export function ServicesSection() {
         <div className={styles.backdropOverlay} />
       </div>
 
-      <header className={styles.head}>
-        <p className={styles.eyebrow}>02 · Услуги</p>
-        <h2 className={styles.title}>
-          Под что бронируют <span className={styles.accent}>чаще всего.</span>
-        </h2>
-      </header>
+      <SectionHeader
+        eyebrow="02 · Услуги"
+        title="Под что бронируют"
+        accent="чаще всего."
+        tone="media"
+        framed
+      />
 
       <div className={styles.rail}>
         <div className={styles.track} ref={trackRef}>
