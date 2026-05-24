@@ -1,7 +1,9 @@
 // Mobile burger + full-screen menu. The burger lives in the header (right),
-// shown only ≤56.25rem; the overlay is a dark editorial sheet revealed with a
+// shown only ≤56.25rem; the overlay is a frosted dark sheet revealed with a
 // circular wipe from the burger corner. Burger sits above the overlay so it
 // doubles as the close (X) control.
+
+@use "@/shared/design-system/mixins" as *;
 
 .burger {
   position: relative;
@@ -49,10 +51,13 @@
   display: flex;
   flex-direction: column;
   padding: 1.125rem clamp(1.25rem, 5vw, 5rem) clamp(1.5rem, 6vw, 2.5rem);
-  background: var(--media-bg);
   color: var(--on-media);
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  // Frosted, not solid — the page shows through, blurred. Falls back to a
+  // near-opaque sheet where backdrop-filter isn't supported (@supports).
+  @include media-glass($blur: var(--blur-frame), $glass: 78%, $opaque: 96%);
 }
 
 .nav {
