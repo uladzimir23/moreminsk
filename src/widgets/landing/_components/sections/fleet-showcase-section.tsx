@@ -25,19 +25,24 @@ export function FleetShowcaseSection() {
   const photos = PHOTOS_BY_YACHT[activeYacht.slug as YachtSlug];
 
   // Detect when the mobile tab strip is pinned, so its backdrop only turns to
-  // glass while stuck (transparent in its resting place). A zero-height
-  // sentinel sits just above the tabs; once it scrolls past the sticky line
-  // (the header height, 50px) it stops intersecting → stuck.
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  // glass while stuck (transparent at rest). Compare the tabs' live viewport
+  // position to their resolved sticky `top` (driven by --landing-header-h), so
+  // it stays exact regardless of the actual header height.
+  const tabsRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    const el = sentinelRef.current;
+    const el = tabsRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setTabsStuck(!entry.isIntersecting), {
-      rootMargin: "-50px 0px 0px 0px",
-      threshold: 0,
-    });
-    io.observe(el);
-    return () => io.disconnect();
+    const onScroll = () => {
+      const stickyTop = parseFloat(getComputedStyle(el).top) || 0;
+      setTabsStuck(el.getBoundingClientRect().top <= stickyTop + 1);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   const nextPhoto = useCallback(() => {
@@ -118,8 +123,8 @@ export function FleetShowcaseSection() {
         />
       </div>
 
-      <div ref={sentinelRef} className={styles.tabsSentinel} aria-hidden="true" />
       <div
+        ref={tabsRef}
         className={`${styles.tabs} ${tabsStuck ? styles.tabsStuck : ""}`}
         role="tablist"
         aria-label="Выбор яхты"

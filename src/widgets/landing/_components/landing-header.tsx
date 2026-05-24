@@ -1,7 +1,7 @@
 "use client";
 
 import { Logo } from "@/shared/ui/logo/Logo";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./landing-header.module.scss";
 
 const NAV = [
@@ -13,6 +13,7 @@ const NAV = [
 
 export function LandingHeader() {
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -21,8 +22,22 @@ export function LandingHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Publish the real header height as --landing-header-h so the sticky fleet
+  // tabs (and anything else) pin flush under it instead of guessing the value.
+  // ResizeObserver re-measures when the bar shrinks on scroll or text reflows.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const apply = () =>
+      document.documentElement.style.setProperty("--landing-header-h", `${el.offsetHeight}px`);
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+    <header ref={headerRef} className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
       <div className={styles.bar}>
         <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
           <Logo />

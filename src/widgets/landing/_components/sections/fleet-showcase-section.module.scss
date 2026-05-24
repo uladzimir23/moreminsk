@@ -92,20 +92,17 @@
   padding-bottom: 1rem;
 }
 
-// Zero-height marker just above the tabs — drives the stuck detection.
-.tabsSentinel {
-  block-size: 0;
-}
-
 // Mobile: pin the yacht selector under the fixed header while the fleet
 // section scrolls — switching yachts never needs scrolling back up. At rest
 // the bar is transparent (just the tab row + divider); once pinned it gets a
-// glass backdrop (via the .tabsStuck class, toggled by an IntersectionObserver)
-// and bleeds to the section edges so content slides under it cleanly.
+// glass backdrop (via the .tabsStuck class, toggled in JS) and bleeds to the
+// section edges so content slides under it cleanly.
 @media (max-width: 56.25rem) {
   .tabs {
     position: sticky;
-    top: 3.125rem; // = scrolled mobile header height
+    // Pin flush under the fixed header — its real height is published as
+    // --landing-header-h (fallback covers first paint before the JS runs).
+    top: var(--landing-header-h, 3.5rem);
     z-index: 100;
     flex-wrap: nowrap;
     overflow-x: auto;
