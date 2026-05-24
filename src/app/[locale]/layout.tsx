@@ -1,8 +1,6 @@
 import { type Locale, routing } from "@/i18n/routing";
-import { AppPanel } from "@/widgets/app-panel/AppPanel";
-import { Appbar } from "@/widgets/appbar/Appbar";
-import { BottomNav } from "@/widgets/bottom-nav/BottomNav";
-import { Footer } from "@/widgets/footer/Footer";
+import { LandingFooter } from "@/widgets/landing/_components/landing-footer";
+import { LandingHeader } from "@/widgets/landing/_components/landing-header";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -26,11 +24,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider locale={typedLocale}>
       <Providers>
-        <Appbar />
+        <LandingHeader />
         {children}
-        <Footer />
-        <BottomNav />
-        <AppPanel />
+        <LandingFooter />
       </Providers>
     </NextIntlClientProvider>
   );

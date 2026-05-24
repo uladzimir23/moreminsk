@@ -1,0 +1,142 @@
+// Landing footer — dark close to the page. Brand + nav + contacts + legal.
+
+.footer {
+  background: #08090c;
+  color: white;
+  padding: clamp(56px, 8vh, 88px) clamp(24px, 6vw, 80px) 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1.2fr;
+  gap: clamp(32px, 5vw, 72px);
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 40px;
+  }
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 320px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  color: white;
+  text-decoration: none;
+}
+.brandMark {
+  width: 22px;
+  height: 22px;
+  color: var(--color-accent);
+}
+.brandAccent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+}
+.tagline {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+}
+.socials {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.8);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.colTitle {
+  margin: 0 0 2px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+.link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s ease;
+  width: fit-content;
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
+.bottom {
+  max-width: 1280px;
+  margin: clamp(48px, 6vh, 72px) auto 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.4);
+}
+.legal {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.legalLink {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

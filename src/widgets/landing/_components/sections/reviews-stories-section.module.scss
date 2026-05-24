@@ -1,0 +1,557 @@
+// Reviews as Instagram Stories — a highlights row that opens a full-screen
+// stories viewer (segmented autoplay progress, header, tap nav, side peek
+// of adjacent groups). Media = scraped yacht photos with IG-style stickers.
+
+.section {
+  position: relative;
+  padding: clamp(80px, 12vh, 140px) clamp(24px, 6vw, 80px);
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0c1620 0%, #0a0f16 100%);
+  color: white;
+}
+
+.head {
+  max-width: 1280px;
+  margin: 0 auto 40px;
+  display: grid;
+  gap: 8px;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: white;
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-accent) 75%, white);
+}
+
+// ── Highlights row ───────────────────────────────────────────────────────
+
+.highlights {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  gap: clamp(18px, 3vw, 36px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 8px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.highlight {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  width: clamp(84px, 11vw, 104px);
+}
+.ring {
+  position: relative;
+  width: clamp(72px, 9vw, 92px);
+  height: clamp(72px, 9vw, 92px);
+  border-radius: 50%;
+  padding: 3px;
+  background: conic-gradient(from 135deg, #38bdf8, var(--color-accent), #0369a1, #38bdf8);
+  transition: transform 0.2s ease;
+
+  .highlight:hover & {
+    transform: scale(1.05);
+  }
+}
+.cover {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0a0f16;
+  display: block;
+}
+.label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.weeks {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+// ── Viewer ───────────────────────────────────────────────────────────────
+
+.viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0c;
+  animation: viewerIn 0.25s ease both;
+}
+@keyframes viewerIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.igWordmark {
+  position: absolute;
+  top: 22px;
+  left: 28px;
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: white;
+  pointer-events: none;
+  user-select: none;
+}
+.close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 5;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: white;
+  }
+  svg {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+  height: 100%;
+  padding: clamp(40px, 6vh, 72px) 0;
+}
+
+// Dimmed adjacent group preview (the side peek in the reference).
+.peek {
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(120px, 14vw, 230px);
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.5;
+  filter: brightness(0.7);
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &:hover {
+    opacity: 0.8;
+    filter: brightness(0.85);
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+.peekMeta {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.peekTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.peekWeeks {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.arrow {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 0;
+  border-radius: 50%;
+  color: #111;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+  &:disabled {
+    opacity: 0;
+    pointer-events: none;
+  }
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+}
+
+// Active story — 9:16 frame.
+.story {
+  position: relative;
+  flex: 0 0 auto;
+  height: min(88vh, 760px);
+  aspect-ratio: 9 / 16;
+  max-width: 92vw;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  user-select: none;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mediaShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    transparent 18%,
+    transparent 72%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+// Progress segments.
+.progress {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 4;
+  display: flex;
+  gap: 4px;
+}
+.bar {
+  flex: 1 1 0;
+  height: 2.5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+.barFill {
+  height: 100%;
+  width: 0;
+  background: white;
+  border-radius: 2px;
+}
+.barFillDone {
+  width: 100%;
+}
+.barFillActive {
+  width: 0;
+  animation: storyProgress 5s linear forwards;
+}
+.barFillActive.paused {
+  animation-play-state: paused;
+}
+@keyframes storyProgress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+// Header.
+.storyHead {
+  position: absolute;
+  top: 24px;
+  left: 10px;
+  right: 10px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+.headAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+}
+.headName {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.headTime {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.headControls {
+  margin-left: auto;
+  display: flex;
+  gap: 14px;
+  pointer-events: auto;
+  color: rgba(255, 255, 255, 0.9);
+
+  button {
+    background: none;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Tap zones (prev / next), sit above media, below stickers/controls.
+.tapZone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  z-index: 2;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.tapPrev {
+  left: 0;
+}
+.tapNext {
+  right: 0;
+  width: 60%;
+}
+
+// ── Stickers ─────────────────────────────────────────────────────────────
+
+.sticker {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+.location {
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px 5px 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: white;
+  white-space: nowrap;
+}
+.locationPin {
+  color: #ff4d4f;
+}
+.caption {
+  top: 62%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 86%;
+  text-align: center;
+  font-size: clamp(1.125rem, 2.6vw, 1.5rem);
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  line-height: 1.2;
+}
+.mention {
+  top: 72%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #111;
+}
+.reaction {
+  top: 22%;
+  right: 8%;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #111;
+  transform: rotate(6deg);
+}
+.poll {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 14px;
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.pollBar {
+  margin-top: 12px;
+  height: 36px;
+  border-radius: 8px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.cta {
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  text-align: center;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: white;
+  line-height: 1.35;
+}
+
+// Reply bar.
+.reply {
+  position: absolute;
+  bottom: 14px;
+  left: 12px;
+  right: 12px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.replyInput {
+  flex: 1 1 auto;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: white;
+  font-family: inherit;
+  font-size: 0.875rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  &:focus {
+    outline: none;
+    border-color: white;
+  }
+}
+.replyIcon {
+  flex: 0 0 auto;
+  background: none;
+  border: 0;
+  color: white;
+  cursor: pointer;
+  display: flex;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer {
+    animation: none;
+  }
+  .barFillActive {
+    animation-duration: 5s; // keep autoplay but no other motion
+  }
+}

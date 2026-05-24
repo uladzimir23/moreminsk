@@ -1,0 +1,169 @@
+// Interactive water backdrop — a rippling SVG grid (feTurbulence +
+// displacement) under a caustic light. On a fine pointer the light follows
+// the cursor and clicks spawn ripple rings; on touch it drifts on its own.
+
+.root {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none; // never blocks the section's content/clicks
+  --mx: 50%;
+  --my: 38%;
+}
+
+.svg {
+  position: absolute;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
+  filter: brightness(0.55) saturate(1.15);
+}
+
+// Procedural caustics — render at full strength; .shade dims it for legibility.
+.svgCaustics {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Layered drifting sine waves (filled sea layers).
+.svgWaves {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.wave1 path,
+.wave2 path,
+.wave3 path,
+.wave4 path {
+  fill: var(--color-accent);
+}
+.wave1 {
+  opacity: 0.1;
+  animation: waveScroll 11s linear infinite;
+}
+.wave2 {
+  opacity: 0.13;
+  animation: waveScroll 16s linear infinite reverse;
+}
+.wave3 {
+  opacity: 0.16;
+  animation: waveScroll 22s linear infinite;
+}
+.wave4 {
+  opacity: 0.22;
+  animation: waveScroll 30s linear infinite reverse;
+}
+@keyframes waveScroll {
+  to {
+    transform: translateX(-360px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wave1,
+  .wave2,
+  .wave3,
+  .wave4 {
+    animation: none;
+  }
+}
+
+// Dark wash over the rippling photo so the section's content stays legible
+// + a faint accent tint to keep it on-brand.
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 30%,
+      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
+      transparent 65%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 15, 22, 0.82) 0%,
+      rgba(10, 15, 22, 0.7) 50%,
+      rgba(10, 15, 22, 0.88) 100%
+    );
+}
+
+// Caustic light — a soft radial glow positioned at --mx/--my.
+.glow {
+  position: absolute;
+  left: var(--mx);
+  top: var(--my);
+  width: 46vw;
+  height: 46vw;
+  max-width: 620px;
+  max-height: 620px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-accent) 40%, transparent) 0%,
+    color-mix(in srgb, var(--color-accent) 16%, transparent) 35%,
+    transparent 68%
+  );
+  filter: blur(20px);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  transition:
+    left 0.18s ease-out,
+    top 0.18s ease-out;
+}
+// Touch / no-pointer: ignore cursor, drift on a slow loop instead.
+.glowAuto {
+  transition: none;
+  animation: glowDrift 18s ease-in-out infinite;
+}
+@keyframes glowDrift {
+  0% {
+    left: 32%;
+    top: 34%;
+  }
+  33% {
+    left: 64%;
+    top: 52%;
+  }
+  66% {
+    left: 44%;
+    top: 30%;
+  }
+  100% {
+    left: 32%;
+    top: 34%;
+  }
+}
+
+// Expanding ripple ring spawned on click (fine pointer).
+.ripple {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid color-mix(in srgb, var(--color-accent) 70%, white);
+  opacity: 0.7;
+  animation: rippleOut 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes rippleOut {
+  to {
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow,
+  .glowAuto {
+    animation: none;
+    transition: none;
+  }
+  .ripple {
+    display: none;
+  }
+}
