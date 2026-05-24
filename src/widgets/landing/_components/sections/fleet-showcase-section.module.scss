@@ -4,6 +4,8 @@
 // foreground gets an atmospheric ambient backdrop that follows whatever
 // you're looking at. Section is always-dark regardless of site theme.
 
+@use "@/shared/design-system/mixins" as *;
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -90,9 +92,16 @@
   padding-bottom: 1rem;
 }
 
+// Zero-height marker just above the tabs — drives the stuck detection.
+.tabsSentinel {
+  block-size: 0;
+}
+
 // Mobile: pin the yacht selector under the fixed header while the fleet
-// section scrolls — switching yachts never needs scrolling back up. Bleeds to
-// the section edges with a glass backdrop so content slides under it cleanly.
+// section scrolls — switching yachts never needs scrolling back up. At rest
+// the bar is transparent (just the tab row + divider); once pinned it gets a
+// glass backdrop (via the .tabsStuck class, toggled by an IntersectionObserver)
+// and bleeds to the section edges so content slides under it cleanly.
 @media (max-width: 56.25rem) {
   .tabs {
     position: sticky;
@@ -106,10 +115,13 @@
     padding-block: 0.625rem 0.75rem;
     padding-inline: clamp(1.5rem, 6vw, 5rem);
     gap: clamp(1rem, 4vw, 2rem);
-    background: color-mix(in srgb, var(--media-bg) 90%, transparent);
-    backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-    -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.4);
-    border-block-end-color: var(--media-hairline);
+    transition:
+      background-color 0.25s ease,
+      backdrop-filter 0.25s ease;
+  }
+  // Glass only while pinned — transparent in its resting place.
+  .tabsStuck {
+    @include media-glass($glass: 90%);
   }
   .tab,
   .tabActive {

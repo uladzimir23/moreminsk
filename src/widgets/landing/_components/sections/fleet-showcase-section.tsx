@@ -19,9 +19,26 @@ export function FleetShowcaseSection() {
   const [activeYachtIdx, setActiveYachtIdx] = useState(0);
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [tabsStuck, setTabsStuck] = useState(false);
 
   const activeYacht = YACHTS[activeYachtIdx];
   const photos = PHOTOS_BY_YACHT[activeYacht.slug as YachtSlug];
+
+  // Detect when the mobile tab strip is pinned, so its backdrop only turns to
+  // glass while stuck (transparent in its resting place). A zero-height
+  // sentinel sits just above the tabs; once it scrolls past the sticky line
+  // (the header height, 50px) it stops intersecting → stuck.
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setTabsStuck(!entry.isIntersecting), {
+      rootMargin: "-50px 0px 0px 0px",
+      threshold: 0,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const nextPhoto = useCallback(() => {
     setActivePhotoIdx((i) => (i + 1) % photos.length);
@@ -101,7 +118,12 @@ export function FleetShowcaseSection() {
         />
       </div>
 
-      <div className={styles.tabs} role="tablist" aria-label="Выбор яхты">
+      <div ref={sentinelRef} className={styles.tabsSentinel} aria-hidden="true" />
+      <div
+        className={`${styles.tabs} ${tabsStuck ? styles.tabsStuck : ""}`}
+        role="tablist"
+        aria-label="Выбор яхты"
+      >
         {YACHTS.map((yacht, i) => (
           <button
             key={yacht.slug}
