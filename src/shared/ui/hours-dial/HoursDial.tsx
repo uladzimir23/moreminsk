@@ -8,6 +8,7 @@ import styles from "./HoursDial.module.scss";
 const MIN_A = -135;
 const MAX_A = 135;
 const SPOKES = [0, 45, 90, 135, 180, 225, 270, 315];
+const BOLTS = [0, 36, 72, 108, 144, 180, 216, 252, 288, 324];
 
 const polar = (deg: number, r: number) => {
   const rad = (deg * Math.PI) / 180;
@@ -102,31 +103,39 @@ export function HoursDial({
           </>
         )}
 
-        {/* Helm — rotates with the value. */}
+        {/* Helm — rotates with the value. A real ship's wheel: a banded wooden
+            rim, turned-baluster handles past the rim, brass hub with a bolt ring. */}
         <g className={styles.helm} style={{ transform: `rotate(${angle.toFixed(2)}deg)` }}>
-          <circle cx="100" cy="100" r="70" className={styles.rim} />
+          {/* Rim band + its two edges. */}
+          <circle cx="100" cy="100" r="66" className={styles.rim} />
+          <circle cx="100" cy="100" r="72" className={styles.rimEdge} />
+          <circle cx="100" cy="100" r="60" className={styles.rimEdge} />
+
           {SPOKES.map((a) => {
-            const inner = polar(a, 18);
-            const outer = polar(a, 70);
-            const gripA = polar(a, 60);
-            const gripB = polar(a, 86);
+            const inner = polar(a, 22);
+            const rim = polar(a, 60);
+            const stemEnd = polar(a, 83);
+            const collar = polar(a, 70);
+            const knob = polar(a, 90);
             return (
               <g key={a}>
-                <line
-                  x1={inner.x}
-                  y1={inner.y}
-                  x2={outer.x}
-                  y2={outer.y}
-                  className={styles.spoke}
-                />
-                <line x1={gripA.x} y1={gripA.y} x2={gripB.x} y2={gripB.y} className={styles.grip} />
+                {/* inner spoke hub → rim */}
+                <line x1={inner.x} y1={inner.y} x2={rim.x} y2={rim.y} className={styles.spoke} />
+                {/* turned handle past the rim: stem + collar bead + end knob */}
+                <line x1={rim.x} y1={rim.y} x2={stemEnd.x} y2={stemEnd.y} className={styles.grip} />
+                <circle cx={collar.x} cy={collar.y} r="4" className={styles.collar} />
+                <circle cx={knob.x} cy={knob.y} r="7" className={styles.knob} />
               </g>
             );
           })}
-          <circle cx="100" cy="100" r="18" className={styles.hub} />
-          {interactive && (
-            <circle cx={polar(0, 86).x} cy={polar(0, 86).y} r="8" className={styles.handle} />
-          )}
+
+          {/* Brass hub: disc + ring of bolt heads + centre bolt. */}
+          <circle cx="100" cy="100" r="23" className={styles.hub} />
+          {BOLTS.map((a) => {
+            const b = polar(a, 15);
+            return <circle key={a} cx={b.x} cy={b.y} r="2.4" className={styles.bolt} />;
+          })}
+          <circle cx="100" cy="100" r="4.5" className={styles.hubCenter} />
         </g>
 
         {interactive && (
