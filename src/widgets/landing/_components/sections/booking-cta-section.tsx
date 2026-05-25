@@ -3,8 +3,18 @@
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
+import { Select } from "@/shared/ui/select/Select";
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
+
+const YACHT_OPTIONS = [
+  { value: "any", label: "Любая / подберите" },
+  ...YACHTS.map((y) => ({ value: y.slug, label: `${y.name} · ${y.capacity} чел` })),
+];
+const OCCASION_OPTIONS = [
+  { value: "walk", label: "Просто прогулка" },
+  ...SERVICES.map((s) => ({ value: s.slug, label: s.shortTitle })),
+];
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -161,42 +171,28 @@ export function BookingCTASection() {
                   <label className={styles.label} htmlFor="bk-yacht">
                     Яхта
                   </label>
-                  <select
+                  <Select
                     id="bk-yacht"
-                    name="yacht"
-                    className={styles.select}
+                    ariaLabel="Яхта"
                     value={yacht}
-                    onChange={(e) => setYacht(e.target.value)}
-                  >
-                    <option value="any">Любая / подберите</option>
-                    {YACHTS.map((y) => (
-                      <option key={y.slug} value={y.slug}>
-                        {y.name} · {y.capacity} чел
-                      </option>
-                    ))}
-                  </select>
+                    onValueChange={setYacht}
+                    options={YACHT_OPTIONS}
+                  />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="bk-service">
                     Повод
                   </label>
-                  <select
+                  <Select
                     id="bk-service"
-                    name="service"
-                    className={styles.select}
+                    ariaLabel="Повод"
                     value={occasion}
-                    onChange={(e) => {
-                      setOccasion(e.target.value);
+                    onValueChange={(v) => {
+                      setOccasion(v);
                       setPkgIdx(0);
                     }}
-                  >
-                    <option value="walk">Просто прогулка</option>
-                    {SERVICES.map((s) => (
-                      <option key={s.slug} value={s.slug}>
-                        {s.shortTitle}
-                      </option>
-                    ))}
-                  </select>
+                    options={OCCASION_OPTIONS}
+                  />
                 </div>
               </div>
 

@@ -1,0 +1,97 @@
+// Editorial select — Radix headless + theme tokens (flips light/dark). Trigger
+// matches the form inputs; the dropdown is portaled to <body>, so it reads the
+// theme class on <html>/<body>.
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  inline-size: 100%;
+  block-size: 3rem;
+  padding: 0 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-foreground) 28%, transparent);
+  }
+  &:focus-visible,
+  &[data-state="open"] {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+}
+
+.icon {
+  display: inline-flex;
+  color: var(--color-foreground-muted);
+  transition: transform 0.2s ease;
+
+  .trigger[data-state="open"] & {
+    transform: rotate(180deg);
+  }
+}
+
+.content {
+  z-index: 1000;
+  min-inline-size: var(--radix-select-trigger-width);
+  max-block-size: var(--radix-select-content-available-height);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-lg);
+  // Subtle entry — fade + lift, respecting the popper side.
+  animation: select-in 0.16s ease;
+}
+
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+.viewport {
+  padding: 0.3125rem;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-xs, 0.25rem);
+  font-size: 0.9375rem;
+  color: var(--color-foreground);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+
+  &[data-highlighted] {
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+    color: var(--color-accent-text, var(--color-accent));
+  }
+  &[data-state="checked"] {
+    font-weight: 600;
+  }
+}
+
+.indicator {
+  display: inline-flex;
+  color: var(--color-accent-text, var(--color-accent));
+}
