@@ -8,6 +8,7 @@ import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
 import { HoursDial } from "@/shared/ui/hours-dial/HoursDial";
 import { Select } from "@/shared/ui/select/Select";
 import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
+import clsx from "clsx";
 import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
@@ -56,6 +57,8 @@ export function BookingCTASection() {
     yacht === "any" ? MIN_RATE : (YACHTS.find((y) => y.slug === yacht)?.pricePerHour ?? MIN_RATE);
   const price = pkg ? pkg.price : hours * yachtRate;
   const durationLabel = pkg ? pkg.duration : `${hours} ч`;
+  // Hours the decorative helm reflects (service → its package's hours).
+  const durationHours = pkg ? Number.parseInt(pkg.duration, 10) || 2 : hours;
 
   const yachtName =
     yacht === "any" ? "Любая яхта" : (YACHTS.find((y) => y.slug === yacht)?.name ?? yacht);
@@ -128,186 +131,228 @@ export function BookingCTASection() {
           </a>
         </div>
 
-        <div className={styles.card}>
-          {status === "success" ? (
-            <div className={styles.success}>
-              <span className={styles.successIcon} aria-hidden="true">
-                <svg
-                  width="26"
-                  height="26"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+        <div className={styles.cardWrap}>
+          <HoursDial
+            value={durationHours}
+            interactive={false}
+            min={WALK_MIN_H}
+            max={WALK_MAX_H}
+            className={styles.bgWheel}
+          />
+          <div className={styles.card}>
+            {status === "success" ? (
+              <div className={styles.success}>
+                <span className={styles.successIcon} aria-hidden="true">
+                  <svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                </span>
+                <h3 className={styles.successTitle}>Заявка принята</h3>
+                <p className={styles.successText}>
+                  Перезвоним в течение 30 минут, подтвердим свободное окно и зафиксируем бронь.
+                  Хорошего дня на воде!
+                </p>
+                <button
+                  type="button"
+                  className={styles.successReset}
+                  onClick={() => setStatus("idle")}
                 >
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              </span>
-              <h3 className={styles.successTitle}>Заявка принята</h3>
-              <p className={styles.successText}>
-                Перезвоним в течение 30 минут, подтвердим свободное окно и зафиксируем бронь.
-                Хорошего дня на воде!
-              </p>
-              <button
-                type="button"
-                className={styles.successReset}
-                onClick={() => setStatus("idle")}
-              >
-                ← Отправить ещё одну
-              </button>
-            </div>
-          ) : (
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <div className={styles.fieldRow}>
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="bk-yacht">
-                    Яхта
-                  </label>
-                  <Select
-                    id="bk-yacht"
-                    ariaLabel="Яхта"
-                    value={yacht}
-                    onValueChange={setYacht}
-                    options={YACHT_OPTIONS}
-                  />
-                </div>
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="bk-service">
-                    Повод
-                  </label>
-                  <Select
-                    id="bk-service"
-                    ariaLabel="Повод"
-                    value={occasion}
-                    onValueChange={(v) => {
-                      setOccasion(v);
-                      setPkgIdx(0);
-                    }}
-                    options={OCCASION_OPTIONS}
-                  />
-                </div>
+                  ← Отправить ещё одну
+                </button>
               </div>
-
-              <div className={styles.field}>
-                <span className={styles.label}>Длительность</span>
-                {service ? (
-                  <div className={styles.chips}>
-                    {packages.map((p, i) => (
-                      <label key={`${p.name}-${p.duration}`} className={styles.chip}>
-                        <input
-                          type="radio"
-                          name="duration"
-                          checked={pkgIdx === i}
-                          onChange={() => setPkgIdx(i)}
-                        />
-                        <span>{p.duration}</span>
-                      </label>
-                    ))}
+            ) : (
+              <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="bk-yacht">
+                      Яхта
+                    </label>
+                    <Select
+                      id="bk-yacht"
+                      ariaLabel="Яхта"
+                      value={yacht}
+                      onValueChange={setYacht}
+                      options={YACHT_OPTIONS}
+                    />
                   </div>
-                ) : (
-                  <HoursDial value={hours} onChange={setHours} min={WALK_MIN_H} max={WALK_MAX_H} />
-                )}
-              </div>
-
-              {/* ── Live calculator output ─────────────────────────────────── */}
-              <div className={styles.pricePanel} aria-live="polite">
-                <span className={styles.priceMeta}>
-                  {yachtName} · {occasionName} · {durationLabel}
-                </span>
-                <span className={styles.priceRow}>
-                  <span className={styles.priceLabel}>
-                    Ориентир
-                    <Tooltip content="Предварительный расчёт. Точную цену подтвердим при звонке — под вашу дату, состав и доп. пожелания.">
-                      <button
-                        type="button"
-                        className={styles.hint}
-                        aria-label="Что значит ориентир"
-                      >
-                        <HelpCircle size={14} aria-hidden="true" />
-                      </button>
-                    </Tooltip>
-                  </span>
-                  <span className={styles.priceValue}>
-                    {price.toLocaleString("ru-RU")}
-                    <span className={styles.priceUnit}>BYN</span>
-                  </span>
-                </span>
-              </div>
-
-              <div className={styles.fieldRow}>
-                <div className={styles.field}>
-                  <label className={styles.label} htmlFor="bk-date">
-                    Дата
-                  </label>
-                  <DatePicker id="bk-date" ariaLabel="Дата" value={date} onChange={setDate} />
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="bk-service">
+                      Повод
+                    </label>
+                    <Select
+                      id="bk-service"
+                      ariaLabel="Повод"
+                      value={occasion}
+                      onValueChange={(v) => {
+                        setOccasion(v);
+                        setPkgIdx(0);
+                      }}
+                      options={OCCASION_OPTIONS}
+                    />
+                  </div>
                 </div>
+
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="bk-name">
-                    Имя
+                  <span className={styles.label}>Длительность</span>
+                  {service ? (
+                    <div className={styles.chips}>
+                      {packages.map((p, i) => (
+                        <label key={`${p.name}-${p.duration}`} className={styles.chip}>
+                          <input
+                            type="radio"
+                            name="duration"
+                            checked={pkgIdx === i}
+                            onChange={() => setPkgIdx(i)}
+                          />
+                          <span>{p.duration}</span>
+                        </label>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.hours}>
+                      <div className={styles.presets}>
+                        {[2, 4, 6, 8].map((h) => (
+                          <button
+                            key={h}
+                            type="button"
+                            className={clsx(styles.preset, hours === h && styles.presetActive)}
+                            onClick={() => setHours(h)}
+                          >
+                            {h === 8 ? "День" : `${h} ч`}
+                          </button>
+                        ))}
+                      </div>
+                      <input
+                        type="range"
+                        className={styles.range}
+                        min={WALK_MIN_H}
+                        max={WALK_MAX_H}
+                        step={1}
+                        value={hours}
+                        onChange={(e) => setHours(Number(e.target.value))}
+                        aria-label="Длительность, часов"
+                        style={
+                          {
+                            "--fill": `${((hours - WALK_MIN_H) / (WALK_MAX_H - WALK_MIN_H)) * 100}%`,
+                          } as React.CSSProperties
+                        }
+                      />
+                      <div className={styles.rangeEnds}>
+                        <span>{WALK_MIN_H} ч</span>
+                        <span className={styles.rangeNow}>{hours} ч</span>
+                        <span>{WALK_MAX_H} ч</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Live calculator output ─────────────────────────────────── */}
+                <div className={styles.pricePanel} aria-live="polite">
+                  <span className={styles.priceMeta}>
+                    {yachtName} · {occasionName} · {durationLabel}
+                  </span>
+                  <span className={styles.priceRow}>
+                    <span className={styles.priceLabel}>
+                      Ориентир
+                      <Tooltip content="Предварительный расчёт. Точную цену подтвердим при звонке — под вашу дату, состав и доп. пожелания.">
+                        <button
+                          type="button"
+                          className={styles.hint}
+                          aria-label="Что значит ориентир"
+                        >
+                          <HelpCircle size={14} aria-hidden="true" />
+                        </button>
+                      </Tooltip>
+                    </span>
+                    <span className={styles.priceValue}>
+                      {price.toLocaleString("ru-RU")}
+                      <span className={styles.priceUnit}>BYN</span>
+                    </span>
+                  </span>
+                </div>
+
+                <div className={styles.fieldRow}>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="bk-date">
+                      Дата
+                    </label>
+                    <DatePicker id="bk-date" ariaLabel="Дата" value={date} onChange={setDate} />
+                  </div>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="bk-name">
+                      Имя
+                    </label>
+                    <input
+                      id="bk-name"
+                      name="name"
+                      type="text"
+                      className={styles.input}
+                      placeholder="Как к вам обращаться"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label} htmlFor="bk-phone">
+                    Телефон
                   </label>
                   <input
-                    id="bk-name"
-                    name="name"
-                    type="text"
+                    id="bk-phone"
+                    name="phone"
+                    type="tel"
                     className={styles.input}
-                    placeholder="Как к вам обращаться"
+                    placeholder="+375 __ ___ __ __"
                     required
                   />
                 </div>
-              </div>
 
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="bk-phone">
-                  Телефон
-                </label>
-                <input
-                  id="bk-phone"
-                  name="phone"
-                  type="tel"
-                  className={styles.input}
-                  placeholder="+375 __ ___ __ __"
-                  required
-                />
-              </div>
+                {status === "error" && (
+                  <p className={styles.error} role="alert">
+                    {errorMsg}{" "}
+                    <a href="tel:+375296953636" className={styles.errorPhone}>
+                      +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
+                    </a>
+                  </p>
+                )}
 
-              {status === "error" && (
-                <p className={styles.error} role="alert">
-                  {errorMsg}{" "}
-                  <a href="tel:+375296953636" className={styles.errorPhone}>
-                    +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
-                  </a>
-                </p>
-              )}
+                <Checkbox id="bk-consent" checked={consent} onCheckedChange={setConsent}>
+                  Согласен на обработку персональных данных. Без спама — звоним только по вашей
+                  заявке.
+                </Checkbox>
 
-              <Checkbox id="bk-consent" checked={consent} onCheckedChange={setConsent}>
-                Согласен на обработку персональных данных. Без спама — звоним только по вашей
-                заявке.
-              </Checkbox>
-
-              <button
-                type="submit"
-                className={styles.submit}
-                disabled={status === "submitting" || !consent}
-              >
-                {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
+                <button
+                  type="submit"
+                  className={styles.submit}
+                  disabled={status === "submitting" || !consent}
                 >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
-            </form>
-          )}
+                  {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>

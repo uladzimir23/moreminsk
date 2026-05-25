@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import { useRef } from "react";
 import styles from "./HoursDial.module.scss";
 
@@ -22,16 +23,19 @@ const arcPath = (a1: number, a2: number, r: number) => {
 
 type Props = {
   value: number;
-  onChange: (hours: number) => void;
+  onChange?: (hours: number) => void;
   min?: number;
   max?: number;
   unit?: string;
   ariaLabel?: string;
+  /** false = a purely decorative spinning helm (no input, no readout). */
+  interactive?: boolean;
+  className?: string;
 };
 
-// Ship's-wheel hours dial — turn the helm (drag / arrows) to set hours; the
-// wheel rotates, an accent arc fills, the centre shows the count. A circular
-// slider under the hood (role=slider, keyboard-accessible).
+// Ship's-wheel hours dial. Interactive: a circular slider (drag / arrows).
+// Decorative: just the helm, spinning to mirror the current value — meant to
+// sit behind a card and turn as the duration changes.
 export function HoursDial({
   value,
   onChange,
@@ -39,6 +43,8 @@ export function HoursDial({
   max = 8,
   unit = "ч",
   ariaLabel = "Длительность, часов",
+  interactive = true,
+  className,
 }: Props) {
   const ref = useRef<SVGSVGElement | null>(null);
   const clamped = Math.max(min, Math.min(max, value));
@@ -47,7 +53,7 @@ export function HoursDial({
 
   const setFromPointer = (clientX: number, clientY: number) => {
     const svg = ref.current;
-    if (!svg) return;
+    if (!svg || !onChange) return;
     const r = svg.getBoundingClientRect();
     const cx = r.left + r.width / 2;
     const cy = r.top + r.height / 2;
@@ -57,27 +63,24 @@ export function HoursDial({
     onChange(Math.round(min + f * (max - min)));
   };
 
-  return (
-    <div className={styles.root}>
-      <svg
-        ref={ref}
-        viewBox="0 0 200 200"
-        className={styles.dial}
-        role="slider"
-        tabIndex={0}
-        aria-label={ariaLabel}
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={clamped}
-        aria-valuetext={`${clamped} ${unit}`}
-        onPointerDown={(e) => {
+  const interactiveProps = interactive
+    ? {
+        role: "slider" as const,
+        tabIndex: 0,
+        "aria-label": ariaLabel,
+        "aria-valuemin": min,
+        "aria-valuemax": max,
+        "aria-valuenow": clamped,
+        "aria-valuetext": `${clamped} ${unit}`,
+        onPointerDown: (e: React.PointerEvent<SVGSVGElement>) => {
           e.currentTarget.setPointerCapture(e.pointerId);
           setFromPointer(e.clientX, e.clientY);
-        }}
-        onPointerMove={(e) => {
+        },
+        onPointerMove: (e: React.PointerEvent<SVGSVGElement>) => {
           if (e.buttons === 1) setFromPointer(e.clientX, e.clientY);
-        }}
-        onKeyDown={(e) => {
+        },
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (!onChange) return;
           if (e.key === "ArrowUp" || e.key === "ArrowRight") {
             e.preventDefault();
             onChange(Math.min(max, clamped + 1));
@@ -85,12 +88,21 @@ export function HoursDial({
             e.preventDefault();
             onChange(Math.max(min, clamped - 1));
           }
-        }}
-      >
-        <path d={arcPath(MIN_A, MAX_A, 92)} className={styles.track} />
-        <path d={arcPath(MIN_A, angle, 92)} className={styles.progress} />
+        },
+      }
+    : { "aria-hidden": true as const };
 
-        {/* Helm — rotates with the value (transform set inline). */}
+  return (
+    <div className={clsx(styles.root, !interactive && styles.decorative, className)}>
+      <svg ref={ref} viewBox="0 0 200 200" className={styles.dial} {...interactiveProps}>
+        {interactive && (
+          <>
+            <path d={arcPath(MIN_A, MAX_A, 92)} className={styles.track} />
+            <path d={arcPath(MIN_A, angle, 92)} className={styles.progress} />
+          </>
+        )}
+
+        {/* Helm — rotates with the value. */}
         <g className={styles.helm} style={{ transform: `rotate(${angle.toFixed(2)}deg)` }}>
           <circle cx="100" cy="100" r="70" className={styles.rim} />
           {SPOKES.map((a) => {
@@ -112,21 +124,22 @@ export function HoursDial({
             );
           })}
           <circle cx="100" cy="100" r="18" className={styles.hub} />
-          {/* Accent handle — the one grip you grab; makes the spin readable on
-              the otherwise-symmetric helm and marks the current position. */}
-          <circle cx={polar(0, 86).x} cy={polar(0, 86).y} r="8" className={styles.handle} />
+          {interactive && (
+            <circle cx={polar(0, 86).x} cy={polar(0, 86).y} r="8" className={styles.handle} />
+          )}
         </g>
 
-        {/* Fixed top notch — the reference the helm turns against. */}
-        <path d="M100 4 l5 9 h-10 Z" className={styles.notch} />
-
-        {/* Upright readout. */}
-        <text x="100" y="98" textAnchor="middle" className={styles.num}>
-          {clamped}
-        </text>
-        <text x="100" y="120" textAnchor="middle" className={styles.unit}>
-          {unit}
-        </text>
+        {interactive && (
+          <>
+            <path d="M100 4 l5 9 h-10 Z" className={styles.notch} />
+            <text x="100" y="98" textAnchor="middle" className={styles.num}>
+              {clamped}
+            </text>
+            <text x="100" y="120" textAnchor="middle" className={styles.unit}>
+              {unit}
+            </text>
+          </>
+        )}
       </svg>
     </div>
   );

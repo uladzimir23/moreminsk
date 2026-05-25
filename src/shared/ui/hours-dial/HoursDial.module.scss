@@ -3,6 +3,27 @@
   justify-content: center;
 }
 
+// Decorative: a big faint helm behind a card, no interaction — just spins to
+// mirror the duration. Fills whatever box it's placed in.
+.decorative {
+  pointer-events: none;
+
+  .dial {
+    inline-size: 100%;
+    cursor: default;
+  }
+  .rim,
+  .spoke,
+  .grip {
+    stroke: var(--color-foreground);
+    opacity: 0.2;
+  }
+  .hub {
+    fill: var(--color-foreground);
+    opacity: 0.14;
+  }
+}
+
 .dial {
   inline-size: clamp(9rem, 40vw, 11rem);
   block-size: auto;
