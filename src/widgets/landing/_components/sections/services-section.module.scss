@@ -74,9 +74,13 @@
 .track {
   display: flex;
   gap: clamp(1rem, 2.5vw, 2rem);
-  // Symmetric side padding so each card snaps to centre with a peek of its
-  // neighbours on both sides (the carousel reads as cards, not a full banner).
-  padding-inline: max(clamp(1.25rem, 6vw, 5rem), calc((100% - min(64rem, 90vw)) / 2));
+  // Left-align the first card to the framed section header's gutter, with a
+  // peek of the next card on the right. (start padding = header-left offset.)
+  padding-inline-start: calc(max(0rem, (100% - var(--section-max)) / 2) + var(--section-gutter));
+  padding-inline-end: var(--section-gutter);
+  scroll-padding-inline-start: calc(
+    max(0rem, (100% - var(--section-max)) / 2) + var(--section-gutter)
+  );
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -92,7 +96,7 @@
 .slide {
   position: relative;
   flex: 0 0 min(64rem, 90vw);
-  scroll-snap-align: center;
+  scroll-snap-align: start;
   isolation: isolate;
   overflow: hidden;
   aspect-ratio: 16 / 9;

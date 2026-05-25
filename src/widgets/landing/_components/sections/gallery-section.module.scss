@@ -63,9 +63,11 @@
 .viewer {
   position: relative;
   z-index: 1;
-  max-width: 90rem;
+  max-width: var(--section-max);
   margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 3rem);
+  // Match the section header's gutter exactly so the viewer's left/right edges
+  // line up with the framed SectionHeader (was a smaller clamp → stuck out).
+  padding-inline: var(--section-gutter);
 }
 
 .frame {
@@ -237,9 +239,9 @@
 
 // Thumbnail strip below the viewer.
 .thumbs {
-  max-width: 90rem;
+  max-width: var(--section-max);
   margin: 0.75rem auto 0;
-  padding: 0 clamp(1rem, 4vw, 3rem);
+  padding-inline: var(--section-gutter); // align with viewer + header
   display: flex;
   gap: 0.375rem;
   overflow-x: auto;
