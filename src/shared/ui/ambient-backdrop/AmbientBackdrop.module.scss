@@ -16,7 +16,6 @@
   object-fit: cover;
   filter: blur(var(--blur-ambient)) brightness(0.4) saturate(1.15);
   transition: opacity 0.8s ease;
-  will-change: opacity;
 }
 
 .img {
@@ -25,6 +24,10 @@
 
 .imgActive {
   opacity: 1;
+  // will-change only on the ONE visible copy — not the whole stack. Promoting
+  // every hidden (opacity:0) image forced a permanent blurred GPU layer per
+  // image; now Chrome skips painting/blurring the inactive ones entirely.
+  will-change: opacity;
 }
 
 .overlay {

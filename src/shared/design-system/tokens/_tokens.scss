@@ -353,7 +353,7 @@
     --image-bg-elevated: #0c1620;
 
     // Blur ladder for ambient/glass/edge effects.
-    --blur-ambient: 70px; // section backdrop photo
+    --blur-ambient: 48px; // section backdrop photo (heavy wash — 48 ≈ 70 visually, cheaper)
     --blur-frame: 40px; // letterbox / per-card backdrop
     --blur-glass: 12px; // glass chrome (header, tiles)
     --blur-edge: 5px; // edge-fade softening

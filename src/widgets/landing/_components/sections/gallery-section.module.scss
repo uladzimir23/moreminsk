@@ -88,13 +88,15 @@
   object-fit: cover;
   filter: blur(3.125rem) brightness(0.55) saturate(1.1);
   transition: opacity 0.6s ease;
-  will-change: opacity;
 }
 .bg {
   opacity: 0;
 }
 .bgActive {
   opacity: 1;
+  // will-change only on the visible copy — promoting all 16 blurred bg layers
+  // held a permanent GPU layer each; the hidden (opacity:0) ones now skip paint.
+  will-change: opacity;
 }
 
 .photo,

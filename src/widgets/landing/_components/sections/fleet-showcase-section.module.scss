@@ -455,13 +455,14 @@
   object-fit: cover;
   filter: blur(2.5rem) brightness(0.55) saturate(1.1);
   transition: opacity 0.6s ease;
-  will-change: opacity;
 }
 .heroBg {
   opacity: 0;
 }
 .heroBgActive {
   opacity: 1;
+  // will-change only on the visible copy — see gallery .bgActive note.
+  will-change: opacity;
 }
 .img,
 .imgActive {
