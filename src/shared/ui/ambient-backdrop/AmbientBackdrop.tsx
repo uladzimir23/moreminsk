@@ -23,6 +23,7 @@ export function AmbientBackdrop({ images, activeIndex, className }: Props) {
           alt=""
           className={i === activeIndex ? styles.imgActive : styles.img}
           loading={i === 0 ? "eager" : "lazy"}
+          decoding="async"
         />
       ))}
       <div className={styles.overlay} />

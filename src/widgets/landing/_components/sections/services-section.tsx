@@ -95,6 +95,7 @@ export function ServicesSection() {
                   alt=""
                   aria-hidden="true"
                   loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
                 />
                 <div className={styles.bgOverlay} aria-hidden="true" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -103,6 +104,7 @@ export function ServicesSection() {
                   src={heroUrl}
                   alt={`${service.shortTitle} — атмосфера на яхте ${mood.yacht.toUpperCase()}`}
                   loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
                 />
 
                 <div className={styles.content}>

@@ -36,21 +36,33 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     if (!section || !video || !sticky) return;
 
     let raf = 0;
+    let running = false; // is the rAF loop currently scheduled?
+    let visible = true; // is the hero on screen? (IntersectionObserver)
     let current = 0; // applied progress (lerped)
     let target = 0; // scroll-derived progress
 
     const clamp = (v: number) => Math.min(1, Math.max(0, v));
 
+    const start = () => {
+      // Arm the loop only if it isn't already running and the hero is in view.
+      if (!running && visible) {
+        running = true;
+        raf = requestAnimationFrame(render);
+      }
+    };
+
     const measure = () => {
       const rect = section.getBoundingClientRect();
       const scrollable = rect.height - window.innerHeight;
       target = scrollable > 0 ? clamp(-rect.top / scrollable) : 0;
+      start();
     };
 
     const render = () => {
       // Lerp toward target — the 0.07 factor is the «delay»/lag both ways.
       current += (target - current) * 0.07;
-      if (Math.abs(target - current) < 0.0004) current = target;
+      const settled = Math.abs(target - current) < 0.0004;
+      if (settled) current = target;
 
       // Runway phases (scrollable = 160vh, progress = scrollY / 160vh):
       //   0    → 0.14  headline fades + rises
@@ -77,15 +89,41 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
         nextBlock.style.opacity = String(reveal);
       }
 
+      // Self-stop once settled — no point burning a frame every ~16ms while
+      // idle. A scroll/resize re-arms the loop via measure() → start().
+      if (settled) {
+        running = false;
+        return;
+      }
       raf = requestAnimationFrame(render);
     };
 
+    // Pause the video + the lerp loop whenever the hero leaves the viewport
+    // (you've scrolled down to the rest of the page). Decoding video frames
+    // and mutating the <video> transform/filter behind every other section
+    // was the main idle cost. Re-enters cleanly on scroll back up.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) {
+          void video.play().catch(() => {});
+          measure();
+        } else {
+          cancelAnimationFrame(raf);
+          running = false;
+          video.pause();
+        }
+      },
+      { threshold: 0 },
+    );
+    io.observe(section);
+
     measure();
-    render();
     window.addEventListener("scroll", measure, { passive: true });
     window.addEventListener("resize", measure);
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
     };

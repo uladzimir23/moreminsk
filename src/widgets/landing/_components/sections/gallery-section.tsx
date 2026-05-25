@@ -56,6 +56,7 @@ export function GallerySection() {
               alt=""
               className={i === activeIdx ? styles.bgActive : styles.bg}
               loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
               aria-hidden="true"
             />
           ))}
@@ -69,6 +70,7 @@ export function GallerySection() {
               alt={shot.alt}
               className={i === activeIdx ? styles.photoActive : styles.photo}
               loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
             />
           ))}
 
@@ -132,7 +134,7 @@ export function GallerySection() {
               onClick={() => setActiveIdx(i)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={shot.url} alt="" loading="lazy" />
+              <img src={shot.url} alt="" loading="lazy" decoding="async" />
             </button>
           ))}
         </div>

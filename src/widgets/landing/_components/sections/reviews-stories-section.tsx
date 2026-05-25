@@ -97,7 +97,13 @@ export function ReviewsStoriesSection() {
           >
             <span className={styles.ring}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className={styles.cover} src={g.cover} alt={g.title} loading="lazy" />
+              <img
+                className={styles.cover}
+                src={g.cover}
+                alt={g.title}
+                loading="lazy"
+                decoding="async"
+              />
             </span>
             <span className={styles.label}>{g.title}</span>
             <span className={styles.weeks}>{g.weeks} нед.</span>

@@ -206,6 +206,7 @@ export function FleetShowcaseSection() {
                 alt=""
                 className={i === activePhotoIdx ? styles.heroBgActive : styles.heroBg}
                 loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
                 aria-hidden="true"
               />
             ))}
@@ -218,6 +219,7 @@ export function FleetShowcaseSection() {
                 alt={`Яхта ${activeYacht.name} на Минском море — фото ${i + 1}`}
                 className={i === activePhotoIdx ? styles.imgActive : styles.img}
                 loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
               />
             ))}
 
@@ -295,7 +297,7 @@ export function FleetShowcaseSection() {
                 onClick={() => setActivePhotoIdx(i)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" loading="lazy" />
+                <img src={url} alt="" loading="lazy" decoding="async" />
               </button>
             ))}
           </div>
