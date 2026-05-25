@@ -5,6 +5,7 @@ import { YACHTS } from "@/shared/content/yachts";
 import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
 import { Checkbox } from "@/shared/ui/checkbox/Checkbox";
 import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
+import { HoursDial } from "@/shared/ui/hours-dial/HoursDial";
 import { Select } from "@/shared/ui/select/Select";
 import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 import { HelpCircle } from "lucide-react";
@@ -22,18 +23,10 @@ const OCCASION_OPTIONS = [
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-// «Просто прогулка» has no service package — it's priced by the yacht's hourly
-// rate × hours. Services carry their own approved package prices.
-type Pkg = { name: string; duration: string; hours: number; price?: number };
-
-const WALK_PACKAGES: ReadonlyArray<Pkg> = [
-  { name: "Прогулка", duration: "2 часа", hours: 2 },
-  { name: "Прогулка", duration: "4 часа", hours: 4 },
-  { name: "Вечер", duration: "6 часов", hours: 6 },
-];
-
 // Lowest hourly across the fleet — used when «любая яхта» is picked.
 const MIN_RATE = Math.min(...YACHTS.map((y) => y.pricePerHour));
+const WALK_MIN_H = 1;
+const WALK_MAX_H = 8;
 
 const POINTS = [
   "Перезвоним в течение 30 минут",
@@ -49,25 +42,20 @@ export function BookingCTASection() {
   const [yacht, setYacht] = useState("any");
   const [occasion, setOccasion] = useState("walk"); // "walk" | service.slug
   const [pkgIdx, setPkgIdx] = useState(0);
+  const [hours, setHours] = useState(2); // walk only — driven by the helm dial
   const [date, setDate] = useState(""); // "YYYY-MM-DD"
   const [consent, setConsent] = useState(false);
 
+  // Services carry fixed approved packages (picked by chips); «просто прогулка»
+  // is hourly — the helm dial sets the hours, priced at the yacht's rate.
   const service = occasion === "walk" ? null : SERVICES.find((s) => s.slug === occasion);
-  const packages: ReadonlyArray<Pkg> = service
-    ? service.packages.map((p) => ({
-        name: p.name,
-        duration: p.duration,
-        hours: 0,
-        price: p.price,
-      }))
-    : WALK_PACKAGES;
-  const pkg = packages[Math.min(pkgIdx, packages.length - 1)] ?? packages[0];
+  const packages = service ? service.packages : [];
+  const pkg = service ? (packages[Math.min(pkgIdx, packages.length - 1)] ?? packages[0]) : null;
 
   const yachtRate =
     yacht === "any" ? MIN_RATE : (YACHTS.find((y) => y.slug === yacht)?.pricePerHour ?? MIN_RATE);
-  // Service packages are fixed; a plain walk is hourly rate × hours. (Trivial —
-  // the React Compiler memoizes it; no manual useMemo.)
-  const price = service ? (pkg.price ?? 0) : pkg.hours * yachtRate;
+  const price = pkg ? pkg.price : hours * yachtRate;
+  const durationLabel = pkg ? pkg.duration : `${hours} ч`;
 
   const yachtName =
     yacht === "any" ? "Любая яхта" : (YACHTS.find((y) => y.slug === yacht)?.name ?? yacht);
@@ -79,7 +67,7 @@ export function BookingCTASection() {
     const payload = {
       yacht: yachtName,
       service: occasionName,
-      duration: pkg.duration,
+      duration: durationLabel,
       price: `${price} BYN`,
       date,
       name: String(fd.get("name") ?? "").trim(),
@@ -204,25 +192,29 @@ export function BookingCTASection() {
 
               <div className={styles.field}>
                 <span className={styles.label}>Длительность</span>
-                <div className={styles.chips}>
-                  {packages.map((p, i) => (
-                    <label key={`${p.name}-${p.duration}`} className={styles.chip}>
-                      <input
-                        type="radio"
-                        name="duration"
-                        checked={pkgIdx === i}
-                        onChange={() => setPkgIdx(i)}
-                      />
-                      <span>{p.duration}</span>
-                    </label>
-                  ))}
-                </div>
+                {service ? (
+                  <div className={styles.chips}>
+                    {packages.map((p, i) => (
+                      <label key={`${p.name}-${p.duration}`} className={styles.chip}>
+                        <input
+                          type="radio"
+                          name="duration"
+                          checked={pkgIdx === i}
+                          onChange={() => setPkgIdx(i)}
+                        />
+                        <span>{p.duration}</span>
+                      </label>
+                    ))}
+                  </div>
+                ) : (
+                  <HoursDial value={hours} onChange={setHours} min={WALK_MIN_H} max={WALK_MAX_H} />
+                )}
               </div>
 
               {/* ── Live calculator output ─────────────────────────────────── */}
               <div className={styles.pricePanel} aria-live="polite">
                 <span className={styles.priceMeta}>
-                  {yachtName} · {occasionName} · {pkg.duration}
+                  {yachtName} · {occasionName} · {durationLabel}
                 </span>
                 <span className={styles.priceRow}>
                   <span className={styles.priceLabel}>

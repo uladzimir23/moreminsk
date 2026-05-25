@@ -1,0 +1,95 @@
+.root {
+  display: flex;
+  justify-content: center;
+}
+
+.dial {
+  inline-size: clamp(9rem, 40vw, 11rem);
+  block-size: auto;
+  touch-action: none; // we drive rotation from pointer events
+  cursor: grab;
+  outline: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+  &:focus-visible .rim {
+    stroke: var(--color-accent);
+  }
+}
+
+// Track + progress run just outside the wheel.
+.track {
+  fill: none;
+  stroke: var(--color-border);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.progress {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: d 0.3s var(--ease-spring, ease);
+}
+
+// The helm spins to the current value.
+.helm {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.45s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+.rim {
+  fill: none;
+  stroke: var(--color-foreground);
+  stroke-width: 4;
+  opacity: 0.85;
+  transition: stroke 0.2s ease;
+}
+.spoke {
+  stroke: var(--color-foreground);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+.grip {
+  stroke: var(--color-foreground);
+  stroke-width: 5;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+.hub {
+  fill: var(--color-accent);
+}
+.handle {
+  fill: var(--color-accent);
+  stroke: var(--color-surface);
+  stroke-width: 3;
+}
+
+.notch {
+  fill: var(--color-accent);
+}
+
+.num {
+  fill: var(--color-foreground);
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.unit {
+  fill: var(--color-foreground-muted);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .helm,
+  .progress {
+    transition: none;
+  }
+}
