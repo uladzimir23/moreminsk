@@ -54,8 +54,7 @@ export function ServicesSection() {
 
   return (
     <section className={styles.section} id="services">
-      {/* Ambient section backdrop — blurred copy of the active service's
-          photo, so the whole section breathes its mood. */}
+      {/* Ambient section backdrop — blurred copy of the active service's photo. */}
       <AmbientBackdrop
         images={SERVICES.map((service) => {
           const mood = SERVICE_MOOD[service.slug];

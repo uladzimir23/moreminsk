@@ -4,10 +4,9 @@
 // menu already carries the nav + contacts.
 
 .footer {
-  position: fixed;
-  inset-inline: 0;
-  inset-block-end: 0;
-  z-index: 0;
+  // Normal flow (was position:fixed + z-index:0 for the reveal effect, which
+  // forced whole-page compositing — see .page note). Sits below the content.
+  position: relative;
   isolation: isolate;
   overflow: hidden;
   background: var(--media-bg-deep);

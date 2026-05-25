@@ -1,24 +1,18 @@
 // Landing-shell scaffolding — just the back-bar and the page background.
 // All content sits in dedicated section components imported by the shell.
 
-// Every page is a lifting card over the fixed footer: sits above it (z-index
-// 1) and reserves --footer-h of space below, so scrolling to the end lifts
-// the card and reveals the footer beneath. overflow: clip (not hidden)
-// rounds the bottom corners without breaking the home page's sticky hero.
-// Applied at the layout level to <div class=page> wrapping {children}, so
-// every route gets the reveal — not just the home page.
+// Plain content wrapper. (Was the "reveal footer" lifting-card: z-index:1 +
+// overflow:clip + border-radius + box-shadow over a position:fixed footer.
+// That made the whole page OVERLAP the fixed footer, so Chrome promoted the
+// entire page-height element to one giant composited layer (~45MB) — and with
+// the other composited layers it blew the GPU texture budget → torn/blank
+// tiles on real GPUs. Reverted to normal flow; footer sits below normally.)
 .page {
   position: relative;
-  z-index: 1;
   min-block-size: 100vh;
-  margin-block-end: var(--footer-h, 22rem);
-  overflow: clip;
-  border-end-start-radius: clamp(1rem, 3vw, 2rem);
-  border-end-end-radius: clamp(1rem, 3vw, 2rem);
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-manrope), system-ui, sans-serif;
-  box-shadow: 0 2rem 4rem rgb(0 0 0 / 0.45);
 }
 
 // Home-only — just the page background swatch (everything else moved to .page).
