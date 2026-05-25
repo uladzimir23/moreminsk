@@ -11,7 +11,7 @@
       color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
       transparent 60%
     ),
-    linear-gradient(180deg, var(--media-bg-elevated) 0%, var(--media-bg) 100%);
+    linear-gradient(180deg, var(--image-bg-elevated) 0%, var(--image-bg) 100%);
   color: white;
 }
 
@@ -89,7 +89,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--media-bg);
+  border: 2px solid var(--image-bg);
   display: block;
 }
 .label {

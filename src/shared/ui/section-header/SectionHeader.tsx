@@ -4,7 +4,8 @@ import styles from "./SectionHeader.module.scss";
 // Standard section eyebrow + title + optional subtitle (Hero & Section Rhythm doc).
 // Passed a heading level via `as` prop so each page keeps a valid h1→h2→h3 outline.
 //
-// tone: "surface" (default, light canvas) | "media" (white-on-dark/photo, ADR-011).
+// tone: "surface" (default, light canvas) | "media" (theme-aware paper, flips
+//   light/dark) | "image" (sits over a photo/video, stays white in both themes).
 // accent: a Lora-italic accent word appended to the title (editorial signature).
 // framed: wrap in the shared section gutter (max 1440 + --section-gutter) so the
 //   header aligns identically across full-bleed landing sections.
@@ -15,7 +16,7 @@ type Props = {
   accent?: string;
   subtitle?: React.ReactNode;
   align?: "left" | "center";
-  tone?: "surface" | "media";
+  tone?: "surface" | "media" | "image";
   framed?: boolean;
   as?: "h1" | "h2" | "h3";
   id?: string;

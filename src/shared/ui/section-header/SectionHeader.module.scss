@@ -87,3 +87,30 @@
     color: var(--on-media-muted);
   }
 }
+
+// ── tone="image" — header sitting directly over a photo/video. Same editorial
+// treatment as "media" but on the theme-INDEPENDENT on-image scale, so it
+// stays white in both themes (the imagery underneath never flips). ──────────
+.root[data-tone="image"] {
+  max-inline-size: var(--section-max);
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--eyebrow-size);
+    font-weight: var(--eyebrow-weight);
+    letter-spacing: var(--eyebrow-tracking);
+    color: var(--on-image-subtle);
+  }
+  .title {
+    font-weight: var(--primitive-weight-medium);
+    color: var(--on-image);
+    text-shadow: 0 0.125rem 1.5rem rgb(0 0 0 / 0.5);
+    max-inline-size: 45rem;
+  }
+  .accent {
+    color: var(--on-image-accent);
+  }
+  .subtitle {
+    color: var(--on-image-muted);
+  }
+}

@@ -345,6 +345,13 @@
     // Accent tuned for legibility over dark imagery (brighter than on paper).
     --on-image-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
 
+    // Always-dark canvas behind a photo/video — section fallbacks before the
+    // image paints, video letterbox, story players. Theme-independent: these
+    // sit UNDER imagery, so they never flip (the paper --media-bg* do).
+    --image-bg: #0a0f16;
+    --image-bg-deep: #0a0a0a;
+    --image-bg-elevated: #0c1620;
+
     // Blur ladder for ambient/glass/edge effects.
     --blur-ambient: 70px; // section backdrop photo
     --blur-frame: 40px; // letterbox / per-card backdrop

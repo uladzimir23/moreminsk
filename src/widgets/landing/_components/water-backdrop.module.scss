@@ -71,8 +71,10 @@
   }
 }
 
-// Dark wash over the rippling photo so the section's content stays legible
-// + a faint accent tint to keep it on-brand.
+// Wash over the rippling backdrop so the section's content stays legible + a
+// faint accent tint to keep it on-brand. Theme-aware: keyed to --media-bg, so
+// it's the dark wash on dark and a soft light veil in the light theme (FAQ is
+// a paper section), keeping the dark text readable over the accent waves.
 .shade {
   position: absolute;
   inset: 0;
@@ -84,9 +86,9 @@
     ),
     linear-gradient(
       180deg,
-      rgba(10, 15, 22, 0.82) 0%,
-      rgba(10, 15, 22, 0.7) 50%,
-      rgba(10, 15, 22, 0.88) 100%
+      color-mix(in srgb, var(--media-bg) 82%, transparent) 0%,
+      color-mix(in srgb, var(--media-bg) 70%, transparent) 50%,
+      color-mix(in srgb, var(--media-bg) 88%, transparent) 100%
     );
 }
 

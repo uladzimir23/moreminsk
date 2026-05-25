@@ -11,7 +11,7 @@
   isolation: isolate;
   overflow: hidden;
   background: var(--media-bg-deep);
-  color: white;
+  color: var(--on-media);
   padding: clamp(2.5rem, 6vh, 4rem) clamp(1.5rem, 6vw, 5rem) 2rem;
 
   @media (max-width: 51.25rem) {
@@ -38,7 +38,7 @@
   font-size: clamp(1.25rem, 3.5vw, 1.875rem);
   font-weight: var(--primitive-weight-medium);
   letter-spacing: -0.02em;
-  color: white;
+  color: var(--on-media);
 }
 .quickAccent {
   font-family: var(--font-accent), Georgia, serif;
@@ -57,7 +57,7 @@
   padding: 0.875rem 1rem;
   border: 1px solid var(--media-hairline-strong);
   background: var(--media-glass-bg);
-  color: white;
+  color: var(--on-media);
   font-size: 1rem;
   font-family: var(--font-mono), monospace;
   letter-spacing: 0.02em;
@@ -112,7 +112,7 @@
   border-bottom: 1px solid var(--media-hairline);
   font-size: clamp(1.25rem, 3.5vw, 1.75rem);
   font-weight: var(--primitive-weight-medium);
-  color: white;
+  color: var(--on-media);
 }
 
 // Drifting horizon glow.
@@ -183,14 +183,14 @@
   font-weight: 600;
   font-size: 1.125rem;
   letter-spacing: -0.01em;
-  color: white;
+  color: var(--on-media);
   text-decoration: none;
 }
 .tagline {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-media-subtle);
 
   // Drop the marketing line on mobile — the page already made the pitch.
   @media (max-width: 51.25rem) {
@@ -208,8 +208,8 @@
   justify-content: center;
   width: 2.375rem;
   height: 2.375rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--media-glass-border);
+  color: var(--on-media-muted);
   transition:
     border-color 0.2s ease,
     color 0.2s ease,
@@ -218,7 +218,7 @@
   &:hover {
     border-color: var(--color-accent);
     color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--media-glass-bg);
   }
   svg {
     width: 1.125rem;
@@ -249,10 +249,10 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--on-media-subtle);
 }
 .link {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--on-media-muted);
   text-decoration: none;
   font-size: 0.9375rem;
   transition: color 0.2s ease;
@@ -269,7 +269,7 @@
   max-width: 80rem;
   margin: clamp(3rem, 6vh, 4.5rem) auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--media-hairline);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -279,7 +279,7 @@
   font-size: 0.65625rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-media-faint);
 
   @media (max-width: 51.25rem) {
     margin-top: 1.75rem;
@@ -293,11 +293,11 @@
   flex-wrap: wrap;
 }
 .legalLink {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--on-media-faint);
   text-decoration: none;
   transition: color 0.2s ease;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--on-media-muted);
   }
 }

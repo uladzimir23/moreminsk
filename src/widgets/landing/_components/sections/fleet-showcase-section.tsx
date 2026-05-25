@@ -119,7 +119,7 @@ export function FleetShowcaseSection() {
           eyebrow="01 · Флот"
           title="Четыре яхты — выбирайте"
           accent="настроение."
-          tone="media"
+          tone="image"
         />
       </div>
 

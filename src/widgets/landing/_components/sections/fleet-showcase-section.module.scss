@@ -37,7 +37,7 @@
   // keeps working relative to the page.
   overflow: clip;
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
-  background: var(--media-bg-deep); // fallback before backdrop image paints
+  background: var(--image-bg-deep); // fallback before backdrop image paints
   color: white;
 }
 
@@ -116,9 +116,11 @@
       background-color 0.25s ease,
       backdrop-filter 0.25s ease;
   }
-  // Glass only while pinned — transparent in its resting place.
+  // Glass only while pinned — transparent in its resting place. Image-base:
+  // fleet stays a dark photo section in both themes, so the sticky tabs keep
+  // the dark frosted treatment rather than flipping with the paper tokens.
   .tabsStuck {
-    @include media-glass($glass: 90%);
+    @include media-glass($glass: 90%, $base: var(--image-bg));
   }
 }
 
@@ -379,7 +381,7 @@
   padding: 0;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: var(--media-bg-deep); // fallback before bg layer paints
+  background: var(--image-bg-deep); // fallback before bg layer paints
   border: 0.0625rem solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   isolation: isolate;

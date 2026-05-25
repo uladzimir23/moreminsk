@@ -68,7 +68,7 @@ export function ServicesSection() {
         eyebrow="02 · Услуги"
         title="Под что бронируют"
         accent="чаще всего."
-        tone="media"
+        tone="image"
         framed
       />
 
