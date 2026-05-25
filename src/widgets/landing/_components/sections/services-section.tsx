@@ -3,19 +3,27 @@
 import { SERVICES } from "@/shared/content/services";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
+import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./services-section.module.scss";
 
-// Each service gets a mood photo from one of the yachts — best-fit visual
-// for the occasion. EVA = romantic/sunset; ALFA = group dinner; MARIO =
-// active/motor; BRAVO = premium/flagship.
-const SERVICE_MOOD: Record<string, { yacht: YachtSlug; photoIdx: number }> = {
-  "den-rozhdeniya": { yacht: "alfa", photoIdx: 1 },
-  korporativ: { yacht: "bravo", photoIdx: 0 },
-  svidanie: { yacht: "eva", photoIdx: 0 },
-  devichnik: { yacht: "alfa", photoIdx: 3 },
-  fotosessiya: { yacht: "eva", photoIdx: 2 },
+// One hand-picked yacht photo per occasion — best-fit, not the cover shot.
+// den-rozhdeniya → ALFA, festive group on deck (red sail, daytime);
+// korporativ → BRAVO flagship under full sail; svidanie → EVA at sunset;
+// devichnik → ALFA, a girls' evening with drinks; fotosessiya → EVA, the
+// coral-dress shoot by the «EVA» lettering (on-brand accent).
+const SERVICE_PHOTO: Record<string, { yacht: YachtSlug; idx: number }> = {
+  "den-rozhdeniya": { yacht: "alfa", idx: 2 },
+  korporativ: { yacht: "bravo", idx: 0 },
+  svidanie: { yacht: "eva", idx: 0 },
+  devichnik: { yacht: "alfa", idx: 6 },
+  fotosessiya: { yacht: "eva", idx: 5 },
+};
+
+const photoFor = (slug: string) => {
+  const pick = SERVICE_PHOTO[slug] ?? { yacht: "eva" as YachtSlug, idx: 0 };
+  return { ...pick, url: PHOTOS_BY_YACHT[pick.yacht][pick.idx] };
 };
 
 export function ServicesSection() {
@@ -52,14 +60,20 @@ export function ServicesSection() {
   const next = () => scrollTo(Math.min(SERVICES.length - 1, activeIdx + 1));
   const prev = () => scrollTo(Math.max(0, activeIdx - 1));
 
+  // Page-level CTA — the per-card «Забронировать …» button lives in the fixed
+  // bottom bar now and tracks whichever poster is centred.
+  const active = SERVICES[activeIdx];
+  const sectionRef = useStickyCta("services", {
+    label: `Забронировать · ${active.shortTitle.toLowerCase()}`,
+    icon: "arrow",
+    onClick: () => document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" }),
+  });
+
   return (
-    <section className={styles.section} id="services">
+    <section className={styles.section} id="services" ref={sectionRef}>
       {/* Ambient section backdrop — blurred copy of the active service's photo. */}
       <AmbientBackdrop
-        images={SERVICES.map((service) => {
-          const mood = SERVICE_MOOD[service.slug];
-          return PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
-        })}
+        images={SERVICES.map((service) => photoFor(service.slug).url)}
         activeIndex={activeIdx}
       />
 
@@ -74,9 +88,10 @@ export function ServicesSection() {
       <div className={styles.rail}>
         <div className={styles.track} ref={trackRef}>
           {SERVICES.map((service, i) => {
-            const mood = SERVICE_MOOD[service.slug];
-            const bgUrl = PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
-            const heroUrl = PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
+            const photo = photoFor(service.slug);
+            const words = service.shortTitle.split(" ");
+            const head = words.slice(0, -1).join(" ");
+            const tail = words[words.length - 1];
 
             return (
               <article
@@ -89,71 +104,25 @@ export function ServicesSection() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  className={styles.bg}
-                  src={bgUrl}
-                  alt=""
-                  aria-hidden="true"
+                  className={styles.photo}
+                  src={photo.url}
+                  alt={`${service.shortTitle} на яхте ${photo.yacht.toUpperCase()}`}
                   loading={i === 0 ? "eager" : "lazy"}
                   decoding="async"
                 />
-                <div className={styles.bgOverlay} aria-hidden="true" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className={styles.heroImg}
-                  src={heroUrl}
-                  alt={`${service.shortTitle} — атмосфера на яхте ${mood.yacht.toUpperCase()}`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                />
+                <div className={styles.scrim} aria-hidden="true" />
 
                 <div className={styles.content}>
-                  <div className={styles.contentInner}>
-                    <p className={styles.chapterNumber}>
-                      {String(i + 1).padStart(2, "0")} · {service.shortTitle}
-                    </p>
-                    <h3 className={styles.serviceName}>
-                      {service.shortTitle.split(" ").length > 1 ? (
-                        <>
-                          {service.shortTitle.split(" ").slice(0, -1).join(" ")}{" "}
-                          <span className={styles.serviceAccent}>
-                            {service.shortTitle.split(" ").slice(-1)[0]}.
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span className={styles.serviceAccent}>{service.shortTitle}.</span>
-                        </>
-                      )}
-                    </h3>
-                    <p className={styles.serviceUtp}>{service.utp}</p>
-
-                    <ul className={styles.packages}>
-                      {service.packages.map((pkg) => (
-                        <li key={pkg.name} className={styles.pkg}>
-                          <span className={styles.pkgName}>{pkg.name}</span>
-                          <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
-                          <span className={styles.pkgDuration}>{pkg.duration}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <a href="#booking" className={styles.cta}>
-                      Забронировать {service.shortTitle.toLowerCase()}
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  </div>
+                  <p className={styles.chapterNumber}>{String(i + 1).padStart(2, "0")}</p>
+                  <h3 className={styles.serviceName}>
+                    {head && `${head} `}
+                    <span className={styles.serviceAccent}>{tail}.</span>
+                  </h3>
+                  <p className={styles.serviceUtp}>{service.utp}</p>
+                  <p className={styles.price}>
+                    <span className={styles.priceFrom}>от</span>
+                    {service.fromPrice}&nbsp;<span className={styles.priceUnit}>BYN</span>
+                  </p>
                 </div>
               </article>
             );

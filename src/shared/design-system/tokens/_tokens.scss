@@ -326,6 +326,11 @@
     --card-padding: var(--primitive-space-8);
     --card-radius: var(--primitive-radius-sm); // 4px — editorial, was 24px in ADR-005
 
+    // Photo cards (service posters, fleet thumbs, gallery tiles) — the fleet
+    // photos are a uniform ~3:4 portrait, so the card hugs that one ratio
+    // everywhere instead of each surface inventing its own banner crop.
+    --photo-card-aspect: 3 / 4;
+
     // ── On-image layer (ADR-011 rev) ───────────────────────────────────────
     // Text & scrim that sit DIRECTLY over photos / the hero video. A photo
     // doesn't change with the theme, so its overlay content stays a white
