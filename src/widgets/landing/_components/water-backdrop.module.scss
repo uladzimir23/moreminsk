@@ -115,27 +115,28 @@
     left 0.18s ease-out,
     top 0.18s ease-out;
 }
-// Touch / no-pointer: ignore cursor, drift on a slow loop instead.
+// Touch / no-pointer: ignore cursor, drift on a slow loop instead. Drift via
+// transform (compositor-only) — animating left/top forced a layout + paint on
+// EVERY frame, all the time (the animation runs even off-screen), which was a
+// constant main-thread reflow cost. Pinned to centre; the transform wanders.
 .glowAuto {
+  left: 50%;
+  top: 50%;
   transition: none;
   animation: glowDrift 18s ease-in-out infinite;
 }
 @keyframes glowDrift {
   0% {
-    left: 32%;
-    top: 34%;
+    transform: translate(-50%, -50%) translate(-12vw, -10vh);
   }
   33% {
-    left: 64%;
-    top: 52%;
+    transform: translate(-50%, -50%) translate(10vw, 6vh);
   }
   66% {
-    left: 44%;
-    top: 30%;
+    transform: translate(-50%, -50%) translate(-4vw, -12vh);
   }
   100% {
-    left: 32%;
-    top: 34%;
+    transform: translate(-50%, -50%) translate(-12vw, -10vh);
   }
 }
 
