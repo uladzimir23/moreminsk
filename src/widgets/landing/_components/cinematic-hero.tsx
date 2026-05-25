@@ -102,6 +102,24 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     // (you've scrolled down to the rest of the page). Decoding video frames
     // and mutating the <video> transform/filter behind every other section
     // was the main idle cost. Re-enters cleanly on scroll back up.
+    //
+    // CRITICAL: the loop also drives the content reveal (nextBlock opacity). If
+    // we just park it while the hero is off-screen, .overlap freezes at opacity
+    // < 1 — a giant partial-opacity composited layer over the whole page, which
+    // renders blank (software GL) or as torn/stale tiles on real GPUs. So when
+    // the hero is below the fold we SNAP the reveal to its end state (content
+    // fully shown) before pausing; the loop resumes when it scrolls back in.
+    const settleRevealed = () => {
+      current = 1;
+      target = 1;
+      video.style.transform = "scale(1.26)";
+      video.style.filter = "brightness(0.18)";
+      if (content) {
+        content.style.opacity = "0";
+        content.style.transform = "translateY(-60px)";
+      }
+      if (nextBlock) nextBlock.style.opacity = "1";
+    };
     const io = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
@@ -112,6 +130,7 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
           cancelAnimationFrame(raf);
           running = false;
           video.pause();
+          settleRevealed();
         }
       },
       { threshold: 0 },
