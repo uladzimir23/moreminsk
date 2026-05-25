@@ -144,10 +144,19 @@
 .card {
   position: relative;
   z-index: 1;
+  // Frosted glass over the spinning helm. Fallback (no backdrop-filter) keeps a
+  // near-opaque surface so the form stays legible; where supported, drop to 10%
+  // + blur 4px so the wheel shows through, softened. Standard property only —
+  // Lightning CSS adds -webkit (hand-writing both makes its dedup drop blur).
   background: var(--color-surface);
   border: 1px solid var(--color-border-hairline);
   box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.18);
   padding: clamp(1.5rem, 3vw, 2.25rem);
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: color-mix(in srgb, var(--color-surface) 10%, transparent);
+    backdrop-filter: blur(0.25rem);
+  }
 }
 
 // ── Hourly duration: quick presets + slider ─────────────────────────────────
