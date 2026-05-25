@@ -3,7 +3,7 @@
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useState } from "react";
-import { GALLERY } from "../../_data/photos";
+import { GALLERY, thumbUrl } from "../../_data/photos";
 import styles from "./gallery-section.module.scss";
 
 export function GallerySection() {
@@ -32,6 +32,18 @@ export function GallerySection() {
 
   const active = GALLERY[activeIdx];
 
+  // Render only a 2-frame window (active + the one fading out) instead of all
+  // 16 photos × bg+fg. Holding every full-res photo decoded is what pushed
+  // low-memory machines to evict + re-decode. @starting-style fades the
+  // incoming frame in, so the crossfade stays smooth with just two elements.
+  const [prevIdx, setPrevIdx] = useState(0);
+  useEffect(() => {
+    if (prevIdx === activeIdx) return;
+    const t = setTimeout(() => setPrevIdx(activeIdx), 650); // ~ .photo opacity fade
+    return () => clearTimeout(t);
+  }, [activeIdx, prevIdx]);
+  const frames = prevIdx === activeIdx ? [activeIdx] : [prevIdx, activeIdx];
+
   return (
     <section className={styles.section} id="gallery">
       {/* Ambient section backdrop — blurred copy of the active photo. */}
@@ -47,29 +59,29 @@ export function GallerySection() {
 
       <div className={styles.viewer}>
         <div className={styles.frame}>
-          {/* Stack of blurred backgrounds (cover) — one per photo */}
-          {GALLERY.map((shot, i) => (
+          {/* Blurred background (cover) — only the windowed frames */}
+          {frames.map((i) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
-              key={`bg-${shot.url}`}
-              src={shot.url}
+              key={`bg-${GALLERY[i].url}`}
+              src={GALLERY[i].url}
               alt=""
               className={i === activeIdx ? styles.bgActive : styles.bg}
-              loading={i === 0 ? "eager" : "lazy"}
+              loading="lazy"
               decoding="async"
               aria-hidden="true"
             />
           ))}
 
-          {/* Stack of crisp foreground photos (contain) — one per photo */}
-          {GALLERY.map((shot, i) => (
+          {/* Crisp foreground photo (contain) — only the windowed frames */}
+          {frames.map((i) => (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
-              key={`fg-${shot.url}`}
-              src={shot.url}
-              alt={shot.alt}
+              key={`fg-${GALLERY[i].url}`}
+              src={GALLERY[i].url}
+              alt={GALLERY[i].alt}
               className={i === activeIdx ? styles.photoActive : styles.photo}
-              loading={i === 0 ? "eager" : "lazy"}
+              loading="lazy"
               decoding="async"
             />
           ))}
@@ -134,7 +146,7 @@ export function GallerySection() {
               onClick={() => setActiveIdx(i)}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={shot.url} alt="" loading="lazy" decoding="async" />
+              <img src={thumbUrl(shot.url)} alt="" loading="lazy" decoding="async" />
             </button>
           ))}
         </div>

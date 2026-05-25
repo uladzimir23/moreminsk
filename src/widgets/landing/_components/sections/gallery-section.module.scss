@@ -97,6 +97,12 @@
   // will-change only on the visible copy — promoting all 16 blurred bg layers
   // held a permanent GPU layer each; the hidden (opacity:0) ones now skip paint.
   will-change: opacity;
+
+  // The viewer renders only active + outgoing frames, so a freshly-mounted
+  // active must fade IN from 0 (it isn't pre-mounted at opacity 0 anymore).
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 .photo,
@@ -115,6 +121,10 @@
 }
 .photoActive {
   opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 // Mobile: fill the frame edge-to-edge in a taller portrait crop — no blurred

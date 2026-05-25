@@ -11,6 +11,12 @@ export type YachtSlug = "eva" | "alfa" | "mario" | "bravo";
 const YACHTS: ReadonlyArray<YachtSlug> = ["eva", "alfa", "mario", "bravo"];
 const withBaseAll = (urls: ReadonlyArray<string>): ReadonlyArray<string> => urls.map(withBase);
 
+// 240px thumbnail variant living in a `tn/` subfolder beside each photo
+// (public/fleet/<yacht>/tn/<name>.jpg). Thumbnail strips must use these — a
+// full 1280px image decoded for an 80px thumb wastes ~5MB of bitmap memory
+// each, which is what pushed low-memory machines to evict + re-decode.
+export const thumbUrl = (url: string): string => url.replace(/\/([^/]+)$/, "/tn/$1");
+
 export const PHOTOS_BY_YACHT: Readonly<Record<YachtSlug, ReadonlyArray<string>>> = {
   eva: withBaseAll(raw.eva),
   alfa: withBaseAll(raw.alfa),

@@ -4,7 +4,7 @@ import { YACHTS } from "@/shared/content/yachts";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
+import { PHOTOS_BY_YACHT, thumbUrl, type YachtSlug } from "../../_data/photos";
 import styles from "./fleet-showcase-section.module.scss";
 
 const SWIPE_THRESHOLD = 40;
@@ -23,6 +23,19 @@ export function FleetShowcaseSection() {
 
   const activeYacht = YACHTS[activeYachtIdx];
   const photos = PHOTOS_BY_YACHT[activeYacht.slug as YachtSlug];
+
+  // Render only a 2-frame window (active + outgoing) of the hero photo stack
+  // instead of all 8 × bg+fg — holding every full-res photo decoded was the
+  // memory pressure behind the "photos reload" feeling. @starting-style fades
+  // the incoming frame in. prevPhotoIdx resets to 0 on yacht switch (below).
+  const [prevPhotoIdx, setPrevPhotoIdx] = useState(0);
+  useEffect(() => {
+    if (prevPhotoIdx === activePhotoIdx) return;
+    const t = setTimeout(() => setPrevPhotoIdx(activePhotoIdx), 650); // ~ .img fade
+    return () => clearTimeout(t);
+  }, [activePhotoIdx, prevPhotoIdx]);
+  const photoFrames =
+    prevPhotoIdx === activePhotoIdx ? [activePhotoIdx] : [prevPhotoIdx, activePhotoIdx];
 
   // Detect when the mobile tab strip is pinned, so its backdrop only turns to
   // glass while stuck (transparent at rest). Compare the tabs' live viewport
@@ -154,6 +167,7 @@ export function FleetShowcaseSection() {
             onClick={() => {
               setActiveYachtIdx(i);
               setActivePhotoIdx(0);
+              setPrevPhotoIdx(0);
             }}
           >
             {yacht.name}
@@ -212,28 +226,28 @@ export function FleetShowcaseSection() {
             onTouchEnd={onTouchEnd}
             aria-label={`Открыть фото ${activeYacht.name} крупно`}
           >
-            {/* Blurred bg layer — same photo, object-fit: cover, fills letterbox */}
-            {photos.map((url, i) => (
+            {/* Blurred bg layer (cover, fills letterbox) — windowed frames */}
+            {photoFrames.map((i) => (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
-                key={`hero-bg-${url}`}
-                src={url}
+                key={`hero-bg-${photos[i]}`}
+                src={photos[i]}
                 alt=""
                 className={i === activePhotoIdx ? styles.heroBgActive : styles.heroBg}
-                loading={i === 0 ? "eager" : "lazy"}
+                loading="lazy"
                 decoding="async"
                 aria-hidden="true"
               />
             ))}
-            {/* Crisp fg layer — object-fit: contain, no crop */}
-            {photos.map((url, i) => (
+            {/* Crisp fg layer (contain, no crop) — windowed frames */}
+            {photoFrames.map((i) => (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img
-                key={`hero-fg-${url}`}
-                src={url}
+                key={`hero-fg-${photos[i]}`}
+                src={photos[i]}
                 alt={`Яхта ${activeYacht.name} на Минском море — фото ${i + 1}`}
                 className={i === activePhotoIdx ? styles.imgActive : styles.img}
-                loading={i === 0 ? "eager" : "lazy"}
+                loading="lazy"
                 decoding="async"
               />
             ))}
@@ -312,7 +326,7 @@ export function FleetShowcaseSection() {
                 onClick={() => setActivePhotoIdx(i)}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="" loading="lazy" decoding="async" />
+                <img src={thumbUrl(url)} alt="" loading="lazy" decoding="async" />
               </button>
             ))}
           </div>

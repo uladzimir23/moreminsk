@@ -463,6 +463,12 @@
   opacity: 1;
   // will-change only on the visible copy — see gallery .bgActive note.
   will-change: opacity;
+
+  // Viewer renders only active + outgoing frames now, so a freshly-mounted
+  // active fades IN from 0 instead of being pre-mounted at opacity 0.
+  @starting-style {
+    opacity: 0;
+  }
 }
 .img,
 .imgActive {
@@ -480,6 +486,10 @@
 }
 .imgActive {
   opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 // Mobile: fill the frame edge-to-edge in a taller portrait crop — no blurred
