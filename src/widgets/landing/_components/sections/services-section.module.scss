@@ -73,6 +73,10 @@
 
 .track {
   display: flex;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  // Symmetric side padding so each card snaps to centre with a peek of its
+  // neighbours on both sides (the carousel reads as cards, not a full banner).
+  padding-inline: max(clamp(1.25rem, 6vw, 5rem), calc((100% - min(64rem, 90vw)) / 2));
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -84,18 +88,19 @@
   }
 }
 
-// Full-width slides — one fills the viewport, no peek. Every slide is
-// structurally identical, so the content lands in the same place each page.
+// Cards — a centred card with a peek of the next/prev, not a full-width banner.
 .slide {
   position: relative;
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+  flex: 0 0 min(64rem, 90vw);
+  scroll-snap-align: center;
   isolation: isolate;
   overflow: hidden;
-  aspect-ratio: 21 / 9;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--card-radius);
   background: var(--image-bg-deep);
 
   @media (max-width: 56.25rem) {
+    flex-basis: 88vw;
     aspect-ratio: 4 / 5;
   }
 }
@@ -167,9 +172,9 @@
 }
 .contentInner {
   width: 100%;
-  max-width: 90rem;
-  margin: 0 auto;
-  padding: clamp(1.75rem, 4vh, 3.5rem) clamp(1.5rem, 6vw, 5rem);
+  // Fills the card now (was max-width 90rem auto, to align with the section
+  // header gutter back when the slide was a full-bleed banner).
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
   display: flex;
   flex-direction: column;
   gap: 1rem;
