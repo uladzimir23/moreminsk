@@ -6,9 +6,20 @@ import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/s
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
 
-const DURATIONS = ["2 часа", "4 часа", "День", "Вечер / ночь"];
-
 type Status = "idle" | "submitting" | "success" | "error";
+
+// «Просто прогулка» has no service package — it's priced by the yacht's hourly
+// rate × hours. Services carry their own approved package prices.
+type Pkg = { name: string; duration: string; hours: number; price?: number };
+
+const WALK_PACKAGES: ReadonlyArray<Pkg> = [
+  { name: "Прогулка", duration: "2 часа", hours: 2 },
+  { name: "Прогулка", duration: "4 часа", hours: 4 },
+  { name: "Вечер", duration: "6 часов", hours: 6 },
+];
+
+// Lowest hourly across the fleet — used when «любая яхта» is picked.
+const MIN_RATE = Math.min(...YACHTS.map((y) => y.pricePerHour));
 
 const POINTS = [
   "Перезвоним в течение 30 минут",
@@ -20,22 +31,40 @@ export function BookingCTASection() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // ── Calculator state ──────────────────────────────────────────────────────
+  const [yacht, setYacht] = useState("any");
+  const [occasion, setOccasion] = useState("walk"); // "walk" | service.slug
+  const [pkgIdx, setPkgIdx] = useState(0);
+
+  const service = occasion === "walk" ? null : SERVICES.find((s) => s.slug === occasion);
+  const packages: ReadonlyArray<Pkg> = service
+    ? service.packages.map((p) => ({
+        name: p.name,
+        duration: p.duration,
+        hours: 0,
+        price: p.price,
+      }))
+    : WALK_PACKAGES;
+  const pkg = packages[Math.min(pkgIdx, packages.length - 1)] ?? packages[0];
+
+  const yachtRate =
+    yacht === "any" ? MIN_RATE : (YACHTS.find((y) => y.slug === yacht)?.pricePerHour ?? MIN_RATE);
+  // Service packages are fixed; a plain walk is hourly rate × hours. (Trivial —
+  // the React Compiler memoizes it; no manual useMemo.)
+  const price = service ? (pkg.price ?? 0) : pkg.hours * yachtRate;
+
+  const yachtName =
+    yacht === "any" ? "Любая яхта" : (YACHTS.find((y) => y.slug === yacht)?.name ?? yacht);
+  const occasionName = service ? service.shortTitle : "Прогулка";
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-
-    const yachtVal = String(fd.get("yacht") ?? "any");
-    const serviceVal = String(fd.get("service") ?? "walk");
     const payload = {
-      yacht:
-        yachtVal === "any"
-          ? "Любая / подберите"
-          : (YACHTS.find((y) => y.slug === yachtVal)?.name ?? yachtVal),
-      service:
-        serviceVal === "walk"
-          ? "Просто прогулка"
-          : (SERVICES.find((s) => s.slug === serviceVal)?.shortTitle ?? serviceVal),
-      duration: String(fd.get("duration") ?? ""),
+      yacht: yachtName,
+      service: occasionName,
+      duration: pkg.duration,
+      price: `${price} BYN`,
       date: String(fd.get("date") ?? ""),
       name: String(fd.get("name") ?? "").trim(),
       phone: String(fd.get("phone") ?? "").trim(),
@@ -66,8 +95,8 @@ export function BookingCTASection() {
             Готовы <span className={styles.accent}>выйти в море?</span>
           </h2>
           <p className={styles.sub}>
-            Оставьте заявку — подберём свободное окно под вашу дату и повод. Или позвоните,
-            договоримся за пару минут.
+            Соберите выход в калькуляторе — цена обновится сразу. Это ориентир: точную стоимость
+            подтвердим при звонке под вашу дату и состав.
           </p>
           <ul className={styles.points}>
             {POINTS.map((p) => (
@@ -132,7 +161,13 @@ export function BookingCTASection() {
                   <label className={styles.label} htmlFor="bk-yacht">
                     Яхта
                   </label>
-                  <select id="bk-yacht" name="yacht" className={styles.select} defaultValue="any">
+                  <select
+                    id="bk-yacht"
+                    name="yacht"
+                    className={styles.select}
+                    value={yacht}
+                    onChange={(e) => setYacht(e.target.value)}
+                  >
                     <option value="any">Любая / подберите</option>
                     {YACHTS.map((y) => (
                       <option key={y.slug} value={y.slug}>
@@ -149,7 +184,11 @@ export function BookingCTASection() {
                     id="bk-service"
                     name="service"
                     className={styles.select}
-                    defaultValue="walk"
+                    value={occasion}
+                    onChange={(e) => {
+                      setOccasion(e.target.value);
+                      setPkgIdx(0);
+                    }}
                   >
                     <option value="walk">Просто прогулка</option>
                     {SERVICES.map((s) => (
@@ -164,13 +203,32 @@ export function BookingCTASection() {
               <div className={styles.field}>
                 <span className={styles.label}>Длительность</span>
                 <div className={styles.chips}>
-                  {DURATIONS.map((d, i) => (
-                    <label key={d} className={styles.chip}>
-                      <input type="radio" name="duration" value={d} defaultChecked={i === 0} />
-                      <span>{d}</span>
+                  {packages.map((p, i) => (
+                    <label key={`${p.name}-${p.duration}`} className={styles.chip}>
+                      <input
+                        type="radio"
+                        name="duration"
+                        checked={pkgIdx === i}
+                        onChange={() => setPkgIdx(i)}
+                      />
+                      <span>{p.duration}</span>
                     </label>
                   ))}
                 </div>
+              </div>
+
+              {/* ── Live calculator output ─────────────────────────────────── */}
+              <div className={styles.pricePanel} aria-live="polite">
+                <span className={styles.priceMeta}>
+                  {yachtName} · {occasionName} · {pkg.duration}
+                </span>
+                <span className={styles.priceRow}>
+                  <span className={styles.priceLabel}>Ориентир</span>
+                  <span className={styles.priceValue}>
+                    {price.toLocaleString("ru-RU")}
+                    <span className={styles.priceUnit}>BYN</span>
+                  </span>
+                </span>
               </div>
 
               <div className={styles.fieldRow}>
