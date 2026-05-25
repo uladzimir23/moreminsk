@@ -92,115 +92,240 @@
   }
 }
 
-// Portrait posters — the photo fills the whole card (one shared ratio token),
-// the copy sits over a bottom scrim. A peek of the next card shows on the right.
+// Card — desktop (≥lg): a wide cinematic banner (blurred backdrop + the crisp
+// photo on the right + package chips + an in-card CTA). Mobile / tablet (<lg):
+// the SAME elements restyle into a portrait poster — the photo fills the card
+// cover, the copy sits over a bottom scrim with «от X BYN», chips + CTA hidden.
 .slide {
   position: relative;
-  flex: 0 0 clamp(15rem, 66vw, 20rem);
+  flex: 0 0 min(64rem, 90vw);
   scroll-snap-align: start;
   isolation: isolate;
   overflow: hidden;
-  aspect-ratio: var(--photo-card-aspect);
+  aspect-ratio: 16 / 9;
   border-radius: var(--card-radius);
   background: var(--image-bg-deep);
 
-  @media (max-width: 56.25rem) {
-    flex-basis: 74vw;
-  }
+  @media (max-width: 63.999rem) {
+    flex-basis: 76vw;
+    aspect-ratio: var(--photo-card-aspect);
 
-  &::after {
-    // Hairline inner frame so the poster reads as a card over the photo.
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: inherit;
-    pointer-events: none;
+    &::after {
+      // Hairline inner frame so the poster reads as a card over the photo.
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: inherit;
+      pointer-events: none;
+    }
   }
 }
 
-// The yacht photo — fills the poster, cover-cropped to the shared ratio.
-.photo {
+// Photo: blurred + dimmed cinematic backdrop on desktop; on mobile it drops the
+// blur and becomes the crisp cover poster.
+.bg {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -6%;
+  width: 112%;
+  height: 112%;
   object-fit: cover;
+  filter: blur(1.875rem) brightness(0.5) saturate(1.1);
   z-index: 0;
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
-  .slide:hover & {
-    transform: scale(1.04);
+  @media (max-width: 63.999rem) {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    filter: none;
   }
 }
-
-// Bottom-up scrim so the copy stays legible whatever the photo.
-.scrim {
+.bgOverlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.55) 26%,
-    rgba(0, 0, 0, 0.1) 54%,
-    transparent 76%
+    105deg,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.32) 50%,
+    rgba(0, 0, 0, 0.15) 100%
   );
+
+  @media (max-width: 63.999rem) {
+    // Bottom-up scrim so the copy stays legible over the cover photo.
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.85) 0%,
+      rgba(0, 0, 0, 0.55) 26%,
+      rgba(0, 0, 0, 0.1) 54%,
+      transparent 76%
+    );
+  }
 }
 
-// Copy column pinned to the bottom of the poster.
+// Crisp hero photo at the right of the banner — desktop only (the bg is the
+// cover image on the poster, so this is hidden there).
+.heroImg {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: auto;
+  max-width: 62%;
+  object-fit: contain;
+  object-position: right center;
+  mask-image: linear-gradient(to right, transparent 0%, black 38%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 38%);
+  pointer-events: none;
+
+  @media (max-width: 63.999rem) {
+    display: none;
+  }
+}
+
 .content {
   position: absolute;
-  inset: auto 0 0 0;
-  z-index: 2;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  color: white;
+
+  @media (max-width: 63.999rem) {
+    align-items: flex-end;
+  }
+}
+.contentInner {
+  width: 100%;
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: clamp(1.125rem, 3vw, 1.625rem);
-  color: white;
+  gap: 1rem;
   animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  > * {
+    max-width: 35rem;
+  }
+
+  @media (max-width: 63.999rem) {
+    gap: 0.4rem;
+    padding: clamp(1.125rem, 5vw, 1.625rem);
+
+    > * {
+      max-width: none;
+    }
+  }
 }
 .chapterNumber {
   margin: 0;
   font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
 }
 .serviceName {
   margin: 0;
-  font-size: clamp(1.75rem, 5.5vw, 2.25rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   font-weight: 500;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: white;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
+
+  @media (max-width: 63.999rem) {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
 }
 .serviceAccent {
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-accent) 82%, white);
+  color: color-mix(in srgb, var(--color-accent) 80%, white);
 }
 .serviceUtp {
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
-  // Keep the poster tidy — clamp the supporting line to two rows.
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+  max-width: 27.5rem;
+
+  @media (max-width: 63.999rem) {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    // Keep the poster tidy — clamp the supporting line to two rows.
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
-.price {
-  margin: 0.25rem 0 0;
+// Package chips — desktop banner only.
+.packages {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 63.999rem) {
+    display: none;
+  }
+}
+.pkg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.875rem 1rem;
+  min-width: 8rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(0.625rem);
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--color-accent);
+  }
+}
+.pkgName {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.pkgPrice {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum", "lnum";
+}
+.pkgDuration {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+// «от X BYN» — mobile / tablet poster only (the chips carry prices on desktop).
+.price {
+  display: none;
+  margin: 0.25rem 0 0;
   align-items: baseline;
   gap: 0.3rem;
   font-size: 1.5rem;
@@ -208,6 +333,10 @@
   letter-spacing: -0.02em;
   color: white;
   font-feature-settings: "tnum", "lnum";
+
+  @media (max-width: 63.999rem) {
+    display: flex;
+  }
 }
 .priceFrom {
   font-family: var(--font-mono), monospace;
@@ -221,6 +350,47 @@
   font-size: 0.8125rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
+}
+
+// In-card CTA — desktop banner only (mobile / tablet books from the booking
+// section / the sticky bar).
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  align-self: flex-start;
+  margin-top: 0.375rem;
+  padding: 0.875rem 1.625rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+  svg {
+    transition: transform 0.2s ease;
+  }
+  &:hover svg {
+    transform: translateX(0.25rem);
+  }
+
+  @media (max-width: 63.999rem) {
+    display: none;
+  }
 }
 
 // ── Controls ─────────────────────────────────────────────────────────────

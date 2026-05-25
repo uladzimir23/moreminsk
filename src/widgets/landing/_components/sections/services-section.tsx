@@ -3,7 +3,6 @@
 import { SERVICES } from "@/shared/content/services";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
-import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
 import styles from "./services-section.module.scss";
@@ -26,6 +25,10 @@ const photoFor = (slug: string) => {
   return { ...pick, url: PHOTOS_BY_YACHT[pick.yacht][pick.idx] };
 };
 
+// Responsive carousel: on desktop (≥lg) a wide cinematic banner — blurred
+// backdrop + the crisp photo on the right + packages + an in-card CTA. On
+// mobile / tablet the same card collapses (via CSS) into a portrait poster:
+// the photo fills it cover, the copy sits over a bottom scrim with «от X BYN».
 export function ServicesSection() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const slideRefs = useRef<Array<HTMLElement | null>>([]);
@@ -60,17 +63,8 @@ export function ServicesSection() {
   const next = () => scrollTo(Math.min(SERVICES.length - 1, activeIdx + 1));
   const prev = () => scrollTo(Math.max(0, activeIdx - 1));
 
-  // Page-level CTA — the per-card «Забронировать …» button lives in the fixed
-  // bottom bar now and tracks whichever poster is centred.
-  const active = SERVICES[activeIdx];
-  const sectionRef = useStickyCta("services", {
-    label: `Забронировать · ${active.shortTitle.toLowerCase()}`,
-    icon: "arrow",
-    onClick: () => document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" }),
-  });
-
   return (
-    <section className={styles.section} id="services" ref={sectionRef}>
+    <section className={styles.section} id="services">
       {/* Ambient section backdrop — blurred copy of the active service's photo. */}
       <AmbientBackdrop
         images={SERVICES.map((service) => photoFor(service.slug).url)}
@@ -104,25 +98,68 @@ export function ServicesSection() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  className={styles.photo}
+                  className={styles.bg}
                   src={photo.url}
                   alt={`${service.shortTitle} на яхте ${photo.yacht.toUpperCase()}`}
                   loading={i === 0 ? "eager" : "lazy"}
                   decoding="async"
                 />
-                <div className={styles.scrim} aria-hidden="true" />
+                <div className={styles.bgOverlay} aria-hidden="true" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className={styles.heroImg}
+                  src={photo.url}
+                  alt=""
+                  aria-hidden="true"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
 
                 <div className={styles.content}>
-                  <p className={styles.chapterNumber}>{String(i + 1).padStart(2, "0")}</p>
-                  <h3 className={styles.serviceName}>
-                    {head && `${head} `}
-                    <span className={styles.serviceAccent}>{tail}.</span>
-                  </h3>
-                  <p className={styles.serviceUtp}>{service.utp}</p>
-                  <p className={styles.price}>
-                    <span className={styles.priceFrom}>от</span>
-                    {service.fromPrice}&nbsp;<span className={styles.priceUnit}>BYN</span>
-                  </p>
+                  <div className={styles.contentInner}>
+                    <p className={styles.chapterNumber}>
+                      {String(i + 1).padStart(2, "0")} · {service.shortTitle}
+                    </p>
+                    <h3 className={styles.serviceName}>
+                      {head && `${head} `}
+                      <span className={styles.serviceAccent}>{tail}.</span>
+                    </h3>
+                    <p className={styles.serviceUtp}>{service.utp}</p>
+
+                    <ul className={styles.packages}>
+                      {service.packages.map((pkg) => (
+                        <li key={pkg.name} className={styles.pkg}>
+                          <span className={styles.pkgName}>{pkg.name}</span>
+                          <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
+                          <span className={styles.pkgDuration}>{pkg.duration}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Poster price — shown on mobile / tablet, hidden on the
+                        desktop banner (packages carry the prices there). */}
+                    <p className={styles.price}>
+                      <span className={styles.priceFrom}>от</span>
+                      {service.fromPrice}&nbsp;<span className={styles.priceUnit}>BYN</span>
+                    </p>
+
+                    <a href="#booking" className={styles.cta}>
+                      Забронировать {service.shortTitle.toLowerCase()}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </article>
             );
