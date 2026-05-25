@@ -3,6 +3,7 @@
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
+import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
 import { Select } from "@/shared/ui/select/Select";
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
@@ -45,6 +46,7 @@ export function BookingCTASection() {
   const [yacht, setYacht] = useState("any");
   const [occasion, setOccasion] = useState("walk"); // "walk" | service.slug
   const [pkgIdx, setPkgIdx] = useState(0);
+  const [date, setDate] = useState(""); // "YYYY-MM-DD"
 
   const service = occasion === "walk" ? null : SERVICES.find((s) => s.slug === occasion);
   const packages: ReadonlyArray<Pkg> = service
@@ -75,7 +77,7 @@ export function BookingCTASection() {
       service: occasionName,
       duration: pkg.duration,
       price: `${price} BYN`,
-      date: String(fd.get("date") ?? ""),
+      date,
       name: String(fd.get("name") ?? "").trim(),
       phone: String(fd.get("phone") ?? "").trim(),
     };
@@ -232,7 +234,7 @@ export function BookingCTASection() {
                   <label className={styles.label} htmlFor="bk-date">
                     Дата
                   </label>
-                  <input id="bk-date" name="date" type="date" className={styles.input} />
+                  <DatePicker id="bk-date" ariaLabel="Дата" value={date} onChange={setDate} />
                 </div>
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="bk-name">

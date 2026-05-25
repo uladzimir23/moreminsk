@@ -1,0 +1,148 @@
+// Custom date picker — trigger matches the form inputs; the calendar pops in a
+// portaled Radix Popover (reads the theme class on <html>/<body>).
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  inline-size: 100%;
+  block-size: 3rem;
+  padding: 0 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--color-foreground) 28%, transparent);
+  }
+  &:focus-visible,
+  &[data-state="open"] {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+}
+.placeholder {
+  color: var(--color-input-placeholder, var(--color-foreground-subtle));
+}
+.icon {
+  flex: none;
+  color: var(--color-foreground-muted);
+}
+
+.content {
+  z-index: 1000;
+  inline-size: 18.5rem;
+  padding: 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  box-shadow: var(--shadow-lg);
+  animation: dp-in 0.16s ease;
+}
+@keyframes dp-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 0.625rem;
+}
+.monthLabel {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  }
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-block-end: 0.25rem;
+
+  span {
+    text-align: center;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-foreground-muted);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.125rem;
+}
+.day {
+  aspect-ratio: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-feature-settings: "tnum", "lnum";
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  }
+  &:disabled {
+    color: var(--color-foreground-subtle);
+    cursor: default;
+    opacity: 0.45;
+  }
+}
+.dayToday {
+  box-shadow: inset 0 0 0 1px var(--color-border-strong, var(--color-border));
+}
+.daySelected {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 600;
+
+  &:hover {
+    background: var(--color-accent);
+  }
+}
