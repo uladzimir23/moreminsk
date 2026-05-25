@@ -8,8 +8,6 @@
   z-index: 0;
   overflow: hidden;
   pointer-events: none; // never blocks the section's content/clicks
-  --mx: 50%;
-  --my: 38%;
 }
 
 .svg {
@@ -92,16 +90,18 @@
     );
 }
 
-// Caustic light — a soft radial glow positioned at --mx/--my.
+// Caustic light — a soft radial glow. Anchored at 50%/38%, offset by --gx/--gy
+// via transform so cursor-following is compositor-only; moving it with left/top
+// forced a layout on every pointermove frame.
 .glow {
   position: absolute;
-  left: var(--mx);
-  top: var(--my);
+  left: 50%;
+  top: 38%;
   width: 46vw;
   height: 46vw;
   max-width: 38.75rem;
   max-height: 38.75rem;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translate(var(--gx, 0rem), var(--gy, 0rem));
   background: radial-gradient(
     circle,
     color-mix(in srgb, var(--color-accent) 40%, transparent) 0%,
@@ -111,9 +111,7 @@
   filter: blur(1.25rem);
   mix-blend-mode: screen;
   opacity: 0.7;
-  transition:
-    left 0.18s ease-out,
-    top 0.18s ease-out;
+  transition: transform 0.18s ease-out;
 }
 // Touch / no-pointer: ignore cursor, drift on a slow loop instead. Drift via
 // transform (compositor-only) — animating left/top forced a layout + paint on

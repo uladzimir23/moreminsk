@@ -117,8 +117,9 @@ export function WaterBackdrop({
         queued = false;
         const rect = root.getBoundingClientRect();
         if (py < rect.top - 200 || py > rect.bottom + 200) return;
-        root.style.setProperty("--mx", `${px - rect.left}px`);
-        root.style.setProperty("--my", `${py - rect.top}px`);
+        // Offset from the glow's 50%/38% anchor — fed to a transform (no layout).
+        root.style.setProperty("--gx", `${px - rect.left - rect.width * 0.5}px`);
+        root.style.setProperty("--gy", `${py - rect.top - rect.height * 0.38}px`);
       });
     };
     const onDown = (e: PointerEvent) => {
