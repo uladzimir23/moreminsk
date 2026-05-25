@@ -40,10 +40,20 @@
 // theme-aware fg — otherwise white-over-hero text vanishes on the light sheet.
 // :has on the expanded burger keeps this module-agnostic (the burger lives in
 // a sibling CSS module).
-.header:has(button[aria-expanded="true"]) {
+.header:has([aria-expanded="true"]) {
   --hdr-fg: var(--on-media);
   --hdr-fg-strong: var(--on-media-strong);
   --hdr-fg-muted: var(--on-media-muted);
+
+  // Open state: the overlay carries the phone / socials / CTA / toggles, so the
+  // header collapses to just the logo + the burger-X over the sheet.
+  .phone,
+  .socials,
+  .cta,
+  .controls,
+  .fleetBtn {
+    display: none;
+  }
 }
 
 .bar {
@@ -72,14 +82,10 @@
 
 // ── Desktop nav ────────────────────────────────────────────────────────────
 
+// The full-screen burger menu is now the nav on every screen, so the inline
+// header links are retired (kept in the DOM, hidden, in case we want them back).
 .nav {
-  display: flex;
-  align-items: center;
-  gap: clamp(1.25rem, 2.6vw, 2.5rem);
-
-  @media (max-width: 56.25rem) {
-    display: none;
-  }
+  display: none;
 }
 
 .link {

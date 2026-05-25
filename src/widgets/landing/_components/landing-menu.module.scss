@@ -8,7 +8,7 @@
 .burger {
   position: relative;
   z-index: 310;
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   inline-size: 2.75rem;
@@ -25,10 +25,6 @@
 
   &[aria-expanded="true"] {
     color: var(--on-media);
-  }
-
-  @media (max-width: 56.25rem) {
-    display: inline-flex;
   }
 }
 
