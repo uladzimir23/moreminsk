@@ -253,8 +253,26 @@
   gap: 0.75rem;
 }
 .priceLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   font-size: 0.875rem;
   color: var(--color-foreground-muted);
+}
+.hint {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground-subtle);
+  cursor: help;
+  transition: color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    outline: none;
+    color: var(--color-accent);
+  }
 }
 .priceValue {
   display: inline-flex;

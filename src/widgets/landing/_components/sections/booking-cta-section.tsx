@@ -3,8 +3,11 @@
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
+import { Checkbox } from "@/shared/ui/checkbox/Checkbox";
 import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
 import { Select } from "@/shared/ui/select/Select";
+import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
+import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
 
@@ -47,6 +50,7 @@ export function BookingCTASection() {
   const [occasion, setOccasion] = useState("walk"); // "walk" | service.slug
   const [pkgIdx, setPkgIdx] = useState(0);
   const [date, setDate] = useState(""); // "YYYY-MM-DD"
+  const [consent, setConsent] = useState(false);
 
   const service = occasion === "walk" ? null : SERVICES.find((s) => s.slug === occasion);
   const packages: ReadonlyArray<Pkg> = service
@@ -221,7 +225,18 @@ export function BookingCTASection() {
                   {yachtName} · {occasionName} · {pkg.duration}
                 </span>
                 <span className={styles.priceRow}>
-                  <span className={styles.priceLabel}>Ориентир</span>
+                  <span className={styles.priceLabel}>
+                    Ориентир
+                    <Tooltip content="Предварительный расчёт. Точную цену подтвердим при звонке — под вашу дату, состав и доп. пожелания.">
+                      <button
+                        type="button"
+                        className={styles.hint}
+                        aria-label="Что значит ориентир"
+                      >
+                        <HelpCircle size={14} aria-hidden="true" />
+                      </button>
+                    </Tooltip>
+                  </span>
                   <span className={styles.priceValue}>
                     {price.toLocaleString("ru-RU")}
                     <span className={styles.priceUnit}>BYN</span>
@@ -274,7 +289,16 @@ export function BookingCTASection() {
                 </p>
               )}
 
-              <button type="submit" className={styles.submit} disabled={status === "submitting"}>
+              <Checkbox id="bk-consent" checked={consent} onCheckedChange={setConsent}>
+                Согласен на обработку персональных данных. Без спама — звоним только по вашей
+                заявке.
+              </Checkbox>
+
+              <button
+                type="submit"
+                className={styles.submit}
+                disabled={status === "submitting" || !consent}
+              >
                 {status === "submitting" ? "Отправляем…" : "Отправить заявку"}
                 <svg
                   width="14"
@@ -290,10 +314,6 @@ export function BookingCTASection() {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-              <p className={styles.note}>
-                Нажимая «Отправить», вы соглашаетесь с обработкой данных. Без спама — только по
-                вашей заявке.
-              </p>
             </form>
           )}
         </div>

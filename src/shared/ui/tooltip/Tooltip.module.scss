@@ -1,0 +1,23 @@
+.content {
+  z-index: 1100;
+  max-inline-size: 16rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  box-shadow: var(--shadow-md);
+  animation: tip-in 0.14s ease;
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.125rem);
+  }
+}
+
+.arrow {
+  fill: var(--color-foreground);
+}
