@@ -32,16 +32,31 @@ export function FleetShowcaseSection() {
   useEffect(() => {
     const el = tabsRef.current;
     if (!el) return;
-    const onScroll = () => {
-      const stickyTop = parseFloat(getComputedStyle(el).top) || 0;
+    // Resolve the sticky `top` ONCE (and on resize) — reading getComputedStyle
+    // on every scroll event forced a synchronous style recalc each time, which
+    // janked scrolling across the whole page. The scroll path now only does a
+    // single rAF-throttled getBoundingClientRect.
+    let stickyTop = parseFloat(getComputedStyle(el).top) || 0;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
       setTabsStuck(el.getBoundingClientRect().top <= stickyTop + 1);
     };
-    onScroll();
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    const onResize = () => {
+      stickyTop = parseFloat(getComputedStyle(el).top) || 0;
+      update();
+    };
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
