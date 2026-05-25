@@ -7,10 +7,11 @@ import { Checkbox } from "@/shared/ui/checkbox/Checkbox";
 import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
 import { HoursDial } from "@/shared/ui/hours-dial/HoursDial";
 import { Select } from "@/shared/ui/select/Select";
+import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 import clsx from "clsx";
 import { HelpCircle } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./booking-cta-section.module.scss";
 
 const YACHT_OPTIONS = [
@@ -38,6 +39,7 @@ const POINTS = [
 export function BookingCTASection() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
 
   // ── Calculator state ──────────────────────────────────────────────────────
   const [yacht, setYacht] = useState("any");
@@ -63,6 +65,21 @@ export function BookingCTASection() {
   const yachtName =
     yacht === "any" ? "Любая яхта" : (YACHTS.find((y) => y.slug === yacht)?.name ?? yacht);
   const occasionName = service ? service.shortTitle : "Прогулка";
+
+  // Page-level CTA — submits the form and carries the live price. Hidden once
+  // the form has succeeded (the thank-you state takes over).
+  const sectionRef = useStickyCta(
+    "booking",
+    status === "success"
+      ? null
+      : {
+          label: status === "submitting" ? "Отправляем…" : "Отправить заявку",
+          note: `${price.toLocaleString("ru-RU")} BYN`,
+          icon: "check",
+          disabled: !consent || status === "submitting",
+          onClick: () => formRef.current?.requestSubmit(),
+        },
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,7 +109,7 @@ export function BookingCTASection() {
   };
 
   return (
-    <section className={styles.section} id="booking">
+    <section className={styles.section} id="booking" ref={sectionRef}>
       <div className={styles.horizon} aria-hidden="true" />
 
       <div className={styles.grid}>
@@ -170,7 +187,7 @@ export function BookingCTASection() {
                 </button>
               </div>
             ) : (
-              <form className={styles.form} onSubmit={handleSubmit}>
+              <form className={styles.form} onSubmit={handleSubmit} ref={formRef}>
                 <div className={styles.fieldRow}>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="bk-yacht">

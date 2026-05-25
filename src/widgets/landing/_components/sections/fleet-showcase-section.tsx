@@ -3,6 +3,7 @@
 import { YACHTS } from "@/shared/content/yachts";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
+import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, thumbUrl, type YachtSlug } from "../../_data/photos";
 import styles from "./fleet-showcase-section.module.scss";
@@ -23,6 +24,14 @@ export function FleetShowcaseSection() {
 
   const activeYacht = YACHTS[activeYachtIdx];
   const photos = PHOTOS_BY_YACHT[activeYacht.slug as YachtSlug];
+
+  // Page-level CTA — «Забронировать <яхта>» rides the fixed bottom bar and
+  // tracks the active yacht tab.
+  const sectionRef = useStickyCta("fleet", {
+    label: `Забронировать · ${activeYacht.name}`,
+    icon: "arrow",
+    onClick: () => document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" }),
+  });
 
   // Render only a 2-frame window (active + outgoing) of the hero photo stack
   // instead of all 8 × bg+fg — holding every full-res photo decoded was the
@@ -136,7 +145,7 @@ export function FleetShowcaseSection() {
   };
 
   return (
-    <section className={styles.section} id="fleet">
+    <section className={styles.section} id="fleet" ref={sectionRef}>
       {/* Ambient backdrop — same photos as the hero stack, heavily blurred
           and dimmed so the foreground reads white-on-dark. */}
       <AmbientBackdrop images={photos} activeIndex={activePhotoIdx} />
@@ -197,23 +206,7 @@ export function FleetShowcaseSection() {
             <span className={styles.priceValue}>{activeYacht.pricePerHour}</span>
             <span className={styles.priceSuffix}>BYN/ч · мин. {activeYacht.minHours} ч</span>
           </div>
-
-          <a href="#booking" className={styles.cta}>
-            Забронировать {activeYacht.name}
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
+          {/* «Забронировать <яхта>» lives in the page-level bottom bar now. */}
         </aside>
 
         <div className={styles.gallery}>

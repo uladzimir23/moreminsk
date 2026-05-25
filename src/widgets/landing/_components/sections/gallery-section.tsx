@@ -2,6 +2,7 @@
 
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
+import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { useCallback, useEffect, useState } from "react";
 import { GALLERY, thumbUrl } from "../../_data/photos";
 import styles from "./gallery-section.module.scss";
@@ -44,8 +45,16 @@ export function GallerySection() {
   }, [activeIdx, prevIdx]);
   const frames = prevIdx === activeIdx ? [activeIdx] : [prevIdx, activeIdx];
 
+  // Page-level CTA — «Смотреть галерею» centres the viewer in the page bar.
+  const sectionRef = useStickyCta("gallery", {
+    label: "Смотреть галерею",
+    icon: "gallery",
+    onClick: () =>
+      document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth", block: "center" }),
+  });
+
   return (
-    <section className={styles.section} id="gallery">
+    <section className={styles.section} id="gallery" ref={sectionRef}>
       {/* Ambient section backdrop — blurred copy of the active photo. */}
       <AmbientBackdrop images={GALLERY.map((shot) => shot.url)} activeIndex={activeIdx} />
 

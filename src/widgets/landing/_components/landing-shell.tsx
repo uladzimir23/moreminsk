@@ -1,3 +1,4 @@
+import { StickyCtaProvider } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { LandingFooter } from "./landing-footer";
@@ -34,16 +35,18 @@ export function LandingShell({ hero, overlapHero = false }: LandingShellProps) {
 
       {hero}
 
-      <div className={overlapHero ? styles.overlap : undefined}>
-        <FleetShowcaseSection />
-        <ServicesSection />
-        <GallerySection />
-        <ReviewsStoriesSection />
-        <FaqSection />
-        <BookingCTASection />
-        <ContactsSection />
-        <LandingFooter />
-      </div>
+      <StickyCtaProvider>
+        <div className={overlapHero ? styles.overlap : undefined}>
+          <FleetShowcaseSection />
+          <ServicesSection />
+          <GallerySection />
+          <ReviewsStoriesSection />
+          <FaqSection />
+          <BookingCTASection />
+          <ContactsSection />
+          <LandingFooter />
+        </div>
+      </StickyCtaProvider>
     </div>
   );
 }
