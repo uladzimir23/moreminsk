@@ -22,7 +22,7 @@ export function AmbientBackdrop({ images, activeIndex, className }: Props) {
 
   useEffect(() => {
     if (prevIndex === activeIndex) return;
-    const t = setTimeout(() => setPrevIndex(activeIndex), 850); // ~ .img opacity fade
+    const t = setTimeout(() => setPrevIndex(activeIndex), 1050); // ~ .img opacity fade (1s)
     return () => clearTimeout(t);
   }, [activeIndex, prevIndex]);
 

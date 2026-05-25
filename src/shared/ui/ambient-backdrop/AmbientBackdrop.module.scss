@@ -15,7 +15,7 @@
   block-size: 120%;
   object-fit: cover;
   filter: blur(var(--blur-ambient)) brightness(0.4) saturate(1.15);
-  transition: opacity 0.8s ease;
+  transition: opacity 1s ease;
 }
 
 .img {
@@ -28,6 +28,12 @@
   // every hidden (opacity:0) image forced a permanent blurred GPU layer per
   // image; now Chrome skips painting/blurring the inactive ones entirely.
   will-change: opacity;
+
+  // Cross-dissolve: the incoming backdrop fades IN from 0 (it's a fresh mount
+  // in the 2-frame window) while the outgoing fades out — no abrupt swap.
+  @starting-style {
+    opacity: 0;
+  }
 }
 
 .overlay {
