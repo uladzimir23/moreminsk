@@ -46,13 +46,27 @@ export function FleetCatalog() {
                 aria-label={`Открыть страницу яхты ${yacht.name}`}
               >
                 {cover && (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={cover}
-                    alt={`Яхта ${yacht.name} на Минском море`}
-                    loading={i === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                  />
+                  <>
+                    {/* Blurred cover fills the frame; the crisp photo sits on
+                        top contained (full height, never cropped). */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className={styles.mediaBg}
+                      src={cover}
+                      alt=""
+                      aria-hidden="true"
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className={styles.mediaPhoto}
+                      src={cover}
+                      alt={`Яхта ${yacht.name} на Минском море`}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
+                  </>
                 )}
                 {yacht.badge === "flagship" && <span className={styles.badge}>флагман</span>}
               </Link>

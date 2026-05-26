@@ -95,18 +95,34 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   isolation: isolate;
 
-  img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  &:hover img {
-    transform: scale(1.04);
-  }
-
   @include focus-ring;
+}
+
+// Blurred cover layer — fills the frame (incl. the letterbox bars) behind the
+// crisp photo. Overscan compensates for the blur's transparent edges.
+.mediaBg {
+  position: absolute;
+  inset: -8%;
+  inline-size: 116%;
+  block-size: 116%;
+  object-fit: cover;
+  filter: blur(2.5rem) brightness(0.55) saturate(1.1);
+  z-index: 0;
+}
+
+// Crisp photo — full height in the container, never cropped (contain).
+.mediaPhoto {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  .media:hover & {
+    transform: scale(1.03);
+  }
 }
 
 .badge {
@@ -289,7 +305,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .media img {
+  .mediaPhoto {
     transition: none;
   }
 }
