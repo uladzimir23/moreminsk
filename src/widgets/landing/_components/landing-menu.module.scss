@@ -23,6 +23,8 @@
   // overlay's theme-aware fg (dark on the light sheet in light theme).
   color: var(--hdr-fg, var(--on-image));
   cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &[aria-expanded="true"] {
     color: var(--on-media);
@@ -68,29 +70,47 @@
   @include media-glass($blur: var(--blur-frame), $glass: 78%, $opaque: 96%);
 }
 
-.nav {
+// Two-pane body: the (narrower) nav list + a desktop preview pane, vertically
+// centred in the sheet. On mobile the preview collapses and the list is full.
+.body {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.25rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem;
   padding-block: 2rem;
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 24rem) 1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
 }
 
-.navLink {
+.nav {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navLink,
+.navLinkActive {
+  display: flex;
+  align-items: center;
   gap: 1rem;
   padding-block: 0.5rem;
   color: var(--on-media);
   text-decoration: none;
-  font-size: clamp(2.25rem, 11vw, 3.25rem);
+  font-size: clamp(2.25rem, 8vw, 3.25rem);
   font-weight: var(--primitive-weight-medium);
   letter-spacing: -0.02em;
   line-height: 1.05;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.985);
 }
 
 .navIndex {
+  flex: none;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 600;
@@ -98,21 +118,64 @@
   color: var(--on-media-accent);
 }
 
+// Word flip — clip one line; the default word slides up out of view while the
+// accent clone (just below) slides up into it on hover/focus, or when this item
+// is the active (previewed) one.
+.navWords {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.2;
+}
+.navWord,
+.navWordAccent {
+  display: block;
+  padding-block-end: 0.08em; // keep Cyrillic descenders (р) out of the clip
+  transition: transform var(--duration-medium) var(--ease-spring);
+}
+.navWordAccent {
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  color: var(--color-accent);
+}
+.navLink:hover .navWord,
+.navLink:focus-visible .navWord,
+.navLinkActive .navWord,
+.navLink:hover .navWordAccent,
+.navLink:focus-visible .navWordAccent,
+.navLinkActive .navWordAccent {
+  transform: translateY(-100%);
+}
+@include reduced-motion {
+  .navWord,
+  .navWordAccent {
+    transition: none;
+  }
+}
+
 .navArrow {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
   inline-size: 1.25rem;
   block-size: 1.25rem;
-  align-self: center;
   margin-inline-start: auto;
   color: var(--on-media-faint);
   transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.25s ease;
+    transform var(--duration-medium) var(--ease-spring),
+    color var(--duration-base) var(--ease-out);
 
-  .navLink:hover &,
-  .navLink:active & {
-    transform: translateX(0.375rem);
-    color: var(--color-accent);
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
   }
+}
+.navLink:hover .navArrow,
+.navLink:focus-visible .navArrow,
+.navLinkActive .navArrow {
+  transform: translateX(0.375rem);
+  color: var(--color-accent);
 }
 
 .cta {
@@ -132,12 +195,360 @@
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-tide;
+  @include btn-press;
 }
 
 // ── Controls + footer block ────────────────────────────────────────────────
 
 .controls {
   margin-block-start: 1.75rem;
+}
+
+// ── Preview pane (desktop only) ─────────────────────────────────────────────
+// A blurb + an explicit page link for the hovered/active item, to the right of
+// the list. Hidden on mobile (the list itself is the nav there).
+.preview {
+  display: none;
+
+  @include respond-to("lg") {
+    display: block;
+    align-self: center;
+    max-inline-size: 40rem;
+    padding-inline-start: clamp(2rem, 4vw, 3.5rem);
+    border-inline-start: 1px solid var(--media-hairline);
+  }
+}
+.previewInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+.previewEyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--on-media-accent);
+}
+.previewDesc {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.6vw, 1.4rem);
+  line-height: 1.55;
+  color: var(--on-media-muted);
+}
+.previewCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-block-start: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--media-hairline-strong);
+  color: var(--on-media);
+  text-decoration: none;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  @include btn-fill; // accent wipes in from the left on hover
+  @include btn-press;
+
+  svg {
+    inline-size: 0.9375rem;
+    block-size: 0.9375rem;
+    transition: transform var(--duration-base) var(--ease-spring);
+  }
+  &:hover svg {
+    transform: translateX(0.25rem);
+  }
+}
+
+// ── Showcase grids in the preview pane ─────────────────────────────────────
+.gridFleet {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-block: 0.25rem;
+}
+.gridServices,
+.gridGallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-block: 0.25rem;
+}
+.gridServices {
+  gap: 0.625rem;
+}
+.gridGallery {
+  gap: 0.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.5rem;
+  border: 1px solid var(--media-hairline);
+  color: var(--on-media);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.97);
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+}
+.card:hover img {
+  transform: scale(1.08);
+}
+.cardThumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  margin-block-end: 0.375rem;
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-medium) var(--ease-spring);
+  }
+}
+.cardBadge {
+  position: absolute;
+  inset-block-start: 0.25rem;
+  inset-inline-start: 0.25rem;
+  padding: 0.125rem 0.3125rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.cardName {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.cardFleet .cardName {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-size: 1.0625rem;
+}
+.cardMeta {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  color: var(--on-media-muted);
+}
+.cardPrice {
+  margin-block-start: 0.125rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--on-media-strong);
+  font-feature-settings: "tnum", "lnum";
+}
+
+.galleryCell {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1;
+  @include btn-press(0.95);
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-medium) var(--ease-spring);
+  }
+  &:hover img {
+    transform: scale(1.1);
+  }
+}
+
+// Prices — two columns
+.priceCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-block: 0.25rem;
+}
+.priceCol {
+  display: flex;
+  flex-direction: column;
+}
+.priceHead {
+  margin-block-end: 0.5rem;
+  padding-block-end: 0.5rem;
+  border-block-end: 1px solid var(--media-hairline);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--on-media-accent);
+}
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.375rem;
+  color: var(--on-media);
+  text-decoration: none;
+  transition: color var(--duration-base) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+.priceName {
+  font-size: 0.875rem;
+}
+.priceVal {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--on-media-muted);
+  white-space: nowrap;
+  font-feature-settings: "tnum", "lnum";
+}
+.priceRow:hover .priceVal {
+  color: var(--color-accent);
+}
+
+// Reviews — rating summary
+.reviewsSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-block: 0.25rem;
+}
+.reviewsScore {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+.reviewsStars {
+  color: var(--color-accent);
+  font-size: 1.125rem;
+  letter-spacing: 0.1em;
+}
+.reviewsNum {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.reviewsCount {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--on-media-muted);
+}
+.reviewQuotes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.reviewQuote {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--on-media-muted);
+}
+.reviewAuthor {
+  display: block;
+  margin-block-start: 0.375rem;
+  font-family: var(--font-mono), monospace;
+  font-style: normal;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-media-accent);
+}
+
+// FAQ — top questions
+.faqList {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+}
+.faqRow {
+  display: block;
+  padding-block: 0.625rem;
+  border-block-end: 1px solid var(--media-hairline);
+  color: var(--on-media);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition:
+    color var(--duration-base) var(--ease-out),
+    padding-inline-start var(--duration-base) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent);
+    padding-inline-start: 0.375rem;
+  }
+}
+
+// Contacts — channels grid
+.contactsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-block: 0.25rem;
+}
+.contactsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.625rem;
+}
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--media-hairline);
+  color: var(--on-media);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.97);
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+}
+.contactIcon {
+  flex: none;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  color: var(--color-accent);
+}
+.contactLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.contactAddress {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--on-media-muted);
 }
 
 .foot {
