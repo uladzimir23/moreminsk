@@ -13,11 +13,15 @@ import styles from "./services-section.module.scss";
 // devichnik → ALFA, a girls' evening with drinks; fotosessiya → EVA, the
 // coral-dress shoot by the «EVA» lettering (on-brand accent).
 const SERVICE_PHOTO: Record<string, { yacht: YachtSlug; idx: number }> = {
+  "progulka-parusnaya": { yacht: "eva", idx: 7 },
+  "progulka-motornaya": { yacht: "mario", idx: 0 },
+  svadba: { yacht: "bravo", idx: 3 },
   "den-rozhdeniya": { yacht: "alfa", idx: 2 },
   korporativ: { yacht: "bravo", idx: 0 },
   svidanie: { yacht: "eva", idx: 0 },
   devichnik: { yacht: "alfa", idx: 6 },
   fotosessiya: { yacht: "eva", idx: 5 },
+  "master-klass": { yacht: "alfa", idx: 0 },
 };
 
 const photoFor = (slug: string) => {

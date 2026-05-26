@@ -56,7 +56,7 @@ export function ServicesSection() {
           photo, so the whole section breathes its mood. */}
       <div className={styles.backdrop} aria-hidden="true">
         {SERVICES.map((service, i) => {
-          const mood = SERVICE_MOOD[service.slug];
+          const mood = SERVICE_MOOD[service.slug] ?? { yacht: "eva" as YachtSlug, photoIdx: 0 };
           return (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -81,7 +81,7 @@ export function ServicesSection() {
       <div className={styles.rail}>
         <div className={styles.track} ref={trackRef}>
           {SERVICES.map((service, i) => {
-            const mood = SERVICE_MOOD[service.slug];
+            const mood = SERVICE_MOOD[service.slug] ?? { yacht: "eva" as YachtSlug, photoIdx: 0 };
             const bgUrl = PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
             const heroUrl = PHOTOS_BY_YACHT[mood.yacht][mood.photoIdx];
 

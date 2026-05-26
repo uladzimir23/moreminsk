@@ -11,9 +11,11 @@ import {
   Cake,
   CalendarDays,
   Camera,
+  Compass,
   GlassWater,
   Heart,
   Sailboat,
+  Ship,
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
@@ -26,6 +28,9 @@ const ICONS: Record<string, LucideIcon> = {
   Sparkles,
   GlassWater,
   Camera,
+  Sailboat,
+  Ship,
+  Compass,
 };
 
 type Props = {
