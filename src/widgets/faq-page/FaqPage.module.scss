@@ -95,13 +95,25 @@
   font-weight: var(--primitive-weight-semibold);
   text-align: start;
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+
+  &:active {
+    transform: scale(0.99);
+  }
 
   &:hover {
     background: color-mix(in oklch, var(--color-foreground) 4%, transparent);
   }
 
   @include focus-ring($offset: -0.125rem);
+
+  @include reduced-motion {
+    &:active {
+      transform: none;
+    }
+  }
 }
 
 .question {
@@ -193,16 +205,9 @@
   font-size: var(--text-sm);
   font-weight: var(--primitive-weight-medium);
   text-decoration: none;
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
 
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-
-  @include focus-ring;
+  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
+  @include btn-press;
 }
 
 @keyframes faqpage-expand {

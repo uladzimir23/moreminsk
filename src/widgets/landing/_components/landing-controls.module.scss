@@ -2,6 +2,8 @@
 // header's --hdr-fg (set by landing-header), so it inherits the same
 // white-over-hero → dark-when-frosted behaviour. Mono, hairline, editorial.
 
+@use "@/shared/design-system/mixins" as *;
+
 .root {
   display: inline-flex;
   align-items: center;
@@ -21,7 +23,10 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     background: color-mix(in srgb, currentColor 12%, transparent);
@@ -31,6 +36,16 @@
 .icon {
   inline-size: 1.0625rem;
   block-size: 1.0625rem;
+  transition: transform var(--duration-medium) var(--ease-spring);
+}
+// Sun/moon spins a touch on hover.
+.theme:hover .icon {
+  transform: rotate(55deg);
+}
+@include reduced-motion {
+  .theme:hover .icon {
+    transform: none;
+  }
 }
 
 .sep {
@@ -57,7 +72,10 @@
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 
   &:hover {
     color: inherit;

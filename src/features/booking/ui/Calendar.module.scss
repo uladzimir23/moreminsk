@@ -35,7 +35,9 @@
   background: color-mix(in oklch, var(--color-foreground) 6%, transparent);
   color: var(--color-foreground);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
 
   @include focus-ring;
 
@@ -43,9 +45,19 @@
     background: color-mix(in oklch, var(--color-foreground) 10%, transparent);
   }
 
+  &:active:not(:disabled) {
+    transform: scale(0.9);
+  }
+
   &:disabled {
     opacity: 0.35;
     cursor: not-allowed;
+  }
+
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 
@@ -77,7 +89,8 @@
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
 
   @include focus-ring($offset: -0.125rem);
 
@@ -89,9 +102,19 @@
     background: color-mix(in oklch, var(--color-primary) 10%, transparent);
   }
 
+  &:active:not(:disabled) {
+    transform: scale(0.92);
+  }
+
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
+  }
+
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 

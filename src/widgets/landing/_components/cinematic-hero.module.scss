@@ -1,6 +1,8 @@
 // Cinematic video hero — full-bleed muted/looped yacht footage, dark
 // vignette overlay for text contrast, sky tint bleeds the brand color in.
 
+@use "@/shared/design-system/mixins" as *;
+
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -196,16 +198,15 @@
   cursor: pointer;
   box-shadow: 0 8px 32px color-mix(in srgb, var(--color-accent) 45%, transparent);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-out);
+  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-press;
   &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.125rem);
     box-shadow: 0 12px 40px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
   svg {
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-base) var(--ease-spring);
   }
   &:hover svg {
     transform: translateX(0.25rem);
@@ -227,15 +228,8 @@
   text-decoration: none;
   border-radius: 0;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
-  &:hover {
-    background: rgba(255, 255, 255, 0.16);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-0.125rem);
-  }
+  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
+  @include btn-press;
 }
 
 .meta {

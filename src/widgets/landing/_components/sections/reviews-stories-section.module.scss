@@ -2,6 +2,8 @@
 // stories viewer (segmented autoplay progress, header, tap nav, side peek
 // of adjacent groups). Media = scraped yacht photos with IG-style stickers.
 
+@use "@/shared/design-system/mixins" as *;
+
 .section {
   position: relative;
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem);
@@ -70,6 +72,8 @@
   border: 0;
   cursor: pointer;
   width: clamp(5.25rem, 11vw, 6.5rem);
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 }
 .ring {
   position: relative;
@@ -155,7 +159,10 @@
   border: 0;
   color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     color: white;
@@ -187,7 +194,9 @@
   filter: brightness(0.7);
   transition:
     opacity 0.2s ease,
-    filter 0.2s ease;
+    filter 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 
   img {
     width: 100%;
@@ -234,10 +243,14 @@
   border-radius: 50%;
   color: #111;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include focus-ring;
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: scale(1.08);
+  }
+  &:active:not(:disabled) {
+    transform: scale(0.9);
   }
   &:disabled {
     opacity: 0;
@@ -246,6 +259,11 @@
   svg {
     width: 1.125rem;
     height: 1.125rem;
+  }
+  @include reduced-motion {
+    &:active {
+      transform: none;
+    }
   }
 
   @media (max-width: 56.25rem) {
@@ -371,6 +389,8 @@
     color: inherit;
     cursor: pointer;
     display: flex;
+    transition: transform var(--duration-fast) var(--ease-spring);
+    @include btn-press(0.9);
   }
   svg {
     width: 1.25rem;
@@ -539,7 +559,12 @@
   color: white;
   cursor: pointer;
   display: flex;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
+  &:hover {
+    transform: scale(1.1);
+  }
   svg {
     width: 1.5rem;
     height: 1.5rem;

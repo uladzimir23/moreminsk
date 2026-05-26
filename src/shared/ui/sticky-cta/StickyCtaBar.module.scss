@@ -3,6 +3,8 @@
 // taking clicks) on the sections that register no CTA. Sits below the header
 // (z 999) and the burger overlay (z 300) so the open menu always wins.
 
+@use "@/shared/design-system/mixins" as *;
+
 .bar {
   position: fixed;
   inset-block-end: 0;
@@ -53,20 +55,22 @@
     0 12px 32px color-mix(in srgb, var(--color-accent) 42%, transparent),
     0 4px 12px rgb(0 0 0 / 0.22);
   transition:
-    background-color 0.2s ease,
-    transform 0.15s ease,
+    transform var(--duration-fast) var(--ease-spring),
     box-shadow 0.2s ease;
+  @include btn-tide;
+  @include focus-ring;
 
-  &:hover:not(:disabled) {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.0625rem);
-  }
   &:active:not(:disabled) {
-    transform: translateY(0);
+    transform: scale(0.97);
   }
   &:disabled {
     opacity: 0.55;
     cursor: not-allowed;
+  }
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 

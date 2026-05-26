@@ -2,6 +2,8 @@
 // collapses to an inline accordion on mobile. One active index drives both:
 // desktop shows it in the side panel, mobile expands it under the question.
 
+@use "@/shared/design-system/mixins" as *;
+
 .section {
   position: relative;
   isolation: isolate;
@@ -88,7 +90,10 @@
   cursor: pointer;
   text-align: left;
   color: var(--on-media-muted);
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 
   &:hover {
     color: var(--on-media);

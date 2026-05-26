@@ -1,6 +1,8 @@
 // Booking — light section, editorial pitch on the left + a real booking
 // form card on the right. Sky-tinted background + hairline horizon motif.
 
+@use "@/shared/design-system/mixins" as *;
+
 .section {
   position: relative;
   overflow: hidden;
@@ -180,14 +182,8 @@
   font-size: 0.8125rem;
   font-weight: 500;
   cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--color-accent) 60%, var(--color-border));
-  }
+  @include btn-fill;
+  @include btn-press;
 }
 .presetActive {
   border-color: var(--color-accent);
@@ -324,6 +320,8 @@
 .chip {
   position: relative;
   cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 
   input {
     position: absolute;
@@ -392,12 +390,22 @@
   background: transparent;
   color: var(--color-foreground-subtle);
   cursor: help;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
 
   &:hover,
   &:focus-visible {
     outline: none;
     color: var(--color-accent);
+  }
+  &:active {
+    transform: scale(0.9);
+  }
+  @include reduced-motion {
+    &:active {
+      transform: none;
+    }
   }
 }
 .priceValue {
@@ -442,17 +450,16 @@
   cursor: pointer;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 32%, transparent);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow 0.2s ease;
+  @include btn-tide;
+  @include btn-press;
 
   &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.125rem);
     box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 45%, transparent);
   }
   svg {
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-base) var(--ease-spring);
   }
   &:hover svg {
     transform: translateX(0.25rem);
@@ -536,6 +543,8 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
+  @include btn-tide;
+  @include btn-press;
 }
 @keyframes successIn {
   from {

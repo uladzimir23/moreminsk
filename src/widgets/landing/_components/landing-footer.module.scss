@@ -3,6 +3,8 @@
 // night water). On mobile it collapses to a tight single column — the burger
 // menu already carries the nav + contacts.
 
+@use "@/shared/design-system/mixins" as *;
+
 .footer {
   // Normal flow (was position:fixed + z-index:0 for the reveal effect, which
   // forced whole-page compositing — see .page note). Sits below the content.
@@ -80,17 +82,21 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-tide;
+  @include focus-ring;
 
-  &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.0625rem);
+  &:active:not(:disabled) {
+    transform: scale(0.97);
   }
   &:disabled {
     cursor: progress;
     opacity: 0.7;
+  }
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 .quickError {
@@ -212,7 +218,9 @@
   transition:
     border-color 0.2s ease,
     color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     border-color: var(--color-accent);

@@ -258,22 +258,18 @@
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    background var(--duration-fast) var(--ease-out);
+  transition: transform var(--duration-fast) var(--ease-spring);
 
-  &:hover {
-    background: var(--color-accent-hover);
+  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-press;
+
+  &:hover .ctaIcon {
+    transform: translateX(0.25rem);
   }
-
-  &:active {
-    transform: scale(0.97);
-  }
-
-  @include focus-ring;
 }
 
 .ctaIcon {
   inline-size: 1.125rem;
   block-size: 1.125rem;
+  transition: transform var(--duration-base) var(--ease-spring);
 }

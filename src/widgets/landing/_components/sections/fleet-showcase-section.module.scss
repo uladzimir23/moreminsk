@@ -136,10 +136,31 @@
   letter-spacing: -0.01em;
   line-height: 1;
   color: var(--on-media-subtle);
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press;
 }
 .tab:hover {
   color: var(--on-media-strong);
+}
+// «Подчёркивание-превью» — a faint accent underline draws in left→right on
+// hover of an inactive tab (the active tab keeps its full glowing underline).
+.tab::after {
+  content: "";
+  position: absolute;
+  bottom: -1.0625rem;
+  left: 0;
+  right: 0;
+  height: 0.125rem;
+  background: var(--color-accent);
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+.tab:hover::after {
+  transform: scaleX(1);
 }
 .tabActive {
   color: var(--on-media);
@@ -177,7 +198,8 @@
     flex: none;
     padding-block: 0 0.375rem;
   }
-  .tabActive::after {
+  .tabActive::after,
+  .tab::after {
     bottom: 0.125rem;
     box-shadow: none;
   }
@@ -338,17 +360,16 @@
   cursor: pointer;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 40%, transparent);
   transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-out);
+  @include btn-tide; // «прилив» on hover (no lift)
+  @include btn-press;
 
   &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.125rem);
     box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
   svg {
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-base) var(--ease-spring);
   }
   &:hover svg {
     transform: translateX(0.25rem);
@@ -407,7 +428,8 @@
   transform: scale(0.85);
   transition:
     opacity 0.2s ease,
-    transform 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 }
 
 // Prev/next arrows under the frame (page through the yacht's photos).
@@ -426,20 +448,29 @@
   border: 1px solid var(--media-hairline-strong);
   color: var(--on-media);
   cursor: pointer;
+  overflow: hidden; // clip the chevron as it flies out one edge
   transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease;
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     border-color: var(--color-accent);
     background: var(--media-glass-bg-hover);
-    transform: translateY(-0.125rem);
   }
   svg {
     width: 1.125rem;
     height: 1.125rem;
   }
+}
+// «Перелёт шеврона» — the chevron darts out the edge it points to and
+// re-enters from the other side, looping while hovered.
+.frameArrowPrev:hover svg {
+  @include chevron-fly("prev");
+}
+.frameArrowNext:hover svg {
+  @include chevron-fly("next");
 }
 .heroBg,
 .heroBgActive {
@@ -541,8 +572,9 @@
   overflow: hidden;
   transition:
     border-color 0.2s ease,
-    transform 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring),
     opacity 0.2s ease;
+  @include btn-press(0.9);
 
   img {
     width: 100%;
@@ -556,8 +588,8 @@
 }
 .thumb:hover {
   opacity: 1;
-  border-color: var(--on-media-faint);
-  transform: translateY(-0.125rem);
+  border-color: var(--color-accent);
+  transform: scale(1.06); // gentle zoom preview, not a lift
 }
 .thumbActive {
   opacity: 1;
@@ -627,7 +659,8 @@
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     background: rgba(255, 255, 255, 0.18);
@@ -655,7 +688,9 @@
   cursor: pointer;
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   &:hover {
     background: rgba(255, 255, 255, 0.18);

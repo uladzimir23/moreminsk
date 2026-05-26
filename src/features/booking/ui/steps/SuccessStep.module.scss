@@ -55,11 +55,9 @@
   font-size: var(--text-sm);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out);
+  transition: transform var(--duration-fast) var(--ease-spring);
 
-  @include focus-ring;
+  @include btn-press;
 }
 
 .primary {
@@ -67,9 +65,7 @@
   color: var(--color-primary-contrast);
   border: 0.0625rem solid var(--color-primary);
 
-  &:hover {
-    background: color-mix(in oklch, var(--color-primary) 85%, black);
-  }
+  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
 }
 
 .secondary {
@@ -77,9 +73,7 @@
   color: var(--color-foreground);
   border: 0.0625rem solid var(--color-border-hairline);
 
-  &:hover {
-    border-color: color-mix(in oklch, var(--color-foreground) 30%, transparent);
-  }
+  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
 }
 
 .errorBlock {

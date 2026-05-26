@@ -168,7 +168,7 @@ export function ServicesSection() {
         <div className={styles.arrows}>
           <button
             type="button"
-            className={styles.arrow}
+            className={`${styles.arrow} ${styles.arrowPrev}`}
             onClick={prev}
             disabled={activeIdx === 0}
             aria-label="Предыдущая услуга"
@@ -187,7 +187,7 @@ export function ServicesSection() {
           </button>
           <button
             type="button"
-            className={styles.arrow}
+            className={`${styles.arrow} ${styles.arrowNext}`}
             onClick={next}
             disabled={activeIdx === SERVICES.length - 1}
             aria-label="Следующая услуга"

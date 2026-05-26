@@ -183,11 +183,13 @@
   backdrop-filter: blur(0.75rem);
   color: var(--on-media);
   cursor: pointer;
+  overflow: hidden; // clip the chevron as it flies out one edge
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
   transform: translateY(-50%);
+  @include focus-ring;
 }
 .navPrev {
   left: 1rem;
@@ -195,12 +197,25 @@
 .navNext {
   right: 1rem;
 }
+// «Перелёт шеврона» — chevron darts out the edge it points to and re-enters
+// from the other side, looping while hovered.
+.navPrev:hover svg {
+  @include chevron-fly("prev");
+}
+.navNext:hover svg {
+  @include chevron-fly("next");
+}
 .nav:hover {
   background: color-mix(in srgb, var(--media-bg) 84%, transparent);
-  border-color: var(--media-hairline-strong);
+  border-color: var(--color-accent);
 }
 .nav:active {
-  transform: translateY(-50%) scale(0.94);
+  transform: translateY(-50%) scale(0.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav:active {
+    transform: translateY(-50%);
+  }
 }
 .nav svg {
   width: 1.125rem;
@@ -277,7 +292,8 @@
   transition:
     opacity 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
 
   img {
     width: 100%;
@@ -291,8 +307,8 @@
 }
 .thumb:hover {
   opacity: 1;
-  border-color: var(--on-media-faint);
-  transform: translateY(-0.125rem);
+  border-color: var(--color-accent);
+  transform: scale(1.06); // gentle zoom preview, not a lift
 }
 .thumbActive {
   opacity: 1;

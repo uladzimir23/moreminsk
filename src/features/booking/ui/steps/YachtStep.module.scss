@@ -32,12 +32,22 @@
   transition:
     border-color var(--duration-fast) var(--ease-out),
     background-color var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+    transform var(--duration-fast) var(--ease-spring);
 
   @include focus-ring;
 
   &:hover:not(:disabled) {
     border-color: color-mix(in oklch, var(--color-primary) 40%, var(--color-border-hairline));
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.99);
+  }
+
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 

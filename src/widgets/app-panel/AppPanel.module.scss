@@ -84,13 +84,8 @@
   background: color-mix(in oklch, var(--color-foreground) 6%, transparent);
   color: var(--color-foreground-muted);
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out);
-
-  &:hover {
-    color: var(--color-foreground);
-  }
-
-  @include focus-ring;
+  @include btn-fill;
+  @include btn-press(0.9);
 }
 
 .closeIcon {

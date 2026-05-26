@@ -24,15 +24,24 @@
   line-height: 1;
   cursor: pointer;
   transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
 
   @include focus-ring;
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  @include reduced-motion {
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 
@@ -41,9 +50,7 @@
   color: var(--color-foreground);
   border: 0;
 
-  &:not(:disabled):hover {
-    background: color-mix(in oklch, var(--color-foreground) 10%, transparent);
-  }
+  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
 }
 
 .next {
@@ -52,7 +59,5 @@
   color: var(--color-primary-contrast);
   border: 0;
 
-  &:not(:disabled):hover {
-    background: var(--color-primary-hover);
-  }
+  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
 }

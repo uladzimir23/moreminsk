@@ -275,7 +275,7 @@ export function FleetShowcaseSection() {
           <div className={styles.frameNav} aria-hidden="true">
             <button
               type="button"
-              className={styles.frameArrow}
+              className={`${styles.frameArrow} ${styles.frameArrowPrev}`}
               onClick={prevPhoto}
               aria-label="Предыдущее фото"
             >
@@ -292,7 +292,7 @@ export function FleetShowcaseSection() {
             </button>
             <button
               type="button"
-              className={styles.frameArrow}
+              className={`${styles.frameArrow} ${styles.frameArrowNext}`}
               onClick={nextPhoto}
               aria-label="Следующее фото"
             >

@@ -112,19 +112,10 @@
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    background var(--duration-fast) var(--ease-out);
+  transition: transform var(--duration-fast) var(--ease-spring);
 
-  &:hover {
-    background: var(--color-accent-hover);
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
-
-  @include focus-ring;
+  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-press;
 }
 
 .heroCtaIcon {
@@ -231,16 +222,9 @@
   color: var(--color-foreground);
   font-size: var(--text-sm);
   text-decoration: none;
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
 
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
-
-  @include focus-ring;
+  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
+  @include btn-press;
 }
 
 .finalCta {

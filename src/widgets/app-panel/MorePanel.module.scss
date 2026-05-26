@@ -34,16 +34,8 @@
   text-decoration: none;
   font-size: var(--text-sm);
   font-weight: var(--primitive-weight-medium);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
-
-  @include focus-ring;
-
-  &:hover {
-    border-color: color-mix(in oklch, var(--color-primary) 40%, var(--color-border-hairline));
-    background: color-mix(in oklch, var(--color-primary) 4%, var(--color-surface));
-  }
+  @include btn-fill;
+  @include btn-press;
 }
 
 .linkIcon {
@@ -93,16 +85,8 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-foreground);
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-
-  @include focus-ring;
-
-  &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-  }
+  @include btn-fill;
+  @include btn-press(0.9);
 }
 
 .socialIcon {

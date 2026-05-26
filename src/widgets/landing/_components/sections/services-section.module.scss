@@ -381,17 +381,16 @@
   cursor: pointer;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 40%, transparent);
   transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-base) var(--ease-out);
+  @include btn-tide; // «прилив» on hover (no lift)
+  @include btn-press;
 
   &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.125rem);
     box-shadow: 0 12px 36px color-mix(in srgb, var(--color-accent) 55%, transparent);
   }
   svg {
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-base) var(--ease-spring);
   }
   &:hover svg {
     transform: translateX(0.25rem);
@@ -433,12 +432,32 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   color: var(--on-media-subtle);
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform var(--duration-fast) var(--ease-spring);
   font-feature-settings: "tnum", "lnum";
+  @include btn-press;
 
   &:hover {
     color: var(--on-media-strong);
   }
+}
+// Underline preview on hover of an inactive dot (active keeps its glow line).
+.dot::after {
+  content: "";
+  position: absolute;
+  bottom: -0.125rem;
+  left: 0.25rem;
+  right: 0.25rem;
+  height: 0.125rem;
+  background: var(--color-accent);
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-spring);
+}
+.dot:hover::after {
+  transform: scaleX(1);
 }
 .dotActive {
   color: var(--on-media);
@@ -470,23 +489,41 @@
   backdrop-filter: blur(0.625rem);
   color: var(--on-media);
   cursor: pointer;
+  overflow: hidden; // clip the chevron as it flies out one edge
   transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    opacity 0.2s ease;
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring),
+    opacity var(--duration-base) var(--ease-out);
+  @include focus-ring;
 
   &:hover:not(:disabled) {
     border-color: var(--color-accent);
     background: var(--media-glass-bg-hover);
-    transform: translateY(-0.125rem);
+  }
+  &:active:not(:disabled) {
+    transform: scale(0.9);
   }
   &:disabled {
     opacity: 0.25;
     cursor: not-allowed;
+    pointer-events: none; // no hover/chevron-fly on a disabled arrow
   }
   svg {
     width: 1.125rem;
     height: 1.125rem;
   }
+  @include reduced-motion {
+    &:active {
+      transform: none;
+    }
+  }
+}
+// «Перелёт шеврона» — chevron darts out the edge it points to and re-enters
+// from the other side, looping while hovered.
+.arrowPrev:hover svg {
+  @include chevron-fly("prev");
+}
+.arrowNext:hover svg {
+  @include chevron-fly("next");
 }
