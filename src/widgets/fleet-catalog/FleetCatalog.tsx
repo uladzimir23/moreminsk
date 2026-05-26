@@ -58,6 +58,9 @@ export function FleetCatalog() {
                       loading={i === 0 ? "eager" : "lazy"}
                       decoding="async"
                     />
+                    {/* Theme-aware wash over the blurred frame — light in the
+                        light theme, dark in the dark theme. */}
+                    <span className={styles.mediaWash} aria-hidden="true" />
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       className={styles.mediaPhoto}

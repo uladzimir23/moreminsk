@@ -105,8 +105,28 @@
   inline-size: 116%;
   block-size: 116%;
   object-fit: cover;
-  filter: blur(2.5rem) brightness(0.6) saturate(1.1);
+  // Light theme: full-colour blur (the wash lightens it). Dark theme: dimmed,
+  // as before.
+  filter: blur(2.5rem) saturate(1.1);
   z-index: 0;
+
+  @include dark-mode {
+    filter: blur(2.5rem) brightness(0.6) saturate(1.1);
+  }
+}
+
+// Theme-aware overlay over the blurred frame: a light wash in the light theme
+// (derived from --color-background = white), nothing in the dark theme (the
+// dimmed blur already reads dark there).
+.mediaWash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: color-mix(in srgb, var(--color-background) 58%, transparent);
+
+  @include dark-mode {
+    display: none;
+  }
 }
 
 // Crisp photo — full height in the container, never cropped (contain).
@@ -116,7 +136,7 @@
   inline-size: 100%;
   block-size: 100%;
   object-fit: contain;
-  z-index: 1;
+  z-index: 2;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
   .media:hover & {

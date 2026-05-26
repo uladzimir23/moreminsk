@@ -49,6 +49,8 @@ export function ServicesIndex() {
                   loading={i === 0 ? "eager" : "lazy"}
                   decoding="async"
                 />
+                {/* Theme-aware wash — light in the light theme, dark in dark. */}
+                <span className={styles.mediaWash} aria-hidden="true" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className={styles.mediaPhoto}
