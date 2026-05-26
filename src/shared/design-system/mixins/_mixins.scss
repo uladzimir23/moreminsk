@@ -289,6 +289,142 @@
   }
 }
 
+// ── Button press ──────────────────────────────────────────────────────────
+// Tactile compress on tap/click + a keyboard focus ring — the shared base for
+// every button across the app. Compose with each button's own hover; :active
+// overrides the hover transform, so a lift- or scale-on-hover still reads as a
+// press. The button must transition `transform` for the press to animate (add
+// `transform var(--duration-fast) var(--ease-spring)` to its transition).
+@mixin btn-press($scale: 0.96) {
+  &:active {
+    transform: scale($scale);
+  }
+  @include focus-ring;
+  @include reduced-motion {
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// ── Button hover: «прилив» (tide) ─────────────────────────────────────────
+// Primary accent CTAs. On hover the darker accent-hover floods UP from the
+// bottom like rising water (no lift). The button keeps its base accent fill;
+// a ::before of accent-hover scales up from the bottom edge, behind the label.
+// Compose with btn-press. Pair with removing any translateY lift on :hover.
+@mixin btn-tide {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-accent-hover);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform var(--duration-medium) var(--ease-spring);
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    transform: scaleY(1);
+  }
+  @include reduced-motion {
+    &::before {
+      transition: none;
+    }
+  }
+}
+
+// ── Button hover: «заливка» (fill wipe) ────────────────────────────────────
+// Ghost / glass / outlined buttons. On hover accent wipes in from the left and
+// the label flips to on-accent (no lift). A ::before of accent scales in from
+// the inline-start edge, behind the label.
+@mixin btn-fill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-medium) var(--ease-spring);
+  }
+  &:hover,
+  &:focus-visible {
+    color: var(--color-on-accent);
+    border-color: var(--color-accent);
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    transform: scaleX(1);
+  }
+  @include reduced-motion {
+    &::before {
+      transition: none;
+    }
+  }
+}
+
+// ── Button hover: «перелёт шеврона» (chevron fly) ──────────────────────────
+// Icon arrow buttons (carousel prev/next). On hover the chevron darts out the
+// edge it points to and re-enters from the opposite edge, looping — a single
+// icon "wrapping around". Apply to the icon (svg); the button must clip
+// (overflow: hidden). $dir: "next" (points right) or "prev" (points left).
+@keyframes mm-chevron-fly-next {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateX(0.85rem);
+    opacity: 0;
+  }
+  41% {
+    transform: translateX(-0.85rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes mm-chevron-fly-prev {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  40% {
+    transform: translateX(-0.85rem);
+    opacity: 0;
+  }
+  41% {
+    transform: translateX(0.85rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@mixin chevron-fly($dir: "next") {
+  animation: mm-chevron-fly-#{$dir} 0.7s var(--ease-out) infinite;
+  @include reduced-motion {
+    animation: none;
+  }
+}
+
 // ── Text gradient ─────────────────────────────────────────────────────────
 // $fallback — solid color used where background-clip: text is unsupported.
 @mixin text-gradient($from, $to, $dir: to right, $fallback: null) {
