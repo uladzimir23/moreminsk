@@ -21,6 +21,7 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
   const stickyRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const lightenRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!pinned) return;
@@ -30,6 +31,7 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     const sticky = stickyRef.current;
     const video = videoRef.current;
     const content = contentRef.current;
+    const lighten = lightenRef.current;
     // The sibling after the hero is the landing content block (.overlap);
     // we fade it in via opacity as it rises over the still-opaque hero.
     const nextBlock = section?.nextElementSibling as HTMLElement | null;
@@ -72,11 +74,25 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       // there's no lifted-section black gap. It stays opaque underneath, so
       // while the next section fades in we see the video through it (no black).
       const scale = 1 + current * 0.26;
-      // The video darkens as the next section starts to reveal (reveal>0),
-      // so it visibly dims «behind» the incoming content.
       const reveal = clamp((current - 0.375) / 0.5);
       video.style.transform = `scale(${scale})`;
-      video.style.filter = `brightness(${1 - reveal * 0.82})`;
+      // Dark theme: the video darkens as the next (dark) section reveals, so it
+      // dims «behind» the incoming content. Light theme: the inverse — the dark
+      // cinematic hero brightens into the light page. The .lighten paper wash
+      // fades in (opacity = reveal) and the footage lifts a touch; cheap
+      // classList read so a runtime theme toggle is picked up next frame.
+      const isLight = !document.documentElement.classList.contains("dark-theme");
+      if (isLight) {
+        // Lighten on its own curve — starts as the headline begins to leave
+        // (≈0.06) and completes before the reveal ends, so the brighten reads
+        // continuously through the scroll rather than only at the hand-off.
+        const lightenProg = clamp((current - 0.06) / 0.72);
+        video.style.filter = `brightness(${1 + lightenProg * 0.18})`;
+        if (lighten) lighten.style.opacity = String(lightenProg);
+      } else {
+        video.style.filter = `brightness(${1 - reveal * 0.82})`;
+        if (lighten) lighten.style.opacity = "0";
+      }
 
       // Headline leaves fast, well before the pause.
       if (content) {
@@ -112,8 +128,10 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
     const settleRevealed = () => {
       current = 1;
       target = 1;
+      const isLight = !document.documentElement.classList.contains("dark-theme");
       video.style.transform = "scale(1.26)";
-      video.style.filter = "brightness(0.18)";
+      video.style.filter = isLight ? "brightness(1.18)" : "brightness(0.18)";
+      if (lighten) lighten.style.opacity = isLight ? "1" : "0";
       if (content) {
         content.style.opacity = "0";
         content.style.transform = "translateY(-60px)";
@@ -164,6 +182,9 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
       />
       <div className={styles.overlay} aria-hidden="true" />
       <div className={styles.tint} aria-hidden="true" />
+      {/* Scroll-driven lighten wash — light theme only, opacity driven by the
+          rAF so the dark hero brightens into the light page as you scroll. */}
+      <div className={styles.lighten} ref={lightenRef} aria-hidden="true" />
 
       <div className={styles.content} ref={contentRef}>
         <span className={styles.eyebrow}>Флот 2026 · 4 яхты под парусом и мотором</span>

@@ -100,6 +100,26 @@
   opacity: 0.6;
 }
 
+// Scroll-driven «lighten» wash — light theme only. Sits above the dark scrim,
+// below the content. The rAF fades it in (opacity set inline) as the next
+// section reveals, so the dark cinematic hero brightens into the light page as
+// you scroll. opacity is 0 at rest, so the hero starts dark like in dark theme;
+// JS holds it at 0 in dark theme (where --media-bg would be dark anyway).
+.lighten {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--media-bg) 82%, transparent) 0%,
+    color-mix(in srgb, var(--media-bg) 64%, transparent) 45%,
+    color-mix(in srgb, var(--media-bg) 88%, transparent) 100%
+  );
+}
+
 .content {
   position: relative;
   z-index: 3;
