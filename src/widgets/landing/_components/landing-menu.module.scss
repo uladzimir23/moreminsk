@@ -1,7 +1,8 @@
-// Mobile burger + full-screen menu. The burger lives in the header (right),
-// shown only ≤56.25rem; the overlay is a frosted dark sheet revealed with a
-// circular wipe from the burger corner. Burger sits above the overlay so it
-// doubles as the close (X) control.
+// Burger + full-screen menu. The burger lives in the header (right) on every
+// breakpoint now — it carries the full nav (incl. Флот / Вопросы) + contacts +
+// toggles alongside the desktop horizontal links. The overlay is a frosted
+// sheet revealed with a circular wipe from the burger corner; the burger sits
+// above the overlay so it doubles as the close (X) control.
 
 @use "@/shared/design-system/mixins" as *;
 
@@ -25,11 +26,6 @@
 
   &[aria-expanded="true"] {
     color: var(--on-media);
-  }
-
-  // Desktop shows the horizontal nav next to the logo, so the burger is hidden.
-  @include respond-to("lg") {
-    display: none;
   }
 }
 

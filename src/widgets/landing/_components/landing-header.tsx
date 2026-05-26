@@ -81,6 +81,9 @@ export function LandingHeader() {
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>
+          {/* Phone, socials and theme/locale toggles show inline only at ≥xl,
+              where the full bar fits; below that they collapse into the burger
+              menu (which is present on every breakpoint). */}
           <a href="tel:+375296953636" className={styles.phone}>
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
           </a>

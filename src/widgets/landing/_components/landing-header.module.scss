@@ -12,7 +12,9 @@
   inset-inline: 0;
   z-index: 999;
 
-  // Over the hero: white scale (the video is dark in both themes).
+  // Over the hero: white scale. The hero is dark at rest in both themes (in
+  // light theme it only lightens once you scroll, by which point the header is
+  // already in its frosted «scrolled» state with the theme-aware paper tokens).
   --hdr-fg: var(--on-image);
   --hdr-fg-strong: var(--on-image-strong);
   --hdr-fg-muted: var(--on-image-muted);
@@ -45,8 +47,11 @@
   --hdr-fg-strong: var(--on-media-strong);
   --hdr-fg-muted: var(--on-media-muted);
 
-  // Open state: the overlay carries the phone / socials / CTA / toggles, so the
-  // header collapses to just the logo + the burger-X over the sheet.
+  // Open state: the overlay carries the nav + contacts + CTA + toggles, so the
+  // header collapses to just the logo + the burger-X over the sheet. (.nav is
+  // the desktop horizontal links — hidden too, else they'd float above the
+  // z-300 overlay on the z-999 header.)
+  .nav,
   .phone,
   .socials,
   .cta,
@@ -129,6 +134,9 @@
 
 // ── Actions ──────────────────────────────────────────────────────────────
 
+// «Яхты» + «Забронировать» + burger are always present. Phone / socials / theme
+// + locale toggles join inline only at ≥xl (where the full bar fits); below xl
+// they collapse into the burger menu, which is shown on every breakpoint.
 .actions {
   display: flex;
   align-items: center;
@@ -136,23 +144,23 @@
   margin-inline-start: auto; // push the cluster to the right of the bar
 }
 
-// Theme + locale cluster — desktop only; on mobile it moves into the burger
-// menu footer (the actions row collapses to logo + «Яхты» + burger there).
+// Theme + locale cluster — inline at ≥xl, otherwise in the burger menu footer.
 .controls {
-  @media (max-width: 56.25rem) {
-    display: none;
+  display: none;
+
+  @include respond-to("xl") {
+    display: flex;
   }
 }
 
-// Social links — pinned on the right after the phone number. Hidden on the
-// smaller screens (like the phone) so mobile stays the logo + «Яхты».
+// Social links — inline at ≥xl (after the phone), otherwise in the burger menu.
 .socials {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
+  display: none;
 
-  @media (max-width: 48rem) {
-    display: none;
+  @include respond-to("xl") {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
   }
 }
 
@@ -171,7 +179,9 @@
   }
 }
 
+// Phone — inline at ≥xl, otherwise in the burger menu.
 .phone {
+  display: none;
   color: var(--hdr-fg-strong);
   text-decoration: none;
   font-family: var(--font-mono), monospace;
@@ -186,8 +196,8 @@
     color: var(--hdr-fg);
   }
 
-  @media (max-width: 48rem) {
-    display: none;
+  @include respond-to("xl") {
+    display: inline-flex;
   }
 }
 
