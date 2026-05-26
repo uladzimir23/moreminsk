@@ -53,7 +53,7 @@ export function GallerySection() {
         eyebrow="03 · Галерея"
         title="Атмосфера"
         accent="на воде."
-        tone="image"
+        tone="media"
         framed
       />
 

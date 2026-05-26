@@ -21,8 +21,8 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0;
-  background: var(--image-bg-deep); // fallback before ambient backdrop paints
-  color: white;
+  background: var(--media-bg); // fallback before ambient backdrop paints
+  color: var(--on-media);
 }
 
 // ── Head ─────────────────────────────────────────────────────────────────
@@ -423,16 +423,16 @@
   font-size: 0.65625rem;
   font-weight: 600;
   letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--on-media-subtle);
   transition: color 0.2s ease;
   font-feature-settings: "tnum", "lnum";
 
   &:hover {
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--on-media-strong);
   }
 }
 .dotActive {
-  color: white;
+  color: var(--on-media);
 
   &::after {
     content: "";
@@ -456,10 +456,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: var(--media-glass-bg);
+  border: 1px solid var(--media-hairline-strong);
   backdrop-filter: blur(0.625rem);
-  color: white;
+  color: var(--on-media);
   cursor: pointer;
   transition:
     border-color 0.2s ease,
@@ -469,7 +469,7 @@
 
   &:hover:not(:disabled) {
     border-color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.16);
+    background: var(--media-glass-bg-hover);
     transform: translateY(-0.125rem);
   }
   &:disabled {

@@ -37,8 +37,8 @@
   // keeps working relative to the page.
   overflow: clip;
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
-  background: var(--image-bg-deep); // fallback before backdrop image paints
-  color: white;
+  background: var(--media-bg); // theme-aware paper (white in light, dark in dark)
+  color: var(--on-media);
 }
 
 // ── Section head ─────────────────────────────────────────────────────────
@@ -58,7 +58,7 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--on-media-muted);
 }
 .title {
   margin: 0;
@@ -66,15 +66,14 @@
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: white;
+  color: var(--on-media);
   max-width: 45rem;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
 }
 .accent {
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-accent) 75%, white);
+  color: var(--on-media-accent);
 }
 
 // ── Tab strip ────────────────────────────────────────────────────────────
@@ -88,7 +87,7 @@
   flex-wrap: wrap;
   gap: clamp(1.25rem, 4vw, 3rem);
   align-items: baseline;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid var(--media-glass-border);
   padding-bottom: 1rem;
 }
 
@@ -116,11 +115,10 @@
       background-color 0.25s ease,
       backdrop-filter 0.25s ease;
   }
-  // Glass only while pinned — transparent in its resting place. Image-base:
-  // fleet stays a dark photo section in both themes, so the sticky tabs keep
-  // the dark frosted treatment rather than flipping with the paper tokens.
+  // Glass only while pinned — transparent at rest. Theme-aware frosted paper
+  // (flips light/dark with the section).
   .tabsStuck {
-    @include media-glass($glass: 90%, $base: var(--image-bg));
+    @include media-glass($glass: 90%);
   }
 }
 
@@ -137,15 +135,14 @@
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   letter-spacing: -0.01em;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--on-media-subtle);
   transition: color 0.2s ease;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
 }
 .tab:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--on-media-strong);
 }
 .tabActive {
-  color: white;
+  color: var(--on-media);
 
   &::after {
     content: "";
@@ -252,7 +249,7 @@
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-media-muted);
 }
 .yachtName {
   margin: 0;
@@ -262,15 +259,13 @@
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  color: white;
-  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.55);
+  color: var(--on-media);
 }
 .desc {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.78);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  color: var(--on-media-muted);
 }
 .features {
   list-style: none;
@@ -285,15 +280,15 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.625rem;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--media-hairline-strong);
+  background: var(--media-glass-bg);
   backdrop-filter: blur(0.5rem);
   font-family: var(--font-mono), monospace;
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--on-media-strong);
 }
 .featureDot {
   width: 0.25rem;
@@ -308,7 +303,7 @@
   align-items: baseline;
   gap: 0.375rem;
   padding-top: 0.875rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  border-top: 1px solid var(--media-glass-border);
   font-feature-settings: "tnum", "lnum";
 }
 .priceLabel,
@@ -318,13 +313,12 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--on-media-muted);
 }
 .priceValue {
   font-size: 1.875rem;
   font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+  color: var(--on-media);
 }
 
 .cta {
@@ -381,9 +375,9 @@
   padding: 0;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: var(--image-bg-deep); // fallback before bg layer paints
-  border: 0.0625rem solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: var(--media-bg-deep); // fallback before bg layer paints
+  border: 0.0625rem solid var(--media-glass-border);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.18);
   isolation: isolate;
   cursor: zoom-in;
 
@@ -406,8 +400,8 @@
   height: 2.25rem;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(0.5rem);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: white;
+  border: 1px solid var(--media-hairline-strong);
+  color: var(--on-media);
   opacity: 0;
   transform: scale(0.85);
   transition:
@@ -427,9 +421,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--media-glass-bg);
+  border: 1px solid var(--media-hairline-strong);
+  color: var(--on-media);
   cursor: pointer;
   transition:
     border-color 0.2s ease,
@@ -438,7 +432,7 @@
 
   &:hover {
     border-color: var(--color-accent);
-    background: rgba(255, 255, 255, 0.14);
+    background: var(--media-glass-bg-hover);
     transform: translateY(-0.125rem);
   }
   svg {
@@ -453,8 +447,13 @@
   width: 116%;
   height: 116%;
   object-fit: cover;
-  filter: blur(2.5rem) brightness(0.55) saturate(1.1);
+  // Light theme: full-colour blurred letterbox. Dark theme: dimmed (as before).
+  filter: blur(2.5rem) brightness(1) saturate(1.05);
   transition: opacity 0.6s ease;
+
+  @include dark-mode {
+    filter: blur(2.5rem) brightness(0.55) saturate(1.1);
+  }
 }
 .heroBg {
   opacity: 0;
@@ -512,7 +511,7 @@
   padding: 0.375rem 0.625rem;
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(0.5rem);
-  color: white;
+  color: var(--on-media);
   font-family: var(--font-mono), monospace;
   font-size: 0.65625rem;
   font-weight: 600;
@@ -534,8 +533,8 @@
   flex: 0 0 5.5rem;
   aspect-ratio: 4 / 3;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--media-hairline-strong);
+  background: var(--media-glass-bg);
   cursor: pointer;
   overflow: hidden;
   transition:
@@ -555,7 +554,7 @@
 }
 .thumb:hover {
   opacity: 1;
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: var(--on-media-faint);
   transform: translateY(-0.125rem);
 }
 .thumbActive {

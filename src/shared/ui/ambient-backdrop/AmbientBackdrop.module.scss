@@ -1,3 +1,5 @@
+@use "@/shared/design-system/mixins" as *;
+
 .root {
   position: absolute;
   inset: 0;
@@ -7,6 +9,8 @@
 }
 
 // Overscan (-10% / 120%) hides the transparent edges the heavy blur leaves.
+// Theme-aware: light theme keeps the photo bright under a heavy paper wash;
+// dark theme dims it (current look).
 .img,
 .imgActive {
   position: absolute;
@@ -14,8 +18,12 @@
   inline-size: 120%;
   block-size: 120%;
   object-fit: cover;
-  filter: blur(var(--blur-ambient)) brightness(0.4) saturate(1.15);
+  filter: blur(var(--blur-ambient)) brightness(1.02) saturate(1.1);
   transition: opacity 1s ease;
+
+  @include dark-mode {
+    filter: blur(var(--blur-ambient)) brightness(0.4) saturate(1.15);
+  }
 }
 
 .img {
@@ -39,13 +47,31 @@
 .overlay {
   position: absolute;
   inset: 0;
+  // Light theme: a heavy paper wash (derived from --media-bg = white) so the
+  // section reads light with only a faint photo tint + a soft accent glow.
   background:
-    var(--media-scrim),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--media-bg) 86%, transparent) 0%,
+      color-mix(in srgb, var(--media-bg) 70%, transparent) 45%,
+      color-mix(in srgb, var(--media-bg) 90%, transparent) 100%
+    ),
     radial-gradient(
       ellipse 70% 50% at 50% 100%,
-      color-mix(in srgb, var(--color-accent) 16%, transparent) 0%,
+      color-mix(in srgb, var(--color-accent) 12%, transparent) 0%,
       transparent 70%
     );
+
+  // Dark theme: the original dark scrim (unchanged).
+  @include dark-mode {
+    background:
+      var(--media-scrim),
+      radial-gradient(
+        ellipse 70% 50% at 50% 100%,
+        color-mix(in srgb, var(--color-accent) 16%, transparent) 0%,
+        transparent 70%
+      );
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

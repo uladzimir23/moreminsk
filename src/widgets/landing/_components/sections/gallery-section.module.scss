@@ -17,8 +17,8 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0 clamp(3.75rem, 8vh, 6.25rem);
-  background: var(--image-bg-deep); // fallback before ambient backdrop paints
-  color: white;
+  background: var(--media-bg); // fallback before ambient backdrop paints
+  color: var(--on-media);
 }
 
 .head {
@@ -255,8 +255,8 @@
   flex: 0 0 5rem;
   aspect-ratio: 4 / 3;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--media-hairline-strong);
+  background: var(--media-glass-bg);
   cursor: pointer;
   overflow: hidden;
   scroll-snap-align: start;
@@ -277,7 +277,7 @@
 }
 .thumb:hover {
   opacity: 1;
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: var(--on-media-faint);
   transform: translateY(-0.125rem);
 }
 .thumbActive {
