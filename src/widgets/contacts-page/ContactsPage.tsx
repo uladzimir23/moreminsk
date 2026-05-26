@@ -1,7 +1,9 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
 import { CONTACTS } from "@/shared/content/contacts";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { Accent } from "@/shared/ui/accent/Accent";
 import {
   CalendarDays,
   Camera,
@@ -20,9 +22,15 @@ export function ContactsPage() {
   return (
     <section className={styles.root} aria-labelledby="contacts-title">
       <div className={styles.container}>
-        <span className={styles.eyebrow}>Контакты</span>
+        <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
+          <Link href="/" className={styles.crumbLink}>
+            Главная
+          </Link>
+          <span aria-hidden="true">/</span>
+          <span>Контакты</span>
+        </nav>
         <h1 id="contacts-title" className={styles.h1}>
-          Связаться с нами
+          Связаться <Accent>с нами</Accent>
         </h1>
         <p className={styles.lead}>
           Отвечаем за 30 минут в рабочие часы. Выбирайте удобный канал — телефон, Telegram или
@@ -70,16 +78,7 @@ export function ContactsPage() {
               </li>
             </ul>
             <p className={styles.muted}>
-              <MessageCircle
-                aria-hidden="true"
-                style={{
-                  inlineSize: "0.875rem",
-                  blockSize: "0.875rem",
-                  display: "inline",
-                  verticalAlign: -2,
-                  marginInlineEnd: "0.25rem",
-                }}
-              />
+              <MessageCircle className={styles.inlineIcon} aria-hidden="true" />
               Самый быстрый способ — Telegram
             </p>
           </div>
@@ -124,9 +123,7 @@ export function ContactsPage() {
               <MapPin className={styles.cardIcon} aria-hidden="true" />
               Адрес причала
             </h2>
-            <p className={styles.muted} style={{ color: "var(--color-foreground)" }}>
-              {CONTACTS.address.line1}
-            </p>
+            <p className={styles.addressLine}>{CONTACTS.address.line1}</p>
             <p className={styles.muted}>{CONTACTS.address.line2}</p>
           </div>
 
@@ -135,9 +132,7 @@ export function ContactsPage() {
               <Clock className={styles.cardIcon} aria-hidden="true" />
               Часы работы
             </h2>
-            <p className={styles.muted} style={{ color: "var(--color-foreground)" }}>
-              {CONTACTS.address.hours}
-            </p>
+            <p className={styles.addressLine}>{CONTACTS.address.hours}</p>
             <p className={styles.muted}>Навигационный сезон: май — октябрь</p>
           </div>
         </div>
@@ -146,7 +141,7 @@ export function ContactsPage() {
           <h2 className={styles.mapTitle}>Как добраться</h2>
           <div className={styles.mapPlaceholder}>
             <MapPin className={styles.mapIcon} aria-hidden="true" />
-            <p style={{ margin: 0 }}>
+            <p className={styles.mapText}>
               Карта загрузится по клику. {CONTACTS.address.line1} — 25 минут от центра Минска.
             </p>
             <a
