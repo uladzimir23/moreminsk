@@ -113,22 +113,27 @@
   padding-block: 0.25rem;
   transition: color 0.2s ease;
 
+  // Wave-shaped underline (echoes the logo waterline): an accent bar masked by
+  // a repeating wave so only the wave shows, revealed left→right via clip-path
+  // (scaleX would stretch the wave). Standard `mask` only — Lightning CSS adds
+  // the -webkit alias; writing both ourselves makes it drop the standard one.
   &::after {
     content: "";
     position: absolute;
-    inset-block-end: -0.125rem;
+    inset-block-end: -0.3rem;
     inset-inline: 0;
-    block-size: 0.0625rem;
+    block-size: 0.3rem;
     background: var(--color-accent);
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='6'%20viewBox='0%200%2016%206'%3E%3Cpath%20d='M0%203%20q4%20-2.4%208%200%20t8%200'%20fill='none'%20stroke='%23fff'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E")
+      left center / auto 100% repeat-x;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
   &:hover {
     color: var(--hdr-fg);
   }
   &:hover::after {
-    transform: scaleX(1);
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -217,14 +222,13 @@
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: transform var(--duration-fast) var(--ease-spring);
+  @include btn-tide; // «прилив» — accent-hover floods up on hover (no lift)
 
-  &:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-0.0625rem);
+  &:active {
+    transform: scale(0.96); // tactile press
   }
+  @include focus-ring;
 
   // On the smallest screens the bottom-nav «Заказать» covers this duty.
   @media (max-width: 30rem) {
@@ -232,14 +236,16 @@
   }
 }
 
-// «Яхты» pill — a ghost capsule with an animated gradient ring + nudging arrow,
-// the primary jump to the fleet. Shown on every screen now (replaces a «Флот»
-// nav link). z-index keeps it above the burger overlay when the menu is open.
+// «Яхты» pill — a ghost capsule with an animated gradient ring. On hover the
+// label swaps Яхты → Флот (same 4 mono chars, so the pill width never changes —
+// no header reflow) while a little yacht sails across behind the text, echoing
+// the logo mark. z-index keeps it above the burger overlay when the menu is open.
 .fleetBtn {
   position: relative;
   z-index: 305;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.375rem;
   padding: 0.5rem 0.9375rem;
   border-radius: 999px;
@@ -252,10 +258,74 @@
   text-transform: uppercase;
   white-space: nowrap;
   isolation: isolate;
-  transition: background-color 0.2s ease;
+  overflow: hidden; // clip the sailing yacht to the capsule
+  transition: background-color var(--duration-base) var(--ease-out);
 
   &:active {
     background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+}
+
+// Label stack — «Яхты» (rest) and «Флот» (hover) share one grid cell so the
+// capsule width stays fixed; they cross-slide left on hover.
+.fleetWords {
+  display: inline-grid;
+  align-items: center;
+  justify-items: center;
+}
+.fleetWordRest,
+.fleetWordHover {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-medium) var(--ease-spring);
+}
+.fleetWordHover {
+  opacity: 0;
+  transform: translateX(0.7rem);
+}
+.fleetBtn:hover .fleetWordRest,
+.fleetBtn:focus-visible .fleetWordRest {
+  opacity: 0;
+  transform: translateX(-0.7rem);
+}
+.fleetBtn:hover .fleetWordHover,
+.fleetBtn:focus-visible .fleetWordHover {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+// Sailing yacht — hidden at rest; on hover it sails left→right across the
+// capsule on a gentle loop, behind the label (accent, soft), like the logo.
+.fleetSail {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  color: var(--color-accent);
+  transition: opacity var(--duration-base) var(--ease-out);
+
+  svg {
+    inline-size: 1.05rem;
+    block-size: 1.05rem;
+  }
+}
+.fleetBtn:hover .fleetSail,
+.fleetBtn:focus-visible .fleetSail {
+  opacity: 0.85;
+  animation: fleet-sail-across 1.9s var(--ease-out) infinite;
+}
+
+@keyframes fleet-sail-across {
+  from {
+    transform: translateX(-1.4rem);
+  }
+  to {
+    transform: translateX(7.5rem);
   }
 }
 
@@ -299,22 +369,22 @@
 .fleetArrow {
   inline-size: 0.75rem;
   block-size: 0.75rem;
-  animation: fleet-nudge 1.8s ease-in-out infinite;
+  transition: transform var(--duration-medium) var(--ease-spring);
 }
-
-@keyframes fleet-nudge {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(0.1875rem);
-  }
+.fleetBtn:hover .fleetArrow,
+.fleetBtn:focus-visible .fleetArrow {
+  transform: translateX(0.1875rem);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .fleetBtn::before,
-  .fleetArrow {
+  .fleetSail {
     animation: none;
+  }
+  // Keep the label swap (it's a state change, not motion) but drop the slide.
+  .fleetWordRest,
+  .fleetWordHover,
+  .fleetArrow {
+    transition: opacity var(--duration-base) var(--ease-out);
   }
 }

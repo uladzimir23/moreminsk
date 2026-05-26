@@ -66,8 +66,27 @@ export function LandingHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <Link href="/fleet" className={styles.fleetBtn}>
-            Яхты
+          <Link href="/fleet" className={styles.fleetBtn} aria-label="Смотреть флот">
+            {/* Yacht sails across behind the label on hover — echoes the logo
+                mark. Sits behind the text; the label swaps Яхты → Флот. */}
+            <span className={styles.fleetSail} aria-hidden="true">
+              <svg viewBox="0 0 28 28" fill="none" focusable="false">
+                <path d="M13 5 L13 18 L5 18 Z" fill="currentColor" />
+                <path d="M15 9 L15 18 L21.5 18 Z" fill="currentColor" opacity="0.55" />
+                <path
+                  d="M3 21 q5 2 10 0 t10 0"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <span className={styles.fleetWords}>
+              <span className={styles.fleetWordRest}>Яхты</span>
+              <span className={styles.fleetWordHover} aria-hidden="true">
+                Флот
+              </span>
+            </span>
             <svg
               className={styles.fleetArrow}
               viewBox="0 0 24 24"
