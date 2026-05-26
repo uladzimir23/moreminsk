@@ -137,6 +137,18 @@ export function productSchema(yacht: Yacht, locale: string) {
   };
 }
 
+export function imageGallerySchema(name: string, images: ReadonlyArray<string>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name,
+    associatedMedia: images.map((src) => ({
+      "@type": "ImageObject",
+      contentUrl: src.startsWith("http") ? src : `${SITE.url}${src}`,
+    })),
+  };
+}
+
 export function faqPageSchema(items: ReadonlyArray<FaqItem>) {
   return {
     "@context": "https://schema.org",

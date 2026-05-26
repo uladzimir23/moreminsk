@@ -1,0 +1,86 @@
+@use "@/shared/design-system/mixins" as *;
+
+.hero {
+  padding-block: var(--space-3xl) var(--space-xl);
+  background: var(--color-background);
+}
+
+.container {
+  inline-size: min(100% - 2 * var(--space-md), 72rem);
+  margin-inline: auto;
+
+  @include respond-to("md") {
+    inline-size: min(100% - 2 * var(--space-xl), 72rem);
+  }
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-block-end: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-foreground-muted);
+}
+
+.crumbLink {
+  color: var(--color-foreground-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+
+  @include focus-ring($offset: 0.125rem);
+}
+
+.h1 {
+  margin: 0 0 var(--space-sm);
+  font-size: var(--text-4xl);
+  font-weight: var(--primitive-weight-bold);
+  line-height: var(--primitive-leading-tight);
+  letter-spacing: var(--primitive-tracking-tight);
+  color: var(--color-foreground);
+  text-wrap: balance;
+
+  @include respond-to("md") {
+    font-size: var(--text-5xl);
+  }
+}
+
+.lead {
+  margin: 0;
+  max-inline-size: 44rem;
+  font-size: var(--text-lg);
+  line-height: var(--primitive-leading-relaxed);
+  color: var(--color-foreground-muted);
+  text-wrap: pretty;
+}
+
+.section {
+  padding-block: var(--space-xl) var(--space-3xl);
+  background: var(--color-background);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.tile {
+  inline-size: 100%;
+  aspect-ratio: var(--photo-card-aspect);
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-alt);
+}

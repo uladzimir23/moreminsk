@@ -10,7 +10,16 @@ export const dynamic = "force-static";
 // so the basePath of the GitHub Pages preview doesn't leak in. Extend the
 // path lists as info pages land.
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPaths = ["/", "/fleet", "/services", "/contacts", "/faq"];
+  const staticPaths = [
+    "/",
+    "/fleet",
+    "/services",
+    "/ceny",
+    "/galereya",
+    "/otzyvy",
+    "/contacts",
+    "/faq",
+  ];
   const yachtPaths = YACHTS.map((y) => `/fleet/${y.slug}`);
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);
   const now = new Date();

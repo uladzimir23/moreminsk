@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
 import { submitBooking } from "@/shared/lib/booking/submit";
 import { Logo } from "@/shared/ui/logo/Logo";
 import { useEffect, useRef, useState } from "react";
@@ -81,9 +82,9 @@ export function LandingFooter() {
 
       <div className={styles.top}>
         <div className={styles.brandCol}>
-          <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
+          <Link href="/" className={styles.brand} aria-label="Минское море — на главную">
             <Logo />
-          </a>
+          </Link>
           <p className={styles.tagline}>
             Аренда парусных и моторных яхт на Минском водохранилище. Прогулки, мероприятия,
             фотосессии — от 150 BYN/час.
@@ -124,21 +125,24 @@ export function LandingFooter() {
 
         <nav className={`${styles.col} ${styles.navCol}`} aria-label="Разделы">
           <p className={styles.colTitle}>Разделы</p>
-          <a className={styles.link} href="#fleet">
+          <Link className={styles.link} href="/fleet">
             Флот
-          </a>
-          <a className={styles.link} href="#services">
+          </Link>
+          <Link className={styles.link} href="/services">
             Услуги
-          </a>
-          <a className={styles.link} href="#gallery">
+          </Link>
+          <Link className={styles.link} href="/ceny">
+            Цены
+          </Link>
+          <Link className={styles.link} href="/galereya">
             Галерея
-          </a>
-          <a className={styles.link} href="#reviews">
+          </Link>
+          <Link className={styles.link} href="/otzyvy">
             Отзывы
-          </a>
-          <a className={styles.link} href="#faq">
+          </Link>
+          <Link className={styles.link} href="/faq">
             Вопросы
-          </a>
+          </Link>
         </nav>
 
         <div className={styles.col}>
