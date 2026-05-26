@@ -1,7 +1,8 @@
 import type { Yacht } from "@/entities/yacht/model/types";
 
 // Факты сверены с moreminsk.by 2026-04-17 (см. raw-media/scraped/facts.md).
-// mainImage — пока плейсхолдер, YachtCard рендерит fallback.
+// mainImage — плейсхолдер; живой UI флота (FleetCatalog/YachtDetail) берёт фото
+// из PHOTOS_BY_YACHT (scraped-photos.json), а не отсюда.
 //
 // 2026-05-26 — техпаспорт (specs): модели определены по фото (надписи на бортах
 // + инсигнии на парусах), ТТХ взяты у верфи Northman (Польша):
