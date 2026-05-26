@@ -56,12 +56,12 @@
 }
 
 .inputError {
-  border-color: var(--color-status-danger, #c0392b);
+  border-color: var(--color-destructive);
 }
 
 .errorMsg {
   font-size: var(--text-xs);
-  color: var(--color-status-danger, #c0392b);
+  color: var(--color-destructive);
 }
 
 .row {

@@ -88,8 +88,8 @@
   gap: var(--space-sm);
   padding: var(--space-md);
   border-radius: var(--radius-lg);
-  border: 0.0625rem solid color-mix(in oklch, var(--color-status-danger, #c0392b) 30%, transparent);
-  background: color-mix(in oklch, var(--color-status-danger, #c0392b) 6%, var(--color-surface));
+  border: 0.0625rem solid color-mix(in oklch, var(--color-destructive) 30%, transparent);
+  background: color-mix(in oklch, var(--color-destructive) 6%, var(--color-surface));
   inline-size: 100%;
   text-align: inline-start;
 }
@@ -97,7 +97,7 @@
 .errorTitle {
   font-size: var(--text-sm);
   font-weight: var(--primitive-weight-semibold);
-  color: var(--color-status-danger, #c0392b);
+  color: var(--color-destructive);
 }
 
 .errorMsg {
