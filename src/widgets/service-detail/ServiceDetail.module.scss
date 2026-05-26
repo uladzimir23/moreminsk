@@ -65,7 +65,7 @@
   inline-size: 3rem;
   block-size: 3rem;
   margin-block-end: var(--space-md);
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   background: color-mix(in oklch, var(--color-primary) 12%, transparent);
   color: var(--color-primary);
 }
@@ -112,7 +112,6 @@
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
   transition:
     transform var(--duration-fast) var(--ease-spring),
     background var(--duration-fast) var(--ease-out);
@@ -157,7 +156,7 @@
 .priceTableWrap {
   overflow-x: auto;
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
 }
 
@@ -227,7 +226,7 @@
   padding-block: 0.5rem;
   padding-inline: var(--space-md);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-full);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
   color: var(--color-foreground);
   font-size: var(--text-sm);
@@ -252,10 +251,9 @@
   padding-block: var(--space-2xl);
   padding-inline: var(--space-lg);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-3xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
   text-align: center;
-  box-shadow: var(--shadow-md);
 }
 
 .finalCtaTitle {

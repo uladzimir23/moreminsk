@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/navigation";
+import { Accent } from "@/shared/ui/accent/Accent";
 import { GALLERY } from "@/widgets/landing/_data/photos";
 import styles from "./GalleryPage.module.scss";
 
@@ -16,7 +17,9 @@ export function GalleryPage() {
             <span aria-hidden="true">/</span>
             <span>Галерея</span>
           </nav>
-          <h1 className={styles.h1}>Фото яхт и мероприятий на Минском море</h1>
+          <h1 className={styles.h1}>
+            Фото яхт и мероприятий <Accent>на Минском море</Accent>
+          </h1>
           <p className={styles.lead}>
             Живые кадры с выходов: яхты EVA, ALFA, MARIO, BRAVO, свидания, дни рождения, девичники и
             фотосессии на воде.

@@ -82,7 +82,7 @@
   gap: var(--space-sm);
   padding: var(--space-lg);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
 }
 
@@ -138,14 +138,14 @@
 .tag {
   padding-block: 0.125rem;
   padding-inline: 0.5rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--card-radius);
   background: var(--color-surface-alt);
 }
 
 .tagLink {
   padding-block: 0.125rem;
   padding-inline: 0.5rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--card-radius);
   background: color-mix(in oklch, var(--color-primary) 12%, transparent);
   color: var(--color-primary);
   text-decoration: none;

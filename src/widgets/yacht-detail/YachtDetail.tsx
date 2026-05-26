@@ -4,6 +4,7 @@ import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
 import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { Accent } from "@/shared/ui/accent/Accent";
 import { ArrowRight, CalendarDays, Check, Clock, Sailboat, Ship, Users } from "lucide-react";
 import styles from "./YachtDetail.module.scss";
 
@@ -65,7 +66,7 @@ export function YachtDetail({ yacht, photos, services }: Props) {
           </p>
 
           <h1 id={`yacht-${yacht.slug}-title`} className={styles.h1}>
-            Яхта {yacht.name}
+            Яхта <Accent>{yacht.name}</Accent>
           </h1>
           <p className={styles.utp}>{yacht.description}</p>
 

@@ -82,7 +82,7 @@
 .tableWrap {
   overflow-x: auto;
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
 }
 
@@ -162,7 +162,7 @@
   gap: var(--space-sm);
   padding: var(--space-lg);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
 }
 
@@ -223,10 +223,9 @@
   padding-block: var(--space-2xl);
   padding-inline: var(--space-lg);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-3xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
   text-align: center;
-  box-shadow: var(--shadow-md);
 }
 
 .ctaTitle {
@@ -259,7 +258,6 @@
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
   transition:
     transform var(--duration-fast) var(--ease-spring),
     background var(--duration-fast) var(--ease-out);

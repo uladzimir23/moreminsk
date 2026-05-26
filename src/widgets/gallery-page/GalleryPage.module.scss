@@ -81,6 +81,6 @@
   inline-size: 100%;
   aspect-ratio: var(--photo-card-aspect);
   object-fit: cover;
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface-alt);
 }

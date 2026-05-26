@@ -79,7 +79,7 @@
   margin-inline-start: 0.25rem;
   padding-block: 0.125rem;
   padding-inline: 0.5rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--card-radius);
   background: color-mix(in oklch, var(--color-accent) 16%, transparent);
   color: var(--color-accent);
   font-size: var(--text-xs);
@@ -166,7 +166,6 @@
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
   transition:
     transform var(--duration-fast) var(--ease-spring),
     background var(--duration-fast) var(--ease-out);
@@ -289,7 +288,7 @@
   inline-size: 100%;
   aspect-ratio: var(--photo-card-aspect);
   object-fit: cover;
-  border-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface-alt);
 }
 
@@ -309,7 +308,7 @@
   padding-block: 0.5rem;
   padding-inline: var(--space-md);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-full);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
   color: var(--color-foreground);
   font-size: var(--text-sm);
@@ -339,10 +338,9 @@
   padding-block: var(--space-2xl);
   padding-inline: var(--space-lg);
   border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-3xl);
+  border-radius: var(--card-radius);
   background: var(--color-surface);
   text-align: center;
-  box-shadow: var(--shadow-md);
 }
 
 .finalCtaTitle {

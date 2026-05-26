@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { Accent } from "@/shared/ui/accent/Accent";
 import { ArrowRight } from "lucide-react";
 import styles from "./PricesPage.module.scss";
 
@@ -28,7 +29,9 @@ export function PricesPage() {
             <span aria-hidden="true">/</span>
             <span>Цены</span>
           </nav>
-          <h1 className={styles.h1}>Цены на аренду яхт в Минске</h1>
+          <h1 className={styles.h1}>
+            Цены на аренду яхт <Accent>в Минске</Accent>
+          </h1>
           <p className={styles.lead}>
             Почасовые ставки яхт и пакеты под событие. Капитан и топливо уже в цене. Это ориентир —
             точную стоимость подтверждаем при звонке под вашу дату и состав.

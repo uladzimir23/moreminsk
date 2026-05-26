@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { REVIEWS } from "@/shared/content/reviews";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
+import { Accent } from "@/shared/ui/accent/Accent";
 import { Star } from "lucide-react";
 import styles from "./ReviewsPage.module.scss";
 
@@ -20,7 +21,9 @@ export function ReviewsPage() {
             <span aria-hidden="true">/</span>
             <span>Отзывы</span>
           </nav>
-          <h1 className={styles.h1}>Отзывы о прогулках на яхте</h1>
+          <h1 className={styles.h1}>
+            Отзывы о прогулках <Accent>на яхте</Accent>
+          </h1>
           <p className={styles.lead}>
             Что пишут гости после выходов на Минском море. Каждый отзыв — про конкретную яхту и
             повод.
