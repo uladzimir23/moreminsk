@@ -1,0 +1,115 @@
+// Brand preloader — fixed overlay (theme-aware paper/dark), a sloop sailing
+// left→right over a drifting wave, then a fade-out.
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: var(--color-background);
+  opacity: 1;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s ease;
+}
+.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.scene {
+  position: relative;
+  inline-size: 100%;
+  block-size: 6rem;
+  overflow: hidden;
+}
+
+// Drifting wave the boat sails along — stretched full width, gentle horizontal
+// drift (slow enough that no loop seam shows before the overlay fades).
+.waves {
+  position: absolute;
+  inset-inline: -10%;
+  inset-block-end: 40%;
+  inline-size: 120%;
+  block-size: 2.5rem;
+  color: var(--color-accent);
+  animation: preloader-wave 5s linear infinite;
+}
+.waveBack {
+  opacity: 0.4;
+}
+.waveFront {
+  opacity: 0.85;
+}
+
+// The sloop — sails across the scene left→right with a gentle bob + tilt.
+.boat {
+  position: absolute;
+  inset-block-start: 1rem;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  color: var(--color-accent);
+  animation: preloader-sail 1.6s cubic-bezier(0.45, 0, 0.25, 1) forwards;
+
+  svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+}
+
+.word {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+  opacity: 0;
+  animation: preloader-word 0.6s ease 0.3s forwards;
+}
+.wordAccent {
+  color: var(--color-accent);
+}
+
+@keyframes preloader-sail {
+  0% {
+    transform: translateX(-16vw) rotate(-4deg);
+  }
+  50% {
+    transform: translateX(46vw) translateY(-0.5rem) rotate(4deg);
+  }
+  100% {
+    transform: translateX(116vw) rotate(-3deg);
+  }
+}
+@keyframes preloader-wave {
+  to {
+    transform: translateX(-12%);
+  }
+}
+@keyframes preloader-word {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boat,
+  .waves,
+  .word {
+    animation: none;
+  }
+  .word {
+    opacity: 1;
+  }
+  .boat {
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+}
