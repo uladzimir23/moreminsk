@@ -26,6 +26,11 @@
   &[aria-expanded="true"] {
     color: var(--on-media);
   }
+
+  // Desktop shows the horizontal nav next to the logo, so the burger is hidden.
+  @include respond-to("lg") {
+    display: none;
+  }
 }
 
 .burgerBox {

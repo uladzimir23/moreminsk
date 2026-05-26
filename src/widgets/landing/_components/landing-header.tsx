@@ -1,21 +1,32 @@
 "use client";
 
+import { Link, usePathname } from "@/i18n/navigation";
+import { usePanel } from "@/shared/lib/panel/usePanel";
 import { Logo } from "@/shared/ui/logo/Logo";
 import { useEffect, useRef, useState } from "react";
 import { LandingControls } from "./landing-controls";
 import styles from "./landing-header.module.scss";
 import { LandingMenu } from "./landing-menu";
 
+// «Флот» lives in the dedicated «Яхты» pill, so it's not duplicated here.
 const NAV = [
-  { href: "#fleet", label: "Флот" },
-  { href: "#services", label: "Услуги" },
-  { href: "#gallery", label: "Галерея" },
-  { href: "#contact", label: "Контакты" },
+  { href: "/services", label: "Услуги" },
+  { href: "/ceny", label: "Цены" },
+  { href: "/galereya", label: "Галерея" },
+  { href: "/otzyvy", label: "Отзывы" },
+  { href: "/contacts", label: "Контакты" },
 ];
 
 export function LandingHeader() {
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const { open } = usePanel();
+
+  // Only the home page has the dark cinematic hero behind the header, so the
+  // white-over-image → frosted-dark flip belongs there. Everywhere else the
+  // header is permanently in the frosted «paper + dark text» state (readable on
+  // both the light page and the dark fleet section).
+  const isHome = usePathname() === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -26,7 +37,6 @@ export function LandingHeader() {
 
   // Publish the real header height as --landing-header-h so the sticky fleet
   // tabs (and anything else) pin flush under it instead of guessing the value.
-  // ResizeObserver re-measures when the bar shrinks on scroll or text reflows.
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -38,24 +48,25 @@ export function LandingHeader() {
     return () => ro.disconnect();
   }, []);
 
+  const framed = scrolled || !isHome;
+
   return (
-    <header ref={headerRef} className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+    <header ref={headerRef} className={`${styles.header} ${framed ? styles.scrolled : ""}`}>
       <div className={styles.bar}>
-        <a href="#top" className={styles.brand} aria-label="Минское море — на главную">
+        <Link href="/" className={styles.brand} aria-label="Минское море — на главную">
           <Logo />
-        </a>
+        </Link>
 
         <nav className={styles.nav} aria-label="Разделы">
           {NAV.map((item) => (
-            <a key={item.href} href={item.href} className={styles.link}>
+            <Link key={item.href} href={item.href} className={styles.link}>
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className={styles.actions}>
-          {/* Mobile-only quick jump to the fleet (desktop has it in the nav). */}
-          <a href="#fleet" className={styles.fleetBtn}>
+          <Link href="/fleet" className={styles.fleetBtn}>
             Яхты
             <svg
               className={styles.fleetArrow}
@@ -69,7 +80,7 @@ export function LandingHeader() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
           <a href="tel:+375296953636" className={styles.phone}>
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
           </a>
@@ -105,9 +116,9 @@ export function LandingHeader() {
               </svg>
             </a>
           </div>
-          <a href="#booking" className={styles.cta}>
+          <button type="button" className={styles.cta} onClick={() => open("order")}>
             Забронировать
-          </a>
+          </button>
           <LandingControls className={styles.controls} />
           <LandingMenu />
         </div>
