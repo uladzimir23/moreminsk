@@ -1,6 +1,7 @@
 "use client";
 
 import type { Yacht } from "@/entities/yacht/model/types";
+import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import { Accent } from "@/shared/ui/accent/Accent";
 import { ArrowRight, Sailboat, Users } from "lucide-react";
@@ -32,7 +33,9 @@ export function YachtCard({ yacht }: Props) {
       <div className={styles.body}>
         <header className={styles.header}>
           <h3 id={`yacht-${yacht.slug}`} className={styles.name}>
-            <Accent>{yacht.name}</Accent>
+            <Link href={`/fleet/${yacht.slug}`} className={styles.nameLink}>
+              <Accent>{yacht.name}</Accent>
+            </Link>
           </h3>
           <p className={styles.type}>{TYPE_LABEL[yacht.type]}</p>
         </header>

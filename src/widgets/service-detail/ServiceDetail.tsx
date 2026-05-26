@@ -122,7 +122,7 @@ export function ServiceDetail({ service, yachts }: Props) {
             <ul className={styles.yachtList}>
               {yachts.map((y) => (
                 <li key={y.slug}>
-                  <Link href="/fleet" className={styles.yachtChip}>
+                  <Link href={`/fleet/${y.slug}`} className={styles.yachtChip}>
                     <Sailboat
                       style={{ inlineSize: "1rem", blockSize: "1rem" }}
                       aria-hidden="true"
