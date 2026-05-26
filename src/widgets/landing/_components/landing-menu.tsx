@@ -1,24 +1,30 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
+import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { LandingControls } from "./landing-controls";
 import styles from "./landing-menu.module.scss";
 
+// Real routes — the menu is the primary nav across the whole site now, so it
+// links to pages (not home-only #anchors). next-intl Link adds the locale.
 const LINKS = [
-  { href: "fleet", label: "Флот" },
-  { href: "services", label: "Услуги" },
-  { href: "gallery", label: "Галерея" },
-  { href: "reviews", label: "Отзывы" },
-  { href: "faq", label: "Вопросы" },
-  { href: "contact", label: "Контакты" },
+  { href: "/fleet", label: "Флот" },
+  { href: "/services", label: "Услуги" },
+  { href: "/ceny", label: "Цены" },
+  { href: "/galereya", label: "Галерея" },
+  { href: "/otzyvy", label: "Отзывы" },
+  { href: "/faq", label: "Вопросы" },
+  { href: "/contacts", label: "Контакты" },
 ];
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function LandingMenu() {
   const [open, setOpen] = useState(false);
+  const { open: openOrder } = usePanel();
   const reduce = useReducedMotion();
   // Portal target — gated on `typeof window` so SSR returns null cleanly,
   // without the state-in-effect pattern eslint forbids.
@@ -39,11 +45,7 @@ export function LandingMenu() {
     };
   }, [open]);
 
-  const jump = (id: string) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
-  };
+  const close = () => setOpen(false);
 
   // ── Burger → X, two-stage: the lines first converge to centre, then the
   // top/bottom rotate into the cross (middle fades out). ──
@@ -134,38 +136,37 @@ export function LandingMenu() {
               >
                 <motion.nav className={styles.nav} variants={list} aria-label="Меню">
                   {LINKS.map((l, i) => (
-                    <motion.a
-                      key={l.href}
-                      href={`#${l.href}`}
-                      className={styles.navLink}
-                      variants={item}
-                      onClick={jump(l.href)}
-                    >
-                      <span className={styles.navIndex}>{String(i + 1).padStart(2, "0")}</span>
-                      {l.label}
-                      <svg
-                        className={styles.navArrow}
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    </motion.a>
+                    <motion.div key={l.href} variants={item}>
+                      <Link href={l.href} className={styles.navLink} onClick={close}>
+                        <span className={styles.navIndex}>{String(i + 1).padStart(2, "0")}</span>
+                        {l.label}
+                        <svg
+                          className={styles.navArrow}
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </motion.div>
                   ))}
 
-                  <motion.a
-                    href="#booking"
+                  <motion.button
+                    type="button"
                     className={styles.cta}
                     variants={item}
-                    onClick={jump("booking")}
+                    onClick={() => {
+                      close();
+                      openOrder("order");
+                    }}
                   >
                     Забронировать
-                  </motion.a>
+                  </motion.button>
 
                   <motion.div className={styles.controls} variants={item}>
                     <LandingControls />
