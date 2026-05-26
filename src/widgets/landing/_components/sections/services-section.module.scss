@@ -2,8 +2,10 @@
 // at ~82vw with both neighbours peeking; the section itself carries an
 // ambient blurred backdrop of the active service's photo, and the rail
 // edges get a gradient + progressive-blur fade so the peeking slides
-// recede softly (focus center, soft edges). Always-dark like the fleet
-// showcase.
+// recede softly (focus center, soft edges). Theme-aware: light theme washes
+// the card paper-light with dark copy; dark theme keeps the cinematic dark.
+
+@use "@/shared/design-system/mixins" as *;
 
 @keyframes fadeUp {
   from {
@@ -55,7 +57,6 @@
   letter-spacing: -0.03em;
   color: white;
   max-width: 43.75rem;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
 }
 .accent {
   font-family: var(--font-lora), Georgia, serif;
@@ -104,7 +105,7 @@
   overflow: hidden;
   aspect-ratio: 16 / 9;
   border-radius: var(--card-radius);
-  background: var(--image-bg-deep);
+  background: var(--media-bg-deep);
 
   @media (max-width: 63.999rem) {
     flex-basis: 76vw;
@@ -116,7 +117,7 @@
       position: absolute;
       inset: 0;
       z-index: 4;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--media-glass-bg-hover);
       border-radius: inherit;
       pointer-events: none;
     }
@@ -131,9 +132,16 @@
   width: 112%;
   height: 112%;
   object-fit: cover;
-  filter: blur(1.875rem) brightness(0.5) saturate(1.1);
+  // Light: bright blurred backdrop under the paper wash. Dark: dimmed.
+  filter: blur(1.875rem) brightness(0.95) saturate(1.05);
   z-index: 0;
 
+  @include dark-mode {
+    filter: blur(1.875rem) brightness(0.5) saturate(1.1);
+  }
+
+  // Mobile is the crisp cover poster (no blur) — ordered last so it wins
+  // over the theme branches above regardless of theme.
   @media (max-width: 63.999rem) {
     inset: 0;
     width: 100%;
@@ -145,20 +153,23 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  // Wash derived from --media-bg → auto-flips: paper-light in light theme
+  // (dark copy reads), cinematic-dark in dark theme. Diagonal so the copy
+  // side (left) is washed heavier than the photo side (right).
   background: linear-gradient(
     105deg,
-    rgba(0, 0, 0, 0.62) 0%,
-    rgba(0, 0, 0, 0.32) 50%,
-    rgba(0, 0, 0, 0.15) 100%
+    color-mix(in srgb, var(--media-bg) 82%, transparent) 0%,
+    color-mix(in srgb, var(--media-bg) 46%, transparent) 50%,
+    color-mix(in srgb, var(--media-bg) 18%, transparent) 100%
   );
 
   @media (max-width: 63.999rem) {
     // Bottom-up scrim so the copy stays legible over the cover photo.
     background: linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.85) 0%,
-      rgba(0, 0, 0, 0.55) 26%,
-      rgba(0, 0, 0, 0.1) 54%,
+      color-mix(in srgb, var(--media-bg) 90%, transparent) 0%,
+      color-mix(in srgb, var(--media-bg) 60%, transparent) 26%,
+      color-mix(in srgb, var(--media-bg) 14%, transparent) 54%,
       transparent 76%
     );
   }
@@ -191,7 +202,7 @@
   z-index: 3;
   display: flex;
   align-items: center;
-  color: white;
+  color: var(--on-media);
 
   @media (max-width: 63.999rem) {
     align-items: flex-end;
@@ -225,7 +236,7 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--on-media-muted);
 }
 .serviceName {
   margin: 0;
@@ -233,8 +244,7 @@
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: white;
-  text-shadow: 0 2px 32px rgba(0, 0, 0, 0.6);
+  color: var(--on-media);
 
   @media (max-width: 63.999rem) {
     font-size: clamp(1.75rem, 8vw, 2.25rem);
@@ -246,14 +256,13 @@
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-accent) 80%, white);
+  color: var(--on-media-accent);
 }
 .serviceUtp {
   margin: 0;
   font-size: clamp(1rem, 1.4vw, 1.125rem);
   line-height: 1.55;
-  color: rgba(255, 255, 255, 0.82);
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+  color: var(--on-media-muted);
   max-width: 27.5rem;
 
   @media (max-width: 63.999rem) {
@@ -286,15 +295,15 @@
   gap: 0.375rem;
   padding: 0.875rem 1rem;
   min-width: 8rem;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: var(--media-glass-bg);
+  border: 1px solid var(--media-glass-border);
   backdrop-filter: blur(0.625rem);
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--media-glass-bg-hover);
     border-color: var(--color-accent);
   }
 }
@@ -304,12 +313,12 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-media-muted);
 }
 .pkgPrice {
   font-size: 1.5rem;
   font-weight: 600;
-  color: white;
+  color: var(--on-media);
   letter-spacing: -0.02em;
   font-feature-settings: "tnum", "lnum";
 }
@@ -319,7 +328,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--on-media-muted);
 }
 
 // «от X BYN» — mobile / tablet poster only (the chips carry prices on desktop).
@@ -331,7 +340,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: white;
+  color: var(--on-media);
   font-feature-settings: "tnum", "lnum";
 
   @media (max-width: 63.999rem) {
@@ -344,12 +353,12 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--on-media-subtle);
 }
 .priceUnit {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--on-media-muted);
 }
 
 // In-card CTA — desktop banner only (mobile / tablet books from the booking
