@@ -23,6 +23,25 @@ export function YachtDetail({ yacht, photos, services }: Props) {
   const { open } = usePanel();
   const TypeIcon = yacht.type === "motor" ? Ship : Sailboat;
 
+  // Техпаспорт — собираем строки только из заполненных полей specs.
+  const specs = yacht.specs;
+  const specRows: Array<{ label: string; value: string }> = specs
+    ? [
+        { label: "Модель", value: specs.model },
+        { label: "Верфь", value: specs.builder },
+        { label: "Длина", value: `${specs.lengthM} м` },
+        { label: "Ширина", value: `${specs.beamM} м` },
+        { label: "Осадка", value: `${specs.draftM} м` },
+        ...(specs.cabins ? [{ label: "Кают", value: String(specs.cabins) }] : []),
+        ...(specs.berths ? [{ label: "Спальных мест", value: String(specs.berths) }] : []),
+        ...(specs.sailAreaM2
+          ? [{ label: "Площадь парусов", value: `${specs.sailAreaM2} м²` }]
+          : []),
+        ...(specs.headroomM ? [{ label: "Высота в каюте", value: `${specs.headroomM} м` }] : []),
+        ...(specs.yearsBuilt ? [{ label: "Годы выпуска", value: specs.yearsBuilt }] : []),
+      ]
+    : [];
+
   return (
     <>
       <section className={styles.hero} aria-labelledby={`yacht-${yacht.slug}-title`}>
@@ -91,6 +110,33 @@ export function YachtDetail({ yacht, photos, services }: Props) {
           </ul>
         </div>
       </section>
+
+      {specRows.length > 0 && (
+        <section
+          className={`${styles.section} ${styles.alt}`}
+          aria-labelledby={`yacht-${yacht.slug}-specs`}
+        >
+          <div className={styles.container}>
+            <h2 id={`yacht-${yacht.slug}-specs`} className={styles.sectionTitle}>
+              Технический паспорт
+            </h2>
+            <dl className={styles.specSheet}>
+              {specRows.map((row) => (
+                <div key={row.label} className={styles.specRow}>
+                  <dt className={styles.specLabel}>{row.label}</dt>
+                  <dd className={styles.specValue}>{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+            {specs?.inferred && (
+              <p className={styles.specNote}>
+                * Модель определена по фото (надпись на борту, оснастка). Точную модификацию
+                уточняем.
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {photos.length > 0 && (
         <section

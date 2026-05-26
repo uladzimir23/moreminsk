@@ -113,6 +113,19 @@ export function serviceSchema(service: Service, locale: string) {
 
 export function productSchema(yacht: Yacht, locale: string) {
   const url = localeUrl(locale, `/fleet/${yacht.slug}`);
+  const s = yacht.specs;
+  const additionalProperty = s
+    ? [
+        { "@type": "PropertyValue", name: "Длина", value: `${s.lengthM} м` },
+        { "@type": "PropertyValue", name: "Ширина", value: `${s.beamM} м` },
+        { "@type": "PropertyValue", name: "Осадка", value: `${s.draftM} м` },
+        { "@type": "PropertyValue", name: "Вместимость", value: `${yacht.capacity} чел.` },
+        ...(s.berths
+          ? [{ "@type": "PropertyValue", name: "Спальных мест", value: String(s.berths) }]
+          : []),
+      ]
+    : undefined;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -121,6 +134,8 @@ export function productSchema(yacht: Yacht, locale: string) {
     description: yacht.description,
     category: "Аренда яхты",
     url,
+    ...(s ? { brand: { "@type": "Brand", name: s.builder }, model: s.model } : {}),
+    ...(additionalProperty ? { additionalProperty } : {}),
     offers: {
       "@type": "Offer",
       priceCurrency: "BYN",

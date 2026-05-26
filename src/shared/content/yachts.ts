@@ -1,14 +1,22 @@
 import type { Yacht } from "@/entities/yacht/model/types";
 
 // Факты сверены с moreminsk.by 2026-04-17 (см. raw-media/scraped/facts.md).
-// Длины и год постройки — open-вопрос к Павлу (на действующем сайте не указаны).
 // mainImage — пока плейсхолдер, YachtCard рендерит fallback.
+//
+// 2026-05-26 — техпаспорт (specs): модели определены по фото (надписи на бортах
+// + инсигнии на парусах), ТТХ взяты у верфи Northman (Польша):
+//   BRAVO — Maxus 28 (парус «28 maxus», борт «MAXUS») → sailboatdata/northman
+//   EVA   — Maxus/Nova 26 (инсигния «26» на гроте)
+//   MARIO — Nexus Revo 870 (борт «nexus», рег. AF-9999)
+//   ALFA  — борт «maxus», точный размер по фото не подтверждён → принят Maxus 26
+//           (идёт рядом с EVA того же размера). inferred: true — уточнить у Павла.
 export const YACHTS: ReadonlyArray<Yacht> = [
   {
     slug: "eva",
     name: "EVA",
     type: "sail",
     capacity: 6,
+    lengthMeters: 8.4,
     pricePerHour: 150,
     minHours: 2,
     description:
@@ -17,12 +25,23 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     suitableFor: ["romantic", "photoshoot", "family", "birthday-small"],
     gallery: [],
     mainImage: "/yachts/eva-cover.jpg",
+    specs: {
+      model: "Northman Maxus 26",
+      builder: "Northman, Польша",
+      lengthM: 8.4,
+      beamM: 2.82,
+      draftM: "0,35 / 1,43",
+      berths: 4,
+      sailAreaM2: 37,
+      headroomM: 1.83,
+    },
   },
   {
     slug: "alfa",
     name: "ALFA",
     type: "sail",
     capacity: 8,
+    lengthMeters: 8.4,
     pricePerHour: 150,
     minHours: 2,
     description:
@@ -31,12 +50,24 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     suitableFor: ["birthday", "hen-party", "stag-party", "corporate"],
     gallery: [],
     mainImage: "/yachts/alfa-cover.jpg",
+    specs: {
+      model: "Northman Maxus 26",
+      builder: "Northman, Польша",
+      lengthM: 8.4,
+      beamM: 2.82,
+      draftM: "0,35 / 1,43",
+      berths: 4,
+      sailAreaM2: 37,
+      headroomM: 1.83,
+      inferred: true,
+    },
   },
   {
     slug: "mario",
     name: "MARIO",
     type: "motor",
     capacity: 8,
+    lengthMeters: 8.7,
     pricePerHour: 150,
     minHours: 2,
     description:
@@ -45,12 +76,23 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     suitableFor: ["birthday", "hen-party", "corporate", "photoshoot"],
     gallery: [],
     mainImage: "/yachts/mario-cover.jpg",
+    specs: {
+      model: "Northman Nexus Revo 870",
+      builder: "Northman, Польша",
+      lengthM: 8.7,
+      beamM: 2.9,
+      draftM: "0,40",
+      cabins: 2,
+      berths: 6,
+      headroomM: 1.97,
+    },
   },
   {
     slug: "bravo",
     name: "BRAVO",
     type: "sail",
     capacity: 8,
+    lengthMeters: 9.44,
     pricePerHour: 150,
     minHours: 2,
     description:
@@ -60,5 +102,15 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     gallery: [],
     mainImage: "/yachts/bravo-cover.jpg",
     badge: "flagship",
+    specs: {
+      model: "Northman Maxus 28",
+      builder: "Northman, Польша",
+      lengthM: 9.44,
+      beamM: 2.92,
+      draftM: "0,4 / 1,6",
+      cabins: 2,
+      berths: 6,
+      yearsBuilt: "2010–2022",
+    },
   },
 ];
