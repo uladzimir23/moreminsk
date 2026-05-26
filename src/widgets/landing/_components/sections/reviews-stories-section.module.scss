@@ -11,8 +11,8 @@
       color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
       transparent 60%
     ),
-    linear-gradient(180deg, var(--image-bg-elevated) 0%, var(--image-bg) 100%);
-  color: white;
+    linear-gradient(180deg, var(--media-bg-elevated) 0%, var(--media-bg) 100%);
+  color: var(--on-media);
 }
 
 .head {
@@ -28,7 +28,7 @@
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--on-media-muted);
 }
 .title {
   margin: 0;
@@ -36,13 +36,13 @@
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: white;
+  color: var(--on-media);
 }
 .accent {
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-accent) 75%, white);
+  color: var(--on-media-accent);
 }
 
 // ── Highlights row ───────────────────────────────────────────────────────
@@ -89,13 +89,13 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--image-bg);
+  border: 2px solid var(--media-bg);
   display: block;
 }
 .label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--on-media-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,7 +106,7 @@
   font-size: 0.59375rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--on-media-faint);
 }
 
 // ── Viewer ───────────────────────────────────────────────────────────────

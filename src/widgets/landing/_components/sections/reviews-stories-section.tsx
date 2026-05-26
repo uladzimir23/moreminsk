@@ -84,7 +84,7 @@ export function ReviewsStoriesSection() {
   return (
     <section className={styles.section} id="reviews">
       <div className={styles.head}>
-        <SectionHeader eyebrow="04 · Отзывы" title="Истории" accent="с воды." tone="image" />
+        <SectionHeader eyebrow="04 · Отзывы" title="Истории" accent="с воды." tone="media" />
       </div>
 
       <div className={styles.highlights}>
