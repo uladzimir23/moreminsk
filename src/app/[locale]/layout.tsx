@@ -1,4 +1,6 @@
 import { type Locale, routing } from "@/i18n/routing";
+import { organizationSchema, websiteSchema } from "@/shared/lib/schema";
+import { JsonLd } from "@/shared/ui/json-ld/JsonLd";
 import { LandingFooter } from "@/widgets/landing/_components/landing-footer";
 import { LandingHeader } from "@/widgets/landing/_components/landing-header";
 import shell from "@/widgets/landing/_components/landing-shell.module.scss";
@@ -24,6 +26,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <NextIntlClientProvider locale={typedLocale}>
+      <JsonLd data={[organizationSchema(), websiteSchema()]} />
       <Providers>
         <LandingHeader />
         <div className={shell.page}>{children}</div>

@@ -1,11 +1,24 @@
+import { SITE } from "@/shared/lib/seo";
 import type { Metadata } from "next";
 import { lora, manrope } from "./fonts";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: "Минское море — аренда яхт на Минском море",
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: "Аренда яхт на Минском море — от 150 BYN/час | Море Minsk",
+    template: "%s | Море Minsk",
+  },
   description:
-    "Парусные и моторные яхты в аренду на Минском водохранилище. Прогулки, мероприятия, пакеты под ключ.",
+    "Парусные и моторные яхты в аренду на Минском водохранилище: свидания, дни рождения, корпоративы, фотосессии. Капитан и топливо в цене. Бронируйте онлайн.",
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    locale: "ru_RU",
+    images: [SITE.defaultOgImage],
+  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
 // Anti-FOUC theme bootstrap (ADR-006). Runs before React hydration so the
