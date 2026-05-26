@@ -4,30 +4,8 @@ import { SERVICES } from "@/shared/content/services";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
+import { servicePhoto } from "../../_data/service-photos";
 import styles from "./services-section.module.scss";
-
-// One hand-picked yacht photo per occasion — best-fit, not the cover shot.
-// den-rozhdeniya → ALFA, festive group on deck (red sail, daytime);
-// korporativ → BRAVO flagship under full sail; svidanie → EVA at sunset;
-// devichnik → ALFA, a girls' evening with drinks; fotosessiya → EVA, the
-// coral-dress shoot by the «EVA» lettering (on-brand accent).
-const SERVICE_PHOTO: Record<string, { yacht: YachtSlug; idx: number }> = {
-  "progulka-parusnaya": { yacht: "eva", idx: 7 },
-  "progulka-motornaya": { yacht: "mario", idx: 0 },
-  svadba: { yacht: "bravo", idx: 3 },
-  "den-rozhdeniya": { yacht: "alfa", idx: 2 },
-  korporativ: { yacht: "bravo", idx: 0 },
-  svidanie: { yacht: "eva", idx: 0 },
-  devichnik: { yacht: "alfa", idx: 6 },
-  fotosessiya: { yacht: "eva", idx: 5 },
-  "master-klass": { yacht: "alfa", idx: 0 },
-};
-
-const photoFor = (slug: string) => {
-  const pick = SERVICE_PHOTO[slug] ?? { yacht: "eva" as YachtSlug, idx: 0 };
-  return { ...pick, url: PHOTOS_BY_YACHT[pick.yacht][pick.idx] };
-};
 
 // Responsive carousel: on desktop (≥lg) a wide cinematic banner — blurred
 // backdrop + the crisp photo on the right + packages + an in-card CTA. On
@@ -71,7 +49,7 @@ export function ServicesSection() {
     <section className={styles.section} id="services">
       {/* Ambient section backdrop — blurred copy of the active service's photo. */}
       <AmbientBackdrop
-        images={SERVICES.map((service) => photoFor(service.slug).url)}
+        images={SERVICES.map((service) => servicePhoto(service.slug).url)}
         activeIndex={activeIdx}
       />
 
@@ -86,7 +64,7 @@ export function ServicesSection() {
       <div className={styles.rail}>
         <div className={styles.track} ref={trackRef}>
           {SERVICES.map((service, i) => {
-            const photo = photoFor(service.slug);
+            const photo = servicePhoto(service.slug);
             const words = service.shortTitle.split(" ");
             const head = words.slice(0, -1).join(" ");
             const tail = words[words.length - 1];

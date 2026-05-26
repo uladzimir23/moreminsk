@@ -1,129 +1,242 @@
+// Services catalog — mirrors the fleet catalog: stacked showcase, one block per
+// service (photo + info, alternating sides), theme-aware via design-system
+// tokens. Single column on mobile.
+
 @use "@/shared/design-system/mixins" as *;
 
 .root {
-  padding-block: var(--space-2xl) var(--space-3xl);
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding: clamp(4.5rem, 11vh, 8rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   background: var(--color-background);
+  color: var(--color-foreground);
 }
 
-.container {
-  inline-size: min(100% - 2 * var(--space-md), 75rem);
-  margin-inline: auto;
-
-  @include respond-to("md") {
-    inline-size: min(100% - 2 * var(--space-xl), 75rem);
-  }
-}
-
-.grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.head {
+  max-width: 80rem;
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-md);
-  margin-block-start: var(--space-xl);
-
-  @include respond-to("sm") {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include respond-to("lg") {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  gap: 0.625rem;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3.25rem);
+  font-weight: var(--primitive-weight-medium);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--color-foreground);
+  max-width: 45rem;
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: var(--primitive-weight-medium);
+  color: var(--color-accent);
+}
+.lead {
+  margin: 0;
+  max-width: 38rem;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-foreground-muted);
 }
 
-.card {
+.list {
+  max-width: 80rem;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  padding: var(--space-lg);
-  border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--radius-2xl);
-  background: var(--color-surface);
-  color: inherit;
-  text-decoration: none;
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    border-color var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+  gap: clamp(3rem, 7vw, 5.5rem);
+}
 
-  &:hover {
-    transform: translateY(-0.125rem);
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-md);
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+
+  @media (max-width: 56.25rem) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
   }
+}
+
+.rowReverse .media {
+  @include respond-to("md") {
+    order: 2;
+  }
+}
+
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 0.0625rem solid var(--color-border-hairline);
+  border-radius: var(--card-radius);
+  background: var(--color-surface-alt);
+  isolation: isolate;
 
   @include focus-ring;
 }
+.mediaBg {
+  position: absolute;
+  inset: -8%;
+  inline-size: 116%;
+  block-size: 116%;
+  object-fit: cover;
+  filter: blur(2.5rem) brightness(0.6) saturate(1.1);
+  z-index: 0;
+}
+.mediaPhoto {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
-.iconWrap {
+  .media:hover & {
+    transform: scale(1.03);
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  min-width: 0;
+}
+.chapter {
+  margin: 0;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.65625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.name {
+  margin: 0;
+  font-size: clamp(2rem, 4.2vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-foreground);
+}
+.nameLink {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--color-accent);
+  }
+
+  @include focus-ring($offset: 0.25rem);
+}
+.desc {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-foreground-muted);
+}
+
+.priceBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  padding-block-start: 0.875rem;
+  border-block-start: 0.0625rem solid var(--color-border-hairline);
+  font-feature-settings: "tnum", "lnum";
+}
+.priceLabel,
+.priceSuffix {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.65625rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+.priceValue {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-block-start: 0.25rem;
+}
+.cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: 2.75rem;
-  block-size: 2.75rem;
-  border-radius: var(--radius-lg);
-  background: color-mix(in oklch, var(--color-primary) 10%, transparent);
-  color: var(--color-primary);
-}
-
-.icon {
-  inline-size: 1.375rem;
-  block-size: 1.375rem;
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: var(--primitive-weight-semibold);
-  letter-spacing: var(--primitive-tracking-tight);
-  color: var(--color-foreground);
-}
-
-.utp {
-  margin: 0;
+  gap: 0.625rem;
+  padding: 0.875rem 1.5rem;
+  border: 0;
+  border-radius: var(--btn-radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: inherit;
   font-size: var(--text-sm);
-  line-height: var(--primitive-leading-relaxed);
-  color: var(--color-foreground-muted);
-}
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-block-start: auto;
-  padding-block-start: var(--space-sm);
-  font-size: var(--text-sm);
-  color: var(--color-foreground);
+  &:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-0.125rem);
+  }
+  &:hover .ctaIcon {
+    transform: translateX(0.25rem);
+  }
 }
-
-.price {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.25rem;
-}
-
-.priceValue {
-  font-weight: var(--primitive-weight-semibold);
-  font-size: var(--text-lg);
-  color: var(--color-foreground);
-}
-
-.priceLabel,
-.priceSuffix {
-  color: var(--color-foreground-muted);
-  font-size: var(--text-xs);
-}
-
-.more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--color-primary);
-  font-weight: var(--primitive-weight-medium);
-}
-
-.moreIcon {
+.ctaIcon {
   inline-size: 1rem;
   block-size: 1rem;
+  transition: transform 0.2s ease;
+}
+.detailLink {
+  color: var(--color-foreground-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border-block-end: 0.0625rem solid var(--color-border);
+  padding-block-end: 0.125rem;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    color: var(--color-foreground);
+    border-block-end-color: var(--color-accent);
+  }
+
+  @include focus-ring($offset: 0.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mediaPhoto {
+    transition: none;
+  }
 }

@@ -14,9 +14,9 @@ const TYPE_LABEL = {
   "sail-motor": "Парусно-моторная",
 } as const;
 
-// Fleet page — the home «Флот» showcase language (always-dark, Lora-italic
-// names, glass feature chips, accent CTA) laid out as a stacked column: one
-// full-width block per yacht, photo and info alternating sides.
+// Fleet catalog — a stacked showcase (Lora-italic names, mono specs, accent
+// CTA) laid out as one full-width block per yacht, photo and info alternating
+// sides. Theme-aware: white/paper in the light theme, dark in the dark theme.
 export function FleetCatalog() {
   const { open } = usePanel();
 
