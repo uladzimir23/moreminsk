@@ -27,6 +27,24 @@
   color: var(--color-accent);
 }
 
+// Waterline drifts left by exactly one wave period (20 user units, where
+// 1px = 1 user unit on an SVG child) in a slow seamless loop, so the water
+// reads as gently moving. The path overshoots the viewBox on both sides, so
+// the visible window stays covered through the whole shift.
+.waterline {
+  animation: mm-wave-drift 7s linear infinite;
+  will-change: transform;
+}
+
+@keyframes mm-wave-drift {
+  to {
+    // On an SVG element 1px == 1 user unit, so this is a 20-user-unit shift =
+    // exactly one wave period (not a layout length — hence the unit override).
+    // stylelint-disable-next-line unit-disallowed-list
+    transform: translateX(-20px);
+  }
+}
+
 // Soft sky glow pinging out from behind the sail — two waves, half a cycle
 // apart, so the ripple reads as continuous shimmer rather than a lone ping.
 .ripple {
@@ -71,6 +89,9 @@
 @media (prefers-reduced-motion: reduce) {
   .ripple {
     display: none;
+  }
+  .waterline {
+    animation: none;
   }
 }
 

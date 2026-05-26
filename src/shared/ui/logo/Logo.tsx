@@ -28,9 +28,11 @@ export function Logo({ markOnly = false, className }: Props) {
           <path d="M13 3 L13 19 L4 19 Z" fill="currentColor" />
           {/* jib */}
           <path d="M15 8 L15 19 L22.5 19 Z" fill="currentColor" opacity="0.55" />
-          {/* waterline */}
+          {/* waterline — extends past the 0–28 viewBox (clipped by the svg) so
+              it can drift left one full wave period in a seamless loop */}
           <path
-            d="M2 23.5 q5 2.4 10 0 t10 0 t10 0"
+            className={styles.waterline}
+            d="M-8 23.5 q5 2.4 10 0 t10 0 t10 0 t10 0 t10 0 t10 0"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinecap="round"
