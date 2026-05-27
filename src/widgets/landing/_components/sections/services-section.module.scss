@@ -408,12 +408,30 @@
   max-width: 80rem;
   margin: 1.75rem auto 0;
   padding: 0 clamp(1.5rem, 6vw, 5rem);
+
+  // Narrow screens: the pager (01–09) + arrows cram/overflow in one row — stack
+  // them (pager full-width row, arrows right below).
+  @media (max-width: 56.25rem) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
 }
 
 .indicator {
   display: flex;
   align-items: center;
   gap: 0.875rem;
+
+  // Narrow: let the pager scroll horizontally instead of overflowing the page.
+  @media (max-width: 56.25rem) {
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 .dot,
 .dotActive {
@@ -472,6 +490,10 @@
 .arrows {
   display: flex;
   gap: 0.5rem;
+
+  @media (max-width: 56.25rem) {
+    align-self: flex-end; // arrows to the right, below the pager
+  }
 }
 .arrow {
   width: 2.75rem;
