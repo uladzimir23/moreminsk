@@ -9,8 +9,8 @@ import type { Yacht } from "@/entities/yacht/model/types";
 //   BRAVO — Maxus 28 (парус «28 maxus», борт «MAXUS») → sailboatdata/northman
 //   EVA   — Maxus/Nova 26 (инсигния «26» на гроте)
 //   MARIO — Nexus Revo 870 (борт «nexus», рег. AF-9999)
-//   ALFA  — борт «maxus», точный размер по фото не подтверждён → принят Maxus 26
-//           (идёт рядом с EVA того же размера). inferred: true — уточнить у Павла.
+//   ALFA  — Maxus 28 (подтвердил Павел 2026-05-27: та же модель, что BRAVO, но
+//           BRAVO новее). Габариты = как у BRAVO (один корпус).
 export const YACHTS: ReadonlyArray<Yacht> = [
   {
     slug: "eva",
@@ -19,9 +19,9 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     capacity: 6,
     lengthMeters: 8.4,
     pricePerHour: 150,
-    minHours: 2,
+    minHours: 1,
     description:
-      "Камерная парусная яхта с тиковой палубой и белыми парусами. Носовая каюта, обеденная зона в кают-компании. Подходит для свидания, семейной прогулки или фотосессии на закате.",
+      "EVA — камерная парусная яхта с тиковой палубой и белыми парусами, до 6 гостей. Уютный кокпит и носовая каюта, мягкая гладь Минского моря — формат под свидание, предложение руки или фотосессию на закате.",
     features: ["Капитан", "Топливо", "Тиковая палуба", "Аудиосистема"],
     suitableFor: ["romantic", "photoshoot", "family", "birthday-small"],
     gallery: [],
@@ -42,25 +42,23 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     name: "ALFA",
     type: "sail",
     capacity: 8,
-    lengthMeters: 8.4,
-    pricePerHour: 150,
-    minHours: 2,
+    lengthMeters: 9.44,
+    pricePerHour: 180,
+    minHours: 1,
     description:
-      "Парусная яхта на 8 гостей. Стол в кают-компании, фуршетный столик на палубе — формат под день рождения, девичник или небольшой корпоратив.",
+      "ALFA — парусная яхта Maxus 28, 9 метров, до 8 гостей. Большой кокпит со столиком и каюта с диванами внизу: приходите со своей едой и напитками — под день рождения, девичник или небольшой корпоратив. Релакс за столом или драйв под парусами — выбираете вы.",
     features: ["Капитан", "Топливо", "Фуршетный стол", "Аудиосистема"],
     suitableFor: ["birthday", "hen-party", "stag-party", "corporate"],
     gallery: [],
     mainImage: "/yachts/alfa-cover.jpg",
     specs: {
-      model: "Northman Maxus 26",
+      model: "Northman Maxus 28",
       builder: "Northman, Польша",
-      lengthM: 8.4,
-      beamM: 2.82,
-      draftM: "0,35 / 1,43",
-      berths: 4,
-      sailAreaM2: 37,
-      headroomM: 1.83,
-      inferred: true,
+      lengthM: 9.44,
+      beamM: 2.92,
+      draftM: "0,4 / 1,6",
+      cabins: 2,
+      berths: 6,
     },
   },
   {
@@ -69,10 +67,10 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     type: "motor",
     capacity: 8,
     lengthMeters: 8.7,
-    pricePerHour: 150,
-    minHours: 2,
+    pricePerHour: 180,
+    minHours: 1,
     description:
-      "Моторная яхта с просторным кокпитом и купальной платформой. Ходит без парусов — идёт по графику в любую погоду. Для активных компаний и фотосессий.",
+      "MARIO — моторная яхта с закрытой рубкой и панорамным остеклением, до 8 гостей. Диван в кокпите, солярий на носу, купальная платформа: мягкий ход без качки в любую погоду. Семейные выходные, девичник или фотосессия.",
     features: ["Капитан", "Топливо", "Купальная платформа", "Аудиосистема"],
     suitableFor: ["birthday", "hen-party", "corporate", "photoshoot"],
     gallery: [],
@@ -94,10 +92,10 @@ export const YACHTS: ReadonlyArray<Yacht> = [
     type: "sail",
     capacity: 8,
     lengthMeters: 9.44,
-    pricePerHour: 150,
-    minHours: 2,
+    pricePerHour: 200,
+    minHours: 1,
     description:
-      "Флагман флота: стол в кают-компании, фуршетный столик на палубе, самая большая площадь палубы во флоте. Для юбилея, премиум-корпоратива и VIP-вечера.",
+      "BRAVO — флагман флота: Maxus 28, 9,4 метра, самый новый корпус у нас. Большой стол на палубе для 8 гостей и каюта внизу — под юбилей, премиум-корпоратив или VIP-вечер. Прогулка с угощением или драйв под парусами.",
     features: ["Капитан", "Топливо", "Фуршетный стол", "Аудиосистема"],
     suitableFor: ["anniversary", "vip-corporate", "proposal"],
     gallery: [],
