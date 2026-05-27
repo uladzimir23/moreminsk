@@ -1,10 +1,10 @@
 import clsx from "clsx";
 import styles from "./Logo.module.scss";
 
-// Brand lockup for «минское море» — a geometric two-sail sloop mark (sky
-// accent) with a soft ripple pinging out behind it, plus a lowercase, single
-// font wordmark. Mark colour = --color-accent; wordmark inherits currentColor
-// so it reads white over the hero and dark on light surfaces.
+// Brand lockup for «Море Минск» — a geometric two-sail sloop: the bigger sail
+// scarlet («алые паруса»), the other + the waterline in currentColor (header fg
+// — white over the hero, dark when frosted). The wordmark stacks «море» over
+// «минск» in plain text colour (no accent).
 
 type Props = {
   /** Hide the wordmark (mark only) — used in tight spots. */
@@ -24,15 +24,15 @@ export function Logo({ markOnly = false, className }: Props) {
           aria-hidden="true"
           focusable="false"
         >
-          {/* mainsail */}
-          <path d="M13 3 L13 19 L4 19 Z" fill="currentColor" />
-          {/* jib */}
-          <path d="M15 8 L15 19 L22.5 19 Z" fill="currentColor" opacity="0.55" />
+          {/* Two sails flanking a central mast, like the client's logo: a
+              neutral sail leaning left + the bigger sail (right) in scarlet. */}
+          <path d="M12.7 4 L6 18.5 L12.7 18.5 Z" fill="currentColor" />
+          <path d="M13.3 2.5 L13.3 18.5 L21 18.5 Z" fill="#e51f2c" />
           {/* waterline — extends past the 0–28 viewBox (clipped by the svg) so
               it can drift left one full wave period in a seamless loop */}
           <path
             className={styles.waterline}
-            d="M-8 23.5 q5 2.4 10 0 t10 0 t10 0 t10 0 t10 0 t10 0"
+            d="M-8 21 q5 2.4 10 0 t10 0 t10 0 t10 0 t10 0 t10 0"
             stroke="currentColor"
             strokeWidth="1.6"
             strokeLinecap="round"
@@ -41,8 +41,8 @@ export function Logo({ markOnly = false, className }: Props) {
       </span>
       {!markOnly && (
         <span className={styles.word}>
-          <span className={styles.wordMinsk}>минское</span>{" "}
-          <span className={styles.wordMore}>море</span>
+          <span className={styles.wordMore}>море</span>{" "}
+          <span className={styles.wordMinsk}>минск</span>
         </span>
       )}
     </span>

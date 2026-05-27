@@ -24,7 +24,9 @@
   z-index: 1;
   inline-size: 1.5rem;
   block-size: 1.5rem;
-  color: var(--color-accent);
+  // Inherit the header fg so the jib + waterline are neutral (white over the
+  // hero, dark when frosted); only the scarlet sail carries colour.
+  color: inherit;
 }
 
 // Waterline drifts left by exactly one wave period (20 user units, where
@@ -96,20 +98,18 @@
 }
 
 // ── Wordmark ────────────────────────────────────────────────────────────────
-// Stacked two lines «минское» / «море» in the mono, wide-tracked style of the
-// «Яхты» button, «море» in the sky accent. Same on every screen.
+// Stacked two lines «море» / «минск», tight mono — plain text colour (no accent).
 
 .word {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  line-height: 1.1;
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 
 .wordMore {
-  color: var(--color-accent);
+  color: inherit; // plain text colour — no accent on the wordmark
 }
