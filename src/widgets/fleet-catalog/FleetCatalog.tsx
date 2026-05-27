@@ -1,9 +1,8 @@
-import { YACHTS } from "@/shared/content/yachts";
 import { PageHero } from "@/shared/ui/page-hero/PageHero";
 import { PageShell } from "@/shared/ui/page-hero/PageShell";
-import { PHOTOS_BY_YACHT, type YachtSlug } from "@/widgets/landing/_data/photos";
-import { FleetCard } from "./FleetCard";
+import { PHOTOS_BY_YACHT } from "@/widgets/landing/_data/photos";
 import styles from "./FleetCatalog.module.scss";
+import { FleetList } from "./FleetList";
 
 // Fleet catalog — a stacked showcase, one atmospheric panel per yacht (the
 // active photo blurred behind a dark scrim, crisp photo + Lora-italic name +
@@ -24,17 +23,7 @@ export function FleetCatalog() {
       }
     >
       <section className={styles.root} aria-labelledby="fleet-catalog-title">
-        <div className={styles.list}>
-          {YACHTS.map((yacht, i) => (
-            <FleetCard
-              key={yacht.slug}
-              yacht={yacht}
-              photos={PHOTOS_BY_YACHT[yacht.slug as YachtSlug] ?? []}
-              reverse={i % 2 === 1}
-              eager={i === 0}
-            />
-          ))}
-        </div>
+        <FleetList />
       </section>
     </PageShell>
   );
