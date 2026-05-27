@@ -1,21 +1,17 @@
 "use client";
 
 import { CONTACTS } from "@/shared/content/contacts";
+import { YACHTS } from "@/shared/content/yachts";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { PageHero } from "@/shared/ui/page-hero/PageHero";
 import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { COVER_BY_YACHT } from "@/widgets/landing/_data/photos";
-import {
-  CalendarDays,
-  Camera,
-  Clock,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Send,
-} from "lucide-react";
+import { ArrowUpRight, CalendarDays, Camera, Clock, Mail, MapPin, Phone, Send } from "lucide-react";
 import styles from "./ContactsPage.module.scss";
+
+const YACHT_COVERS = YACHTS.map((y) => COVER_BY_YACHT[y.slug as keyof typeof COVER_BY_YACHT]);
 
 export function ContactsPage() {
   const { open } = usePanel();
@@ -34,14 +30,17 @@ export function ContactsPage() {
         />
       }
     >
-      <section className={styles.root} aria-labelledby="contacts-title">
-        <div className={styles.container}>
+      <section className={styles.section} aria-labelledby="contacts-title">
+        <AmbientBackdrop images={YACHT_COVERS} activeIndex={0} className={styles.sectionBg} />
+        <SectionHeader eyebrow="Контакты" title="Каналы" accent="связи" tone="media" framed />
+
+        <div className={styles.inner}>
           <div className={styles.grid}>
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <Phone className={styles.cardIcon} aria-hidden="true" />
-                Телефоны
-              </h2>
+            <article className={styles.card}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <Phone />
+              </span>
+              <h2 className={styles.cardTitle}>Телефоны</h2>
               <ul className={styles.list}>
                 {CONTACTS.phones.map((p) => (
                   <li key={p.href}>
@@ -52,13 +51,13 @@ export function ContactsPage() {
                 ))}
               </ul>
               <p className={styles.muted}>МТС, A1 — звонки и Viber</p>
-            </div>
+            </article>
 
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <Send className={styles.cardIcon} aria-hidden="true" />
-                Мессенджеры
-              </h2>
+            <article className={styles.card}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <Send />
+              </span>
+              <h2 className={styles.cardTitle}>Мессенджеры</h2>
               <ul className={styles.list}>
                 <li>
                   <a
@@ -76,17 +75,14 @@ export function ContactsPage() {
                   </a>
                 </li>
               </ul>
-              <p className={styles.muted}>
-                <MessageCircle className={styles.inlineIcon} aria-hidden="true" />
-                Самый быстрый способ — Telegram
-              </p>
-            </div>
+              <p className={styles.muted}>Самый быстрый способ — Telegram</p>
+            </article>
 
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <Mail className={styles.cardIcon} aria-hidden="true" />
-                Почта
-              </h2>
+            <article className={styles.card}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <Mail />
+              </span>
+              <h2 className={styles.cardTitle}>Почта</h2>
               <ul className={styles.list}>
                 <li>
                   <a href={CONTACTS.email.href} className={styles.link}>
@@ -95,13 +91,13 @@ export function ContactsPage() {
                 </li>
               </ul>
               <p className={styles.muted}>Для документов и корпоративных заявок</p>
-            </div>
+            </article>
 
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <Camera className={styles.cardIcon} aria-hidden="true" />
-                Соцсети
-              </h2>
+            <article className={styles.card}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <Camera />
+              </span>
+              <h2 className={styles.cardTitle}>Соцсети</h2>
               <ul className={styles.list}>
                 <li>
                   <a
@@ -115,43 +111,37 @@ export function ContactsPage() {
                 </li>
               </ul>
               <p className={styles.muted}>Галерея выходов — смотрите перед бронью</p>
-            </div>
+            </article>
 
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <MapPin className={styles.cardIcon} aria-hidden="true" />
-                Адрес причала
-              </h2>
-              <p className={styles.addressLine}>{CONTACTS.address.line1}</p>
-              <p className={styles.muted}>{CONTACTS.address.line2}</p>
-            </div>
-
-            <div className={styles.card}>
-              <h2 className={styles.cardTitle}>
-                <Clock className={styles.cardIcon} aria-hidden="true" />
-                Часы работы
-              </h2>
+            <article className={styles.card}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <Clock />
+              </span>
+              <h2 className={styles.cardTitle}>Часы работы</h2>
               <p className={styles.addressLine}>{CONTACTS.address.hours}</p>
               <p className={styles.muted}>Навигационный сезон: май — октябрь</p>
-            </div>
-          </div>
+            </article>
 
-          <div className={styles.mapSection}>
-            <h2 className={styles.mapTitle}>Как добраться</h2>
-            <div className={styles.mapPlaceholder}>
-              <MapPin className={styles.mapIcon} aria-hidden="true" />
-              <p className={styles.mapText}>
-                Карта загрузится по клику. {CONTACTS.address.line1} — 25 минут от центра Минска.
-              </p>
-              <a
-                href={CONTACTS.address.mapsUrl}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.mapLink}
-              >
-                Открыть в Яндекс.Картах
-              </a>
-            </div>
+            {/* Map / location — wide glass panel. */}
+            <article className={`${styles.card} ${styles.mapCard}`}>
+              <span className={styles.iconTile} aria-hidden="true">
+                <MapPin />
+              </span>
+              <div className={styles.mapBody}>
+                <h2 className={styles.cardTitle}>Причал</h2>
+                <p className={styles.addressLine}>{CONTACTS.address.line1}</p>
+                <p className={styles.muted}>{CONTACTS.address.line2}</p>
+                <a
+                  href={CONTACTS.address.mapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.mapLink}
+                >
+                  Открыть в Яндекс.Картах
+                  <ArrowUpRight className={styles.mapLinkIcon} aria-hidden="true" />
+                </a>
+              </div>
+            </article>
           </div>
 
           <div className={styles.ctaRow}>
