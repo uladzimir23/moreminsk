@@ -55,9 +55,7 @@
 
 .next {
   flex: 1 1 auto;
-  background: var(--color-primary);
-  color: var(--color-primary-contrast);
   border: 0;
 
-  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-cta;
 }

@@ -75,15 +75,12 @@
   flex: none;
   padding: 0.875rem 1.5rem;
   border: 0;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring);
-  @include btn-tide;
+  @include btn-cta;
   @include focus-ring;
 
   &:active:not(:disabled) {

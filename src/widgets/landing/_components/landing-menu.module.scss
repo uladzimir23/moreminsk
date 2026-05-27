@@ -186,8 +186,6 @@
   margin-block-start: 1.5rem;
   padding: 0.875rem 1.75rem;
   border: 0;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-family: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -195,8 +193,7 @@
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring);
-  @include btn-tide;
+  @include btn-cta;
   @include btn-press;
 }
 

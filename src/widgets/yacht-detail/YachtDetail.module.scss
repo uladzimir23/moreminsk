@@ -160,15 +160,12 @@
   padding-inline: var(--space-xl);
   border: 0;
   border-radius: var(--btn-radius);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-family: var(--font-body);
   font-size: var(--text-base);
   font-weight: var(--primitive-weight-semibold);
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring);
 
-  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-cta;
   @include btn-press;
 }
 

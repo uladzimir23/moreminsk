@@ -61,11 +61,9 @@
 }
 
 .primary {
-  background: var(--color-primary);
-  color: var(--color-primary-contrast);
   border: 0.0625rem solid var(--color-primary);
 
-  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  @include btn-cta;
 }
 
 .secondary {

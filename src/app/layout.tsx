@@ -1,4 +1,5 @@
 import { SITE } from "@/shared/lib/seo";
+import { KitPointer } from "@/shared/ui/kit-pointer/KitPointer";
 import type { Metadata } from "next";
 import { lora, manrope } from "./fonts";
 import "./globals.scss";
@@ -34,7 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <KitPointer />
+      </body>
     </html>
   );
 }

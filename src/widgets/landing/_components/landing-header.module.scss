@@ -211,9 +211,6 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  border: 0;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-family: inherit;
   font-size: 0.75rem;
   font-weight: 600;
@@ -222,13 +219,8 @@
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring);
-  @include btn-tide; // «прилив» — accent-hover floods up on hover (no lift)
-
-  &:active {
-    transform: scale(0.96); // tactile press
-  }
-  @include focus-ring;
+  @include btn-cta; // solid blue + glint sweep on hover
+  @include btn-press;
 
   // On the smallest screens the bottom-nav «Заказать» covers this duty.
   @media (max-width: 30rem) {
@@ -259,6 +251,11 @@
   white-space: nowrap;
   isolation: isolate;
   overflow: hidden; // clip the sailing yacht to the capsule
+  // Soft brand glow (blue + orange) — not clipped by overflow; the spinning
+  // gradient ring above makes it shimmer.
+  box-shadow:
+    0 0 1.125rem -0.375rem color-mix(in srgb, var(--color-accent) 60%, transparent),
+    0 0 1.5rem -0.5rem color-mix(in srgb, var(--color-accent-2) 45%, transparent);
   transition: background-color var(--duration-base) var(--ease-out);
 
   &:active {
@@ -337,10 +334,12 @@
   z-index: -1;
   border-radius: inherit;
   padding: 0.0625rem;
+  // Brand gradient arc — travels orange → blue around the capsule border.
   background: conic-gradient(
     from var(--fleet-angle),
-    color-mix(in srgb, currentColor 28%, transparent) 0deg 250deg,
-    var(--color-accent) 312deg,
+    color-mix(in srgb, currentColor 28%, transparent) 0deg 215deg,
+    var(--color-accent) 290deg,
+    var(--color-accent-2) 342deg,
     color-mix(in srgb, currentColor 28%, transparent) 360deg
   );
   -webkit-mask:

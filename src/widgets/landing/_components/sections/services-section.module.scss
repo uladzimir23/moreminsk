@@ -256,7 +256,7 @@
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: var(--on-media-accent);
+  color: var(--color-accent-2); // orange — secondary accent
 }
 .serviceUtp {
   margin: 0;
@@ -371,8 +371,6 @@
   align-self: flex-start;
   margin-top: 0.375rem;
   padding: 0.875rem 1.625rem;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -380,10 +378,7 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 40%, transparent);
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    box-shadow var(--duration-base) var(--ease-out);
-  @include btn-tide; // «прилив» on hover (no lift)
+  @include btn-cta;
   @include btn-press;
 
   &:hover {

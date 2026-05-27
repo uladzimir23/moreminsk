@@ -441,18 +441,13 @@
   @media (max-width: 63.999rem) {
     display: none;
   }
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   cursor: pointer;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--color-accent) 32%, transparent);
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    box-shadow 0.2s ease;
-  @include btn-tide;
+  @include btn-cta;
   @include btn-press;
 
   &:hover {
@@ -543,7 +538,6 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
-  @include btn-tide;
   @include btn-press;
 }
 @keyframes successIn {
