@@ -8,13 +8,12 @@
 
 export type BookingPayload = {
   yacht: string;
-  service: string;
-  duration: string;
   date: string;
+  time: string;
   name: string;
   phone: string;
-  /** Calculator estimate, e.g. "350 BYN" (optional — quick forms omit it). */
-  price?: string;
+  /** Optional повод when the lead came from a service page (no calculator). */
+  service?: string;
 };
 
 export class BookingNotConfiguredError extends Error {
@@ -33,10 +32,9 @@ function formatMessage(p: BookingPayload): string {
     `Имя: ${p.name}`,
     `Телефон: ${p.phone}`,
     `Яхта: ${p.yacht}`,
-    `Повод: ${p.service}`,
-    `Длительность: ${p.duration}`,
-    ...(p.price ? [`Ориентир по цене: ${p.price}`] : []),
     `Дата: ${p.date || "—"}`,
+    `Время: ${p.time || "—"}`,
+    ...(p.service ? [`Повод: ${p.service}`] : []),
   ].join("\n");
 }
 

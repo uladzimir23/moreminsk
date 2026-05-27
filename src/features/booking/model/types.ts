@@ -4,12 +4,6 @@ import type { Yacht } from "@/entities/yacht/model/types";
 export type YachtSlug = Yacht["slug"];
 export type ServiceSlug = Service["slug"];
 
-export type DurationOption =
-  | { kind: "hours"; hours: 1 | 2 | 3 | 4 }
-  | { kind: "day" }
-  | { kind: "night" }
-  | { kind: "multi-day" };
-
 export type PackageRef =
   | { kind: "none" }
   | { kind: "service"; serviceSlug: ServiceSlug }
@@ -38,7 +32,6 @@ export interface BookingDraft {
   yachtSlug?: YachtSlug | "any";
   date?: string;
   timeSlot?: string;
-  duration?: DurationOption;
   package: PackageRef;
   guests?: number;
   contact: Partial<ContactFields>;
@@ -50,12 +43,10 @@ export interface Booking {
   yachtSlug: YachtSlug | "any";
   date: string;
   timeSlot?: string;
-  duration: DurationOption;
   package: PackageRef;
   guests: number;
   contact: ContactFields;
   policyAccepted: true;
-  estimatedPrice: number | "on-request";
   createdAt: string;
   source: BookingSource;
 }

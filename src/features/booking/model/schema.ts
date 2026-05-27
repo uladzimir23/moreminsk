@@ -5,48 +5,17 @@ export const yachtStepSchema = z.object({
   yachtSlug: z.union([z.enum(["eva", "alfa", "mario", "bravo"]), z.literal("any")]),
 });
 
-const durationSchema = z.discriminatedUnion("kind", [
-  z.object({
-    kind: z.literal("hours"),
-    hours: z.union([z.literal(2), z.literal(3), z.literal(4)]),
-  }),
-  z.object({ kind: z.literal("day") }),
-  z.object({ kind: z.literal("night") }),
-  z.object({ kind: z.literal("multi-day") }),
-]);
-
-export const dateTimeStepSchema = z
-  .object({
-    date: z
-      .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "Выберите дату")
-      .refine((val) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return new Date(val) >= today;
-      }, "Дата не может быть в прошлом"),
-    duration: durationSchema,
-    timeSlot: z.string().optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.duration.kind === "multi-day" || data.duration.kind === "night") return true;
-      return !!data.timeSlot;
-    },
-    { message: "Выберите время", path: ["timeSlot"] },
-  );
-
-export const packageStepSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("none") }),
-  z.object({
-    kind: z.literal("service"),
-    serviceSlug: z.enum(["den-rozhdeniya", "korporativ", "svidanie", "devichnik", "fotosessiya"]),
-  }),
-  z.object({
-    kind: z.literal("turnkey"),
-    serviceSlug: z.enum(["den-rozhdeniya", "korporativ", "svidanie", "devichnik", "fotosessiya"]),
-  }),
-]);
+export const dateTimeStepSchema = z.object({
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Выберите дату")
+    .refine((val) => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return new Date(val) >= today;
+    }, "Дата не может быть в прошлом"),
+  timeSlot: z.string().min(1, "Выберите время"),
+});
 
 export const contactStepSchema = z.object({
   name: z.string().trim().min(2, "Минимум 2 символа"),
@@ -69,6 +38,5 @@ export const summaryStepSchema = z.object({
 
 export type YachtStepValues = z.infer<typeof yachtStepSchema>;
 export type DateTimeStepValues = z.infer<typeof dateTimeStepSchema>;
-export type PackageStepValues = z.infer<typeof packageStepSchema>;
 export type ContactStepValues = z.infer<typeof contactStepSchema>;
 export type SummaryStepValues = z.infer<typeof summaryStepSchema>;

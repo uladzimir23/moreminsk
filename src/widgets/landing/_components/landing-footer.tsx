@@ -32,11 +32,11 @@ export function LandingFooter() {
     try {
       await submitBooking({
         yacht: "—",
-        service: "Быстрый звонок (футер)",
-        duration: "—",
         date: "—",
+        time: "—",
         name: "—",
         phone,
+        service: "Быстрый звонок (футер)",
       });
       setQuick("done");
     } catch {

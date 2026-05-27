@@ -3,10 +3,9 @@
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { Check } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import formStyles from "../../BookingForm.module.scss";
-import { durationLabel, TIME_SLOTS } from "../../model/durations";
-import { calcPrice, formatPrice } from "../../model/price";
+import { TIME_SLOTS } from "../../model/durations";
 import { useBookingStore } from "../../model/store";
 import { WizardNav } from "../WizardNav";
 import styles from "./SummaryStep.module.scss";
@@ -42,7 +41,6 @@ export function SummaryStep() {
   const { draft, patch, goBack, goNext } = useBookingStore();
   const [error, setError] = useState<string | null>(null);
 
-  const estimate = useMemo(() => calcPrice(draft), [draft]);
   const timeLabel = timeSlotLabel(draft.timeSlot);
 
   const onSubmit = (e: React.FormEvent) => {
@@ -80,12 +78,6 @@ export function SummaryStep() {
           </span>
         </div>
         <div className={styles.row}>
-          <span className={styles.rowLabel}>Длительность</span>
-          <span className={styles.rowValue}>
-            {draft.duration ? durationLabel(draft.duration) : "—"}
-          </span>
-        </div>
-        <div className={styles.row}>
           <span className={styles.rowLabel}>Повод</span>
           <span className={styles.rowValue}>{packageLabel(draft.package)}</span>
         </div>
@@ -108,14 +100,6 @@ export function SummaryStep() {
             <span className={styles.rowValue}>{draft.contact.comment}</span>
           </div>
         )}
-      </div>
-
-      <div className={styles.price}>
-        <span className={styles.priceLabel}>Предварительная цена</span>
-        <span className={styles.priceValue}>{formatPrice(estimate)}</span>
-        <span className={styles.priceBreakdown}>
-          {estimate.kind === "exact" ? estimate.breakdown : estimate.reason}
-        </span>
       </div>
 
       <label className={styles.policy}>

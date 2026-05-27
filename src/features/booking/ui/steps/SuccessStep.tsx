@@ -33,7 +33,7 @@ export function SuccessStep() {
           </span>
         </div>
         <div className={styles.actions}>
-          <button type="button" className={styles.primary} onClick={() => goToStep(5)}>
+          <button type="button" className={styles.primary} onClick={() => goToStep(4)}>
             Попробовать снова
           </button>
           <button type="button" className={styles.secondary} onClick={close}>

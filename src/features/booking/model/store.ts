@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import type { BookingDraft, BookingPanelPayload, BookingSource } from "./types";
 
-export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
+export type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 type SubmitState = "idle" | "submitting" | "ok" | "error";
 
@@ -40,7 +40,7 @@ export const useBookingStore = create<BookingStore>()(
       submitState: "idle",
 
       goNext: () => {
-        const next = Math.min(6, get().step + 1) as WizardStep;
+        const next = Math.min(5, get().step + 1) as WizardStep;
         set({ step: next });
       },
       goBack: () => {
@@ -75,7 +75,7 @@ export const useBookingStore = create<BookingStore>()(
         }),
 
       markSubmitting: () => set({ submitState: "submitting", lastError: undefined }),
-      markSuccess: (id) => set({ submitState: "ok", lastSubmittedId: id, step: 6 }),
+      markSuccess: (id) => set({ submitState: "ok", lastSubmittedId: id, step: 5 }),
       markError: (message) => set({ submitState: "error", lastError: message }),
     }),
     {
