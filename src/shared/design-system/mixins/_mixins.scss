@@ -317,14 +317,6 @@
     --cta-angle: 360deg;
   }
 }
-@keyframes mm-cta-sail {
-  from {
-    background-position: -2rem bottom;
-  }
-  to {
-    background-position: calc(100% + 2rem) bottom;
-  }
-}
 
 // ── Primary CTA — «Signature · settle» ───────────────────────────────────────
 // Rest: a Running-light comet orbits the 1px edge (masked ::before). Hover: the
@@ -340,8 +332,10 @@
   border: 0;
   background-color: var(--color-accent);
   // Our logo sloop (white jib + scarlet main) sails along the bottom edge on
-  // hover — echoes the «Яхты» pill. Parked off the left edge at rest; the hover
-  // animation carries it across, then it parks off-left again on leave.
+  // hover — echoes the «Яхты» pill. Parked off the left edge at rest; a hover
+  // TRANSITION (not an animation) carries it across once, then it resets instantly
+  // on leave. Must not use `animation` here: that would override a consumer's
+  // entrance animation on the button and make it replay on hover-out.
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2024'%3E%3Cpath%20d='M12.7%204L6%2018.5h6.7Z'%20fill='%23ffffff'/%3E%3Cpath%20d='M13.3%202.5v16h7.7Z'%20fill='%23ff3b47'/%3E%3Cpath%20d='M3%2021q4%202%208%200t8%200t8%200'%20fill='none'%20stroke='%23ffffff'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 1.1rem auto;
@@ -352,7 +346,8 @@
   transition:
     background-color var(--duration-base) var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out),
-    transform var(--duration-base) var(--ease-spring);
+    transform var(--duration-base) var(--ease-spring),
+    background-position 0s; // instant reset on leave → no reverse-sail
 
   // Rest: Running-light comet on the edge ring. Settles (pauses) on hover.
   &::before {
@@ -419,12 +414,17 @@
   &:hover,
   &:focus-visible {
     background-color: var(--color-accent-hover);
+    background-position: calc(100% + 2rem) bottom; // logo sails across the bottom
     transform: perspective(30rem) rotateX(calc(var(--rx, 0deg) * 0.9))
       rotateY(calc(var(--ry, 0deg) * 0.9)) scale(1.04);
     box-shadow:
       0 0.5rem 1.6rem -0.5rem color-mix(in srgb, var(--color-accent) 70%, transparent),
       0 0 1.75rem -0.5rem color-mix(in srgb, var(--color-accent-2) 50%, transparent);
-    animation: mm-cta-sail 1.9s var(--ease-out) infinite; // logo sails the bottom
+    transition:
+      background-color var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-spring),
+      background-position 1.4s linear;
   }
   &:hover::before,
   &:focus-visible::before {
@@ -446,7 +446,7 @@
     &:hover,
     &:focus-visible {
       transform: none;
-      animation: none;
+      background-position: -2rem bottom; // keep the sail parked (no motion)
     }
     &:hover svg,
     &:focus-visible svg {
@@ -580,6 +580,42 @@
   animation: mm-chevron-fly-#{$dir} 0.7s var(--ease-out) infinite;
   @include reduced-motion {
     animation: none;
+  }
+}
+
+// ── Nav arrow (carousel prev/next) ──────────────────────────────────────────
+// THE site's icon-arrow style — reuse for every photo carousel / pager. SQUARE
+// (no border-radius — matches our square-CTA geometry), glass chip with a
+// hairline that turns accent on hover, on-media chevron, clips for chevron-fly.
+// Pair with @include chevron-fly($dir) on the inner <svg> + an inline chevron
+// path. Don't hand-roll arrow buttons (no ad-hoc round ones).
+@mixin nav-arrow($size: 2.5rem) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: $size;
+  block-size: $size;
+  padding: 0;
+  border: 0.0625rem solid var(--media-hairline-strong);
+  border-radius: 0;
+  background: var(--media-glass-bg);
+  color: var(--on-media);
+  cursor: pointer;
+  overflow: hidden; // clip the chevron as it flies out one edge
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--color-accent);
+    background: var(--media-glass-bg-hover);
+  }
+  svg {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
   }
 }
 
