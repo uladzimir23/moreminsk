@@ -5,10 +5,13 @@ import { Link } from "@/i18n/navigation";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { PageHero } from "@/shared/ui/page-hero/PageHero";
 import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { COVER_BY_YACHT } from "@/widgets/landing/_data/photos";
-import { ArrowRight } from "lucide-react";
+import clsx from "clsx";
+import { ArrowRight, BadgeCheck, Clock, Fuel, Sailboat, Ship, type LucideIcon } from "lucide-react";
 import styles from "./PricesPage.module.scss";
 
 const TYPE_LABEL: Record<Yacht["type"], string> = {
@@ -16,6 +19,17 @@ const TYPE_LABEL: Record<Yacht["type"], string> = {
   motor: "Моторная",
   "sail-motor": "Парусно-моторная",
 };
+const TYPE_ICON: Record<Yacht["type"], LucideIcon> = {
+  sail: Sailboat,
+  motor: Ship,
+  "sail-motor": Sailboat,
+};
+
+const TRUST: ReadonlyArray<{ icon: LucideIcon; text: string }> = [
+  { icon: BadgeCheck, text: "Капитан с лицензией" },
+  { icon: Fuel, text: "Топливо в цене" },
+  { icon: Clock, text: "Ответ за 30 минут" },
+];
 
 export function PricesPage() {
   const { open } = usePanel();
@@ -28,86 +42,126 @@ export function PricesPage() {
           eyebrow="Цены"
           title="Цены на аренду яхт"
           accent="в Минске"
-          lead="Почасовые ставки яхт и пакеты под событие. Капитан и топливо уже в цене. Это ориентир — точную стоимость подтверждаем при звонке под вашу дату и состав."
+          lead="Почасовые ставки яхт — капитан и топливо уже в цене, минимум 1 час. Это ориентир: точную стоимость подтверждаем при звонке под вашу дату и состав."
           image={COVER_BY_YACHT.bravo}
           titleId="prices-title"
         />
       }
     >
-      <section className={styles.section} aria-labelledby="prices-title">
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>Яхты — почасовая аренда</h2>
-          <div className={styles.tableWrap}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th scope="col" className={styles.stickyCol}>
-                    Яхта
-                  </th>
-                  <th scope="col">Тип</th>
-                  <th scope="col">Гостей</th>
-                  <th scope="col">Цена/час</th>
-                  <th scope="col">Минимум</th>
-                </tr>
-              </thead>
-              <tbody>
-                {YACHTS.map((y) => (
-                  <tr key={y.slug}>
-                    <th scope="row" className={styles.stickyCol}>
-                      <Link href={`/fleet/${y.slug}`} className={styles.rowLink}>
-                        {y.name}
-                      </Link>
-                    </th>
-                    <td>{TYPE_LABEL[y.type]}</td>
-                    <td>до {y.capacity}</td>
-                    <td className={styles.price}>от {y.pricePerHour} BYN</td>
-                    <td>{y.minHours} ч</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      {/* Sticky in-page anchors. */}
+      <nav className={styles.anchorNav} aria-label="Разделы цен">
+        <a href="#fleet" className={styles.anchorLink}>
+          Флот
+        </a>
+        <a href="#services" className={styles.anchorLink}>
+          Услуги
+        </a>
+      </nav>
+
+      <section id="fleet" className={styles.section}>
+        <SectionHeader eyebrow="01 · Флот" title="Почасовая" accent="аренда" tone="media" framed />
+
+        <ul className={styles.grid}>
+          {YACHTS.map((y) => {
+            const cover = COVER_BY_YACHT[y.slug as keyof typeof COVER_BY_YACHT];
+            const TypeIcon = TYPE_ICON[y.type];
+            const flagship = y.badge === "flagship";
+            return (
+              <li key={y.slug} className={clsx(styles.card, flagship && styles.cardFlagship)}>
+                {/* Per-card blurred-photo backdrop (slow ken-burns lives on the blur). */}
+                <AmbientBackdrop images={[cover]} activeIndex={0} className={styles.cardBg} />
+                {flagship && <span className={styles.badge}>флагман</span>}
+
+                <Link
+                  href={`/fleet/${y.slug}`}
+                  className={styles.media}
+                  aria-label={`Яхта ${y.name}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    className={styles.mediaImg}
+                    src={cover}
+                    alt={`Яхта ${y.name} на Минском море`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </Link>
+
+                <div className={styles.info}>
+                  <p className={styles.specs}>
+                    <TypeIcon className={styles.specIcon} aria-hidden="true" />
+                    {TYPE_LABEL[y.type]} · до {y.capacity} гостей · минимум {y.minHours} ч
+                  </p>
+                  <h3 className={styles.name}>
+                    <Link href={`/fleet/${y.slug}`} className={styles.nameLink}>
+                      {y.name}
+                    </Link>
+                  </h3>
+                  <p className={styles.priceBlock}>
+                    <span className={styles.priceFrom}>от</span>
+                    <span className={styles.priceValue}>{y.pricePerHour}</span>
+                    <span className={styles.priceSuffix}>BYN/ч</span>
+                  </p>
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.book}
+                      onClick={() => open("order", { yacht: y.slug })}
+                    >
+                      Забронировать
+                    </button>
+                    <Link href={`/fleet/${y.slug}`} className={styles.detail}>
+                      Подробнее
+                    </Link>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <ul className={styles.trust}>
+          {TRUST.map((t) => (
+            <li key={t.text} className={styles.trustItem}>
+              <t.icon className={styles.trustIcon} aria-hidden="true" />
+              {t.text}
+            </li>
+          ))}
+        </ul>
       </section>
 
-      <section className={`${styles.section} ${styles.alt}`}>
-        <div className={styles.container}>
-          <h2 className={styles.sectionTitle}>Пакеты под событие</h2>
-          <ul className={styles.serviceList}>
-            {SERVICES.map((s) => (
-              <li key={s.slug} className={styles.serviceCard}>
-                <Link href={`/services/${s.slug}`} className={styles.serviceName}>
-                  {s.shortTitle}
-                  <ArrowRight className={styles.serviceIcon} aria-hidden="true" />
-                </Link>
-                <ul className={styles.pkgList}>
-                  {s.packages.map((p) => (
-                    <li key={`${p.name}-${p.duration}`} className={styles.pkg}>
-                      <span className={styles.pkgName}>
-                        {p.name} · {p.duration}
-                      </span>
-                      <span className={styles.pkgPrice}>{p.price} BYN</span>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <section id="services" className={styles.section}>
+        <SectionHeader
+          eyebrow="02 · Услуги"
+          title="Под событие"
+          accent="почасово"
+          tone="media"
+          framed
+        />
+
+        <ul className={styles.svcGrid}>
+          {SERVICES.map((s) => (
+            <li key={s.slug}>
+              <Link href={`/services/${s.slug}`} className={styles.svcChip}>
+                <span className={styles.svcName}>{s.shortTitle}</span>
+                <span className={styles.svcPrice}>от {s.fromPrice} BYN/ч</span>
+                <ArrowRight className={styles.svcArrow} aria-hidden="true" />
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className={styles.section}>
-        <div className={styles.container}>
-          <div className={styles.cta}>
-            <h2 className={styles.ctaTitle}>Соберите свой выход в калькуляторе</h2>
-            <p className={styles.ctaLead}>
-              Цена обновится сразу — выберите яхту, повод и длительность.
-            </p>
-            <button type="button" className={styles.ctaBtn} onClick={() => open("order")}>
-              Рассчитать стоимость
-              <ArrowRight className={styles.ctaIcon} aria-hidden="true" />
-            </button>
-          </div>
+        <div className={styles.cta}>
+          <h2 className={styles.ctaTitle}>Готовы выбрать дату?</h2>
+          <p className={styles.ctaLead}>
+            Капитан и топливо в цене, минимум 1 час. Подтвердим свободное окно за 30 минут.
+          </p>
+          <button type="button" className={styles.ctaBtn} onClick={() => open("order")}>
+            Забронировать
+            <ArrowRight className={styles.ctaIcon} aria-hidden="true" />
+          </button>
         </div>
       </section>
     </PageShell>
