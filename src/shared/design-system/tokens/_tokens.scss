@@ -407,12 +407,33 @@
     --color-primary-soft: var(--primitive-color-slate-50);
     --color-on-primary: #ffffff;
 
-    --color-accent: var(--primitive-color-sky-500); // #0ea5e9 — was sunset coral
-    --color-accent-hover: var(--primitive-color-sky-600);
-    --color-accent-active: var(--primitive-color-sky-700);
-    --color-accent-soft: var(--primitive-color-sky-50);
-    --color-accent-text: var(--primitive-color-sky-600); // inline-link variant, AA 4.6:1 on white
+    // Primary brand accent — deep royal blue. Drives CTAs/buttons, links, dots,
+    // eyebrows, focus ring.
+    --color-accent: #246ed1;
+    --color-accent-hover: #1f5fb8;
+    --color-accent-active: #1a4f9c;
+    --color-accent-soft: #eef4fc;
+    --color-accent-text: #1f5fb8; // ≥4.5:1 on white
     --color-on-accent: #ffffff;
+
+    // Second accent — scarlet («алые паруса»). Used sparingly: Lora-italic
+    // accent words. Bright variant is theme-independent (italic over the hero).
+    --color-accent-2: #e01e2b;
+    --color-accent-2-bright: #ff3b47;
+
+    // Brand gradient — bright Apple-ish sweep: scarlet → hot pink → violet →
+    // electric blue. Drives glowing borders + glints.
+    --gradient-brand: linear-gradient(110deg, #ff2638 0%, #ff2d8f 34%, #8b3bff 68%, #2b7bff 100%);
+
+    // Aurora — bright flag-palette (scarlet · white · blue) as soft overlapping
+    // colour blobs over a base sweep. The consuming element animates each layer's
+    // background-position at its own pace, so the colours drift and recombine
+    // organically (never a repeating stripe). Used on accent text.
+    --gradient-flag:
+      radial-gradient(60% 150% at 18% 22%, #ff2440 0%, transparent 60%),
+      radial-gradient(55% 140% at 84% 30%, #2f8bff 0%, transparent 60%),
+      radial-gradient(48% 130% at 52% 92%, #ffffff 0%, transparent 55%),
+      linear-gradient(100deg, #ff2440 0%, #246ed1 100%);
 
     --color-success: var(--primitive-color-success);
     --color-warning: var(--primitive-color-warning);
@@ -422,7 +443,7 @@
     --color-border: var(--primitive-color-slate-200);
     --color-border-hairline: var(--primitive-color-slate-200); // crisp 1px, not color-mix
     --color-border-strong: var(--primitive-color-slate-400);
-    --color-ring: var(--primitive-color-sky-500);
+    --color-ring: var(--color-accent); // primary blue
 
     --color-card: var(--color-surface);
     --color-card-foreground: var(--color-foreground);
@@ -508,12 +529,17 @@
     --color-primary-soft: color-mix(in oklch, var(--color-primary) 12%, transparent);
     --color-on-primary: var(--primitive-color-slate-950);
 
-    --color-accent: var(--primitive-color-sky-400); // #38bdf8 — brighter on dark
-    --color-accent-hover: var(--primitive-color-sky-300);
-    --color-accent-active: var(--primitive-color-sky-200);
+    // Same accent as light + light text on it → buttons are theme-independent
+    // (identical fill/hover/label in both themes).
+    --color-accent: #246ed1;
+    --color-accent-hover: #1f5fb8;
+    --color-accent-active: #1a4f9c;
     --color-accent-soft: color-mix(in oklch, var(--color-accent) 18%, transparent);
-    --color-accent-text: var(--primitive-color-sky-400); // ≥4.5:1 on near-black
-    --color-on-accent: var(--primitive-color-slate-950);
+    --color-accent-text: #6a9bff; // brighter for ≥4.5:1 on near-black (inline links)
+    --color-on-accent: #ffffff; // light label on the blue button
+
+    --color-accent-2: #ff4a55; // brighter scarlet on dark
+    // --color-accent-2-bright + --gradient-brand cascade from the light block.
 
     --color-success: color-mix(in oklch, var(--primitive-color-success) 70%, white);
     --color-warning: color-mix(in oklch, var(--primitive-color-warning) 80%, white);
@@ -522,7 +548,7 @@
     --color-border: var(--primitive-color-slate-800);
     --color-border-hairline: var(--primitive-color-slate-800);
     --color-border-strong: var(--primitive-color-slate-700);
-    --color-ring: var(--primitive-color-sky-400);
+    --color-ring: var(--color-accent); // primary blue (dark)
 
     // Dark mode keeps subtle shadow для отделения surface от background.
     --color-card-shadow: 0 1px 0 rgb(255 255 255 / 0.04);
@@ -573,6 +599,6 @@
     --media-glass-bg-hover: rgb(255 255 255 / 0.12);
     --media-glass-border: rgb(255 255 255 / 0.18);
 
-    --on-media-accent: color-mix(in srgb, var(--primitive-color-sky-400) 80%, white);
+    --on-media-accent: color-mix(in srgb, #6a9bff 92%, white); // bright royal blue on dark media
   }
 } // close @layer tokens
