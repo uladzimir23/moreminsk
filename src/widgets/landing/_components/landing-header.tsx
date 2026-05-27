@@ -8,8 +8,9 @@ import { LandingControls } from "./landing-controls";
 import styles from "./landing-header.module.scss";
 import { LandingMenu } from "./landing-menu";
 
-// «Флот» lives in the dedicated «Яхты» pill, so it's not duplicated here.
+// «Яхты» pill leads the bar; «Главная» is the first text link right after it.
 const NAV = [
+  { href: "/", label: "Главная" },
   { href: "/services", label: "Услуги" },
   { href: "/ceny", label: "Цены" },
   { href: "/galereya", label: "Галерея" },
@@ -57,6 +58,42 @@ export function LandingHeader() {
           <Logo />
         </Link>
 
+        {/* «Яхты» pill leads the bar (first interactive item after the brand). */}
+        <Link href="/fleet" className={styles.fleetBtn} aria-label="Смотреть флот">
+          {/* Yacht sails across behind the label on hover — echoes the logo
+              mark. Sits behind the text; the label swaps Яхты → Флот. */}
+          <span className={styles.fleetSail} aria-hidden="true">
+            <svg viewBox="0 0 28 28" fill="none" focusable="false">
+              <path d="M13 5 L13 18 L5 18 Z" fill="currentColor" />
+              <path d="M15 9 L15 18 L21.5 18 Z" fill="currentColor" opacity="0.55" />
+              <path
+                d="M3 21 q5 2 10 0 t10 0"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <span className={styles.fleetWords}>
+            <span className={styles.fleetWordRest}>Яхты</span>
+            <span className={styles.fleetWordHover} aria-hidden="true">
+              Флот
+            </span>
+          </span>
+          <svg
+            className={styles.fleetArrow}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </Link>
+
         <nav className={styles.nav} aria-label="Разделы">
           {NAV.map((item) => (
             <Link key={item.href} href={item.href} className={styles.link}>
@@ -66,43 +103,9 @@ export function LandingHeader() {
         </nav>
 
         <div className={styles.actions}>
-          <Link href="/fleet" className={styles.fleetBtn} aria-label="Смотреть флот">
-            {/* Yacht sails across behind the label on hover — echoes the logo
-                mark. Sits behind the text; the label swaps Яхты → Флот. */}
-            <span className={styles.fleetSail} aria-hidden="true">
-              <svg viewBox="0 0 28 28" fill="none" focusable="false">
-                <path d="M13 5 L13 18 L5 18 Z" fill="currentColor" />
-                <path d="M15 9 L15 18 L21.5 18 Z" fill="currentColor" opacity="0.55" />
-                <path
-                  d="M3 21 q5 2 10 0 t10 0"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-            <span className={styles.fleetWords}>
-              <span className={styles.fleetWordRest}>Яхты</span>
-              <span className={styles.fleetWordHover} aria-hidden="true">
-                Флот
-              </span>
-            </span>
-            <svg
-              className={styles.fleetArrow}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Link>
-          {/* Phone, socials and theme/locale toggles show inline only at ≥xl,
-              where the full bar fits; below that they collapse into the burger
-              menu (which is present on every breakpoint). */}
+          {/* Phone, socials and the theme toggle show inline only at ≥xl, where
+              the full bar fits; below that they collapse into the burger menu
+              (which is present on every breakpoint). */}
           <a href="tel:+375296953636" className={styles.phone}>
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
           </a>
