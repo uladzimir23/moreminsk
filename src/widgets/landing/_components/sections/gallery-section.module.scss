@@ -11,11 +11,13 @@
   color: var(--on-media);
 }
 
-// Centres the gallery under the framed SectionHeader (same max-width + gutter).
+// Centres the gallery under the framed SectionHeader. Capped narrower than the
+// full section width — the YachtGallery frame is 4:3, so at full --section-max it
+// grew to ~960px tall (portrait photos → wide letterbox). 50rem keeps it sane.
 .viewer {
   position: relative;
   z-index: 1;
-  max-width: var(--section-max);
+  max-width: 50rem;
   margin: 0 auto;
   padding-inline: var(--section-gutter);
 }
