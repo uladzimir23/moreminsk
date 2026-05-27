@@ -48,7 +48,7 @@
   font-family: var(--font-accent);
   font-style: italic;
   font-weight: var(--primitive-weight-medium);
-  color: var(--color-accent);
+  color: var(--color-accent-2); // orange — secondary accent on italic words
 }
 
 .subtitle {
@@ -81,7 +81,7 @@
     max-inline-size: 45rem;
   }
   .accent {
-    color: var(--on-media-accent);
+    color: var(--color-accent-2); // orange on the media layer
   }
   .subtitle {
     color: var(--on-media-muted);
@@ -108,7 +108,7 @@
     max-inline-size: 45rem;
   }
   .accent {
-    color: var(--on-image-accent);
+    color: var(--color-accent-2-bright); // bright orange over the photo/video
   }
   .subtitle {
     color: var(--on-image-muted);

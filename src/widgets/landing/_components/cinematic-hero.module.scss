@@ -159,8 +159,53 @@
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  color: color-mix(in srgb, var(--color-accent) 80%, white);
   letter-spacing: -0.02em;
+  // Bright aurora (scarlet · white · blue — флаг palette). Three soft colour
+  // blobs over a base sweep, each layer drifting on its own path → organic,
+  // never-repeating flow. Fallback colour where background-clip:text is unsupported.
+  color: var(--color-accent-2-bright);
+  background: var(--gradient-flag);
+  background-size:
+    200% 200%,
+    220% 200%,
+    180% 220%,
+    200% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  will-change: background-position;
+  animation: mm-tishina-aurora 16s ease-in-out infinite;
+}
+@keyframes mm-tishina-aurora {
+  0% {
+    background-position:
+      0% 0%,
+      100% 0%,
+      50% 100%,
+      0% 50%;
+  }
+  33% {
+    background-position:
+      100% 50%,
+      0% 100%,
+      0% 0%,
+      100% 50%;
+  }
+  66% {
+    background-position:
+      50% 100%,
+      50% 0%,
+      100% 50%,
+      0% 50%;
+  }
+  100% {
+    background-position:
+      0% 0%,
+      100% 0%,
+      50% 100%,
+      0% 50%;
+  }
 }
 
 .sub {
@@ -186,30 +231,18 @@
   align-items: center;
   gap: 0.625rem;
   padding: 1rem 1.875rem;
-  border: 0;
   border-radius: 0;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
   font-size: 0.875rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--color-accent) 45%, transparent);
-  transition:
-    transform var(--duration-fast) var(--ease-spring),
-    box-shadow var(--duration-base) var(--ease-out);
-  @include btn-tide; // «прилив» floods accent-hover up on hover (no lift)
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--color-accent) 38%, transparent);
+  @include btn-cta; // «Signature · settle» — comet + cursor spot/tilt + icon fly
   @include btn-press;
   &:hover {
-    box-shadow: 0 12px 40px color-mix(in srgb, var(--color-accent) 55%, transparent);
-  }
-  svg {
-    transition: transform var(--duration-base) var(--ease-spring);
-  }
-  &:hover svg {
-    transform: translateX(0.25rem);
+    box-shadow: 0 12px 40px color-mix(in srgb, var(--color-accent) 50%, transparent);
   }
 }
 .btnGlass {
@@ -274,5 +307,8 @@
   .hero,
   .sticky {
     background: black var(--hero-poster-url) center / cover no-repeat;
+  }
+  .accent {
+    animation: none;
   }
 }
