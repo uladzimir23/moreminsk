@@ -2,7 +2,9 @@ import { Link } from "@/i18n/navigation";
 import { REVIEWS } from "@/shared/content/reviews";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
-import { Accent } from "@/shared/ui/accent/Accent";
+import { PageHero } from "@/shared/ui/page-hero/PageHero";
+import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { COVER_BY_YACHT } from "@/widgets/landing/_data/photos";
 import { Star } from "lucide-react";
 import styles from "./ReviewsPage.module.scss";
 
@@ -11,27 +13,20 @@ const monthYear = (iso: string) =>
 
 export function ReviewsPage() {
   return (
-    <>
-      <section className={styles.hero}>
-        <div className={styles.container}>
-          <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
-            <Link href="/" className={styles.crumbLink}>
-              Главная
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span>Отзывы</span>
-          </nav>
-          <h1 className={styles.h1}>
-            Отзывы о прогулках <Accent>на яхте</Accent>
-          </h1>
-          <p className={styles.lead}>
-            Что пишут гости после выходов на Минском море. Каждый отзыв — про конкретную яхту и
-            повод.
-          </p>
-        </div>
-      </section>
-
-      <section className={styles.section}>
+    <PageShell
+      hero={
+        <PageHero
+          crumbs={[{ label: "Главная", href: "/" }, { label: "Отзывы" }]}
+          eyebrow="Отзывы"
+          title="Отзывы о прогулках"
+          accent="на яхте"
+          lead="Что пишут гости после выходов на Минском море. Каждый отзыв — про конкретную яхту и повод."
+          image={COVER_BY_YACHT.mario}
+          titleId="reviews-title"
+        />
+      }
+    >
+      <section className={styles.section} aria-labelledby="reviews-title">
         <div className={styles.container}>
           <ul className={styles.list}>
             {REVIEWS.map((review) => {
@@ -70,6 +65,6 @@ export function ReviewsPage() {
           </ul>
         </div>
       </section>
-    </>
+    </PageShell>
   );
 }

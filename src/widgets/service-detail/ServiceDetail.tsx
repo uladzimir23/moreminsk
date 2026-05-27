@@ -4,34 +4,12 @@ import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
 import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
+import { PageHero } from "@/shared/ui/page-hero/PageHero";
+import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { servicePhoto } from "@/widgets/landing/_data/service-photos";
 import clsx from "clsx";
-import {
-  ArrowRight,
-  Briefcase,
-  Cake,
-  CalendarDays,
-  Camera,
-  Compass,
-  GlassWater,
-  Heart,
-  Sailboat,
-  Ship,
-  Sparkles,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, Sailboat } from "lucide-react";
 import styles from "./ServiceDetail.module.scss";
-
-const ICONS: Record<string, LucideIcon> = {
-  Heart,
-  Cake,
-  Briefcase,
-  Sparkles,
-  GlassWater,
-  Camera,
-  Sailboat,
-  Ship,
-  Compass,
-};
 
 type Props = {
   service: Service;
@@ -40,33 +18,21 @@ type Props = {
 
 export function ServiceDetail({ service, yachts }: Props) {
   const { open } = usePanel();
-  const Icon = ICONS[service.icon] ?? Sparkles;
 
   return (
-    <>
-      <section className={styles.hero} aria-labelledby={`svc-${service.slug}-title`}>
-        <div className={styles.container}>
-          <nav aria-label="Хлебные крошки" className={styles.breadcrumbs}>
-            <Link href="/" className={styles.breadcrumbLink}>
-              Главная
-            </Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/services" className={styles.breadcrumbLink}>
-              Услуги
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span>{service.shortTitle}</span>
-          </nav>
-
-          <span className={styles.iconWrap} aria-hidden="true">
-            <Icon className={styles.heroIcon} />
-          </span>
-
-          <h1 id={`svc-${service.slug}-title`} className={styles.h1}>
-            {service.h1}
-          </h1>
-          <p className={styles.utp}>{service.utp}</p>
-
+    <PageShell
+      hero={
+        <PageHero
+          crumbs={[
+            { label: "Главная", href: "/" },
+            { label: "Услуги", href: "/services" },
+            { label: service.shortTitle },
+          ]}
+          title={service.h1}
+          lead={service.utp}
+          image={servicePhoto(service.slug).url}
+          titleId={`svc-${service.slug}-title`}
+        >
           <button
             type="button"
             className={styles.heroCta}
@@ -75,9 +41,9 @@ export function ServiceDetail({ service, yachts }: Props) {
             <CalendarDays className={styles.heroCtaIcon} aria-hidden="true" />
             Посмотреть даты
           </button>
-        </div>
-      </section>
-
+        </PageHero>
+      }
+    >
       <section
         className={clsx(styles.section, styles.alt)}
         aria-labelledby={`svc-${service.slug}-packages`}
@@ -156,6 +122,6 @@ export function ServiceDetail({ service, yachts }: Props) {
           </div>
         </div>
       </section>
-    </>
+    </PageShell>
   );
 }

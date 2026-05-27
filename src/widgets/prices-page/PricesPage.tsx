@@ -5,7 +5,9 @@ import { Link } from "@/i18n/navigation";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import { usePanel } from "@/shared/lib/panel/usePanel";
-import { Accent } from "@/shared/ui/accent/Accent";
+import { PageHero } from "@/shared/ui/page-hero/PageHero";
+import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { COVER_BY_YACHT } from "@/widgets/landing/_data/photos";
 import { ArrowRight } from "lucide-react";
 import styles from "./PricesPage.module.scss";
 
@@ -19,27 +21,20 @@ export function PricesPage() {
   const { open } = usePanel();
 
   return (
-    <>
-      <section className={styles.hero}>
-        <div className={styles.container}>
-          <nav className={styles.breadcrumbs} aria-label="Хлебные крошки">
-            <Link href="/" className={styles.crumbLink}>
-              Главная
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span>Цены</span>
-          </nav>
-          <h1 className={styles.h1}>
-            Цены на аренду яхт <Accent>в Минске</Accent>
-          </h1>
-          <p className={styles.lead}>
-            Почасовые ставки яхт и пакеты под событие. Капитан и топливо уже в цене. Это ориентир —
-            точную стоимость подтверждаем при звонке под вашу дату и состав.
-          </p>
-        </div>
-      </section>
-
-      <section className={styles.section}>
+    <PageShell
+      hero={
+        <PageHero
+          crumbs={[{ label: "Главная", href: "/" }, { label: "Цены" }]}
+          eyebrow="Цены"
+          title="Цены на аренду яхт"
+          accent="в Минске"
+          lead="Почасовые ставки яхт и пакеты под событие. Капитан и топливо уже в цене. Это ориентир — точную стоимость подтверждаем при звонке под вашу дату и состав."
+          image={COVER_BY_YACHT.bravo}
+          titleId="prices-title"
+        />
+      }
+    >
+      <section className={styles.section} aria-labelledby="prices-title">
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Яхты — почасовая аренда</h2>
           <div className={styles.tableWrap}>
@@ -115,6 +110,6 @@ export function PricesPage() {
           </div>
         </div>
       </section>
-    </>
+    </PageShell>
   );
 }

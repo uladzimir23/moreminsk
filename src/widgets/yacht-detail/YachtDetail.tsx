@@ -4,8 +4,9 @@ import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
 import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
-import { Accent } from "@/shared/ui/accent/Accent";
-import { ArrowRight, CalendarDays, Check, Clock, Sailboat, Ship, Users } from "lucide-react";
+import { PageHero } from "@/shared/ui/page-hero/PageHero";
+import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { ArrowRight, CalendarDays, Check, Clock, Users } from "lucide-react";
 import styles from "./YachtDetail.module.scss";
 
 const TYPE_LABEL: Record<Yacht["type"], string> = {
@@ -22,7 +23,6 @@ type Props = {
 
 export function YachtDetail({ yacht, photos, services }: Props) {
   const { open } = usePanel();
-  const TypeIcon = yacht.type === "motor" ? Ship : Sailboat;
 
   // Техпаспорт — собираем строки только из заполненных полей specs.
   const specs = yacht.specs;
@@ -44,32 +44,21 @@ export function YachtDetail({ yacht, photos, services }: Props) {
     : [];
 
   return (
-    <>
-      <section className={styles.hero} aria-labelledby={`yacht-${yacht.slug}-title`}>
-        <div className={styles.container}>
-          <nav aria-label="Хлебные крошки" className={styles.breadcrumbs}>
-            <Link href="/" className={styles.breadcrumbLink}>
-              Главная
-            </Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/fleet" className={styles.breadcrumbLink}>
-              Флот
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span>{yacht.name}</span>
-          </nav>
-
-          <p className={styles.eyebrow}>
-            <TypeIcon className={styles.eyebrowIcon} aria-hidden="true" />
-            {TYPE_LABEL[yacht.type]}
-            {yacht.badge === "flagship" && <span className={styles.badge}>флагман</span>}
-          </p>
-
-          <h1 id={`yacht-${yacht.slug}-title`} className={styles.h1}>
-            Яхта <Accent>{yacht.name}</Accent>
-          </h1>
-          <p className={styles.utp}>{yacht.description}</p>
-
+    <PageShell
+      hero={
+        <PageHero
+          crumbs={[
+            { label: "Главная", href: "/" },
+            { label: "Флот", href: "/fleet" },
+            { label: yacht.name },
+          ]}
+          eyebrow={`${TYPE_LABEL[yacht.type]}${yacht.badge === "flagship" ? " · флагман" : ""}`}
+          title="Яхта"
+          accent={yacht.name}
+          lead={yacht.description}
+          image={photos[0]}
+          titleId={`yacht-${yacht.slug}-title`}
+        >
           <ul className={styles.specs}>
             <li className={styles.spec}>
               <Users className={styles.specIcon} aria-hidden="true" />
@@ -93,9 +82,9 @@ export function YachtDetail({ yacht, photos, services }: Props) {
             <CalendarDays className={styles.heroCtaIcon} aria-hidden="true" />
             Посмотреть даты
           </button>
-        </div>
-      </section>
-
+        </PageHero>
+      }
+    >
       <section className={styles.section} aria-labelledby={`yacht-${yacht.slug}-onboard`}>
         <div className={styles.container}>
           <h2 id={`yacht-${yacht.slug}-onboard`} className={styles.sectionTitle}>
@@ -203,6 +192,6 @@ export function YachtDetail({ yacht, photos, services }: Props) {
           </div>
         </div>
       </section>
-    </>
+    </PageShell>
   );
 }
