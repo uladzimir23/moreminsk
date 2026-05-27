@@ -63,24 +63,64 @@
   background: var(--color-background);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
+// Marquee rows — each track holds its row twice and slides exactly one copy
+// width (-50%) for a seamless loop; rows run opposite directions, pause on
+// hover. Edges fade via a mask. Reduced-motion falls back to a manual scroll.
+.marquee {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 
-  @include respond-to("md") {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @include respond-to("lg") {
-    grid-template-columns: repeat(4, 1fr);
+  & + & {
+    margin-block-start: var(--space-sm);
   }
 }
 
-.tile {
-  inline-size: 100%;
-  aspect-ratio: var(--photo-card-aspect);
-  object-fit: cover;
+.track {
+  display: flex;
+  inline-size: max-content;
+  animation: gallery-marquee 52s linear infinite;
+  will-change: transform;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.trackReverse {
+  animation-name: gallery-marquee-rev;
+}
+
+.shot {
+  flex: none;
+  block-size: clamp(9rem, 20vw, 15rem);
+  inline-size: auto;
+  margin-inline-end: var(--space-sm);
   border-radius: var(--card-radius);
   background: var(--color-surface-alt);
+  object-fit: cover;
+}
+
+@keyframes gallery-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes gallery-marquee-rev {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@include reduced-motion {
+  .track {
+    animation: none;
+  }
+  .marquee {
+    overflow-x: auto;
+  }
 }
