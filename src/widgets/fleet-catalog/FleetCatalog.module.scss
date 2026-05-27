@@ -8,9 +8,9 @@
   position: relative;
   isolation: isolate;
   overflow: clip;
-  padding: clamp(4.5rem, 11vh, 8rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   background: var(--color-background);
   color: var(--color-foreground);
+  // No section padding — cards are full-bleed, edge-to-edge strips.
 }
 
 // ── Head ───────────────────────────────────────────────────────────────────
@@ -56,22 +56,62 @@
 // ── Column of yacht blocks ───────────────────────────────────────────────────
 
 .list {
-  max-width: 80rem;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(3rem, 7vw, 5.5rem);
+  // Full-bleed, no gaps — cards are edge-to-edge strips that stack flush.
 }
 
 .row {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   gap: clamp(1.5rem, 4vw, 3.5rem);
   align-items: center;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+  color: var(--color-foreground); // theme-aware text over the washed blur
+
+  // Hairline between stacked full-bleed cards.
+  & + & {
+    border-block-start: 0.0625rem solid var(--color-border-hairline);
+  }
 
   @media (max-width: 56.25rem) {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
+    padding: clamp(2rem, 8vw, 3rem) clamp(1.25rem, 5vw, 2rem);
+  }
+}
+
+// Blurred backdrop of the active photo, filling the whole card behind a veil —
+// echoes the home «now-playing» showcase; follows the rotating photo. Both the
+// blur and the veil are theme-aware (light wash in light, dimmed in dark).
+.rowBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.rowBgImg {
+  position: absolute;
+  inset: -8%;
+  inline-size: 116%;
+  block-size: 116%;
+  object-fit: cover;
+  filter: blur(2.5rem) saturate(1.1);
+
+  @include dark-mode {
+    filter: blur(2.5rem) brightness(0.55) saturate(1.1);
+  }
+}
+.rowWash {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-background) 70%, transparent);
+
+  @include dark-mode {
+    background: color-mix(in srgb, var(--color-background) 48%, transparent);
   }
 }
 
@@ -83,50 +123,27 @@
   }
 }
 
+// Crisp photo frame sitting over the shared blurred backdrop (its letterbox
+// bars reveal that backdrop, like the home hero viewer). z-index lifts it + the
+// info above the absolute .rowBg/.rowScrim.
 .media {
   position: relative;
-  display: block;
+  z-index: 1;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border: 0.0625rem solid var(--color-border-hairline);
   border-radius: var(--card-radius);
-  background: var(--color-surface-alt);
   isolation: isolate;
-
-  @include focus-ring;
 }
-
-// Blurred cover layer — fills the frame (incl. the letterbox bars) behind the
-// crisp photo. Overscan compensates for the blur's transparent edges. (Photo
-// content, theme-independent.)
-.mediaBg {
-  position: absolute;
-  inset: -8%;
-  inline-size: 116%;
-  block-size: 116%;
-  object-fit: cover;
-  // Light theme: full-colour blur (the wash lightens it). Dark theme: dimmed,
-  // as before.
-  filter: blur(2.5rem) saturate(1.1);
-  z-index: 0;
-
-  @include dark-mode {
-    filter: blur(2.5rem) brightness(0.6) saturate(1.1);
-  }
-}
-
-// Theme-aware overlay over the blurred frame: a light wash in the light theme
-// (derived from --color-background = white), nothing in the dark theme (the
-// dimmed blur already reads dark there).
-.mediaWash {
+// The clickable photo (opens the yacht page). Arrows/dots are siblings on top,
+// so they're not nested inside this <a> and their clicks are stopped in JS.
+.mediaLink {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: color-mix(in srgb, var(--color-background) 58%, transparent);
+  display: block;
 
-  @include dark-mode {
-    display: none;
-  }
+  @include focus-ring;
 }
 
 // Crisp photo — full height in the container, never cropped (contain).
@@ -141,6 +158,118 @@
 
   .media:hover & {
     transform: scale(1.03);
+  }
+}
+
+// Mobile: drop the 4/3 letterbox — the frame fits each photo at its natural
+// ratio (the full photo, no contain bars). The active frame sits in flow so the
+// container height tracks it; the rest overlay for the cross-fade.
+@media (max-width: 56.25rem) {
+  .media {
+    aspect-ratio: auto;
+  }
+  // In flow so the active photo gives the frame its height (else .media collapses).
+  .mediaLink {
+    position: relative;
+    inset: auto;
+  }
+  .mediaPhoto {
+    inset: 0 0 auto;
+    block-size: auto;
+  }
+  .mediaPhoto.fadeActive {
+    position: relative; // sets the frame height to this photo's natural ratio
+  }
+}
+
+// Stacked cross-fade frames: all layers present, only the active one shown.
+// Keeps the transform transition (so the hover scale on .mediaPhoto survives).
+.fade {
+  opacity: 0;
+  transition:
+    opacity 0.8s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.fadeActive {
+  opacity: 1;
+}
+
+// Prev/next arrows over the photo. Hidden until the card is hovered (desktop);
+// always shown on touch. They sit above the photo <Link>; their click is stopped
+// in JS so it flips the photo instead of navigating.
+.navPrev,
+.navNext {
+  @include nav-arrow; // shared square glass icon-arrow (see _mixins.scss)
+  position: absolute;
+  inset-block-start: 50%;
+  margin-block-start: -1.25rem; // center without transform (btn-press uses transform)
+  z-index: 3;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+}
+.navPrev {
+  inset-inline-start: 0.75rem;
+}
+.navNext {
+  inset-inline-end: 0.75rem;
+}
+.media:hover .navPrev,
+.media:hover .navNext,
+.navPrev:focus-visible,
+.navNext:focus-visible {
+  opacity: 1;
+}
+@media (hover: none) {
+  .navPrev,
+  .navNext {
+    opacity: 0.92; // touch has no hover — keep arrows visible
+  }
+}
+.navPrev:hover svg,
+.navPrev:focus-visible svg {
+  @include chevron-fly("prev");
+}
+.navNext:hover svg,
+.navNext:focus-visible svg {
+  @include chevron-fly("next");
+}
+
+.dots {
+  position: absolute;
+  inset-block-end: 0.625rem;
+  inset-inline: 0;
+  z-index: 3;
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
+.dot {
+  box-sizing: content-box;
+  inline-size: 0.3125rem;
+  block-size: 0.3125rem;
+  padding: 0.25rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.5);
+  background-clip: content-box;
+  cursor: pointer;
+  filter: drop-shadow(0 0 0.15rem rgb(0 0 0 / 0.45));
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+.dotActive {
+  background-color: var(--color-on-image, #fff);
+  transform: scale(1.3);
+}
+
+@include reduced-motion {
+  .fade {
+    transition: none;
   }
 }
 
@@ -163,10 +292,13 @@
 // ── Info column ──────────────────────────────────────────────────────────────
 
 .info {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
+  gap: 1rem;
   min-width: 0;
+  padding-block: clamp(0.5rem, 2vw, 1.25rem);
 }
 .specs {
   margin: 0;
@@ -257,10 +389,20 @@
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; // both buttons stay on one row — including mobile
   align-items: center;
-  gap: 0.75rem 1.25rem;
+  gap: 0.625rem;
   margin-block-start: 0.25rem;
+
+  @media (max-width: 30rem) {
+    .cta,
+    .detailLink {
+      flex: 1 1 0;
+      padding-inline: 0.75rem;
+      font-size: var(--text-xs);
+      white-space: nowrap;
+    }
+  }
 }
 .cta {
   display: inline-flex;
@@ -292,6 +434,7 @@
 .detailLink {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   padding: 0.875rem 1.25rem;
   border: 0.0625rem solid var(--color-border);
   border-radius: var(--btn-radius);

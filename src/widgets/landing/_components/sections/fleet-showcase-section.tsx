@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
 import { YACHTS } from "@/shared/content/yachts";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
@@ -198,22 +199,27 @@ export function FleetShowcaseSection() {
             <span className={styles.priceSuffix}>BYN/ч · мин. {activeYacht.minHours} ч</span>
           </div>
 
-          <a href="#booking" className={styles.cta}>
-            Забронировать {activeYacht.name}
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
+          <div className={styles.actions}>
+            <a href="#booking" className={styles.cta}>
+              Забронировать {activeYacht.name}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+            <Link href={`/fleet/${activeYacht.slug}`} className={styles.detailLink}>
+              Подробнее о яхте
+            </Link>
+          </div>
         </aside>
 
         <div className={styles.gallery}>

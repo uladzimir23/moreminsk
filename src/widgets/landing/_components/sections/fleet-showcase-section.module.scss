@@ -348,7 +348,6 @@
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  margin-top: 0.25rem;
   padding: 0.875rem 1.5rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -369,6 +368,30 @@
   &:hover svg {
     transform: translateX(0.25rem);
   }
+}
+
+// CTA + «Подробнее о яхте» on one row (outline link → detail page).
+.actions {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem 0.875rem;
+}
+.detailLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 1.25rem;
+  border: 0.0625rem solid var(--media-hairline-strong);
+  border-radius: var(--btn-radius);
+  color: var(--on-media);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  @include btn-fill; // accent wipes in from the left on hover
+  @include btn-press;
 }
 
 // Right column: gallery
@@ -434,30 +457,7 @@
   justify-content: flex-end;
 }
 .frameArrow {
-  width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--media-glass-bg);
-  border: 1px solid var(--media-hairline-strong);
-  color: var(--on-media);
-  cursor: pointer;
-  overflow: hidden; // clip the chevron as it flies out one edge
-  transition:
-    border-color var(--duration-base) var(--ease-out),
-    background-color var(--duration-base) var(--ease-out),
-    transform var(--duration-fast) var(--ease-spring);
-  @include btn-press(0.9);
-
-  &:hover {
-    border-color: var(--color-accent);
-    background: var(--media-glass-bg-hover);
-  }
-  svg {
-    width: 1.125rem;
-    height: 1.125rem;
-  }
+  @include nav-arrow; // shared icon-arrow style (see _mixins.scss)
 }
 // «Перелёт шеврона» — the chevron darts out the edge it points to and
 // re-enters from the other side, looping while hovered.
