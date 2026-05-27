@@ -46,36 +46,16 @@ export function ServiceDetail({ service, yachts }: Props) {
     >
       <section
         className={clsx(styles.section, styles.alt)}
-        aria-labelledby={`svc-${service.slug}-packages`}
+        aria-labelledby={`svc-${service.slug}-price`}
       >
         <div className={styles.container}>
-          <h2 id={`svc-${service.slug}-packages`} className={styles.sectionTitle}>
-            Пакеты и цены
+          <h2 id={`svc-${service.slug}-price`} className={styles.sectionTitle}>
+            Цена
           </h2>
-          <div className={styles.priceTableWrap}>
-            <table className={styles.priceTable}>
-              <thead>
-                <tr>
-                  <th scope="col" className={styles.stickyCol}>
-                    Пакет
-                  </th>
-                  <th scope="col">Длительность</th>
-                  <th scope="col">Цена</th>
-                </tr>
-              </thead>
-              <tbody>
-                {service.packages.map((pkg) => (
-                  <tr key={pkg.name}>
-                    <th scope="row" className={styles.stickyCol}>
-                      {pkg.name}
-                    </th>
-                    <td>{pkg.duration}</td>
-                    <td className={styles.price}>{pkg.price} BYN</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className={styles.priceLead}>
+            <span className={styles.price}>от {service.fromPrice} BYN/час</span> — капитан и топливо
+            в цене, минимум 1 час. Точную стоимость подтвердим при звонке под вашу дату и состав.
+          </p>
         </div>
       </section>
 

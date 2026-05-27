@@ -132,15 +132,10 @@ export function ServicesSection() {
                     </h3>
                     <p className={styles.serviceUtp}>{service.utp}</p>
 
-                    <ul className={styles.packages}>
-                      {service.packages.map((pkg) => (
-                        <li key={pkg.name} className={styles.pkg}>
-                          <span className={styles.pkgName}>{pkg.name}</span>
-                          <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
-                          <span className={styles.pkgDuration}>{pkg.duration}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <p className={styles.price}>
+                      <span className={styles.priceFrom}>от</span>
+                      {service.fromPrice}&nbsp;<span className={styles.priceUnit}>BYN/час</span>
+                    </p>
 
                     <a href="#booking" className={styles.cta}>
                       Забронировать {service.shortTitle.toLowerCase()}

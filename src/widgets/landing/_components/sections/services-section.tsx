@@ -108,18 +108,10 @@ export function ServicesSection() {
                     </h3>
                     <p className={styles.serviceUtp}>{service.utp}</p>
 
-                    <ul className={styles.packages}>
-                      {service.packages.map((pkg) => (
-                        <li key={pkg.name} className={styles.pkg}>
-                          <span className={styles.pkgName}>{pkg.name}</span>
-                          <span className={styles.pkgPrice}>{pkg.price}&nbsp;BYN</span>
-                          <span className={styles.pkgDuration}>{pkg.duration}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Poster price — shown on mobile / tablet, hidden on the
-                        desktop banner (packages carry the prices there). */}
+                    {/* Entry price «от X BYN» — identical on every breakpoint.
+                        Was a desktop-chips (пакеты 2ч/4ч) vs mobile-poster split
+                        that showed different numbers per resolution; chips dropped
+                        per client direction «цена от 1 часа» (см. Правки D). */}
                     <p className={styles.price}>
                       <span className={styles.priceFrom}>от</span>
                       {service.fromPrice}&nbsp;<span className={styles.priceUnit}>BYN</span>
