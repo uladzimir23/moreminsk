@@ -76,3 +76,8 @@ scripts/scrape-output/
 
 # Claude Code — дополнительные локальные артефакты
 .claude/hooks/*.local.*
+
+# Скриншоты-аннотации правок заказчика (Telegram) — только локальный референс,
+# тяжёлые бинарники. Логотип (png/svg) остаётся в репо.
+docs/10 - Brief & Requirements/attachments/*.jpg
+docs/10 - Brief & Requirements/attachments/*.jpeg
