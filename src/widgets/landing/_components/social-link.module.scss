@@ -23,9 +23,11 @@
 .icon {
   display: inline-flex;
 
+  // Glyphs sit in a 205 viewBox with padding → render larger so they read at
+  // the same optical size as the other ~1.25rem icon controls.
   svg {
-    block-size: 1.15rem;
-    inline-size: auto;
+    inline-size: 1.9rem;
+    block-size: 1.9rem;
     display: block;
   }
 }
