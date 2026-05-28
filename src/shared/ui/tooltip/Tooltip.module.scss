@@ -1,20 +1,68 @@
 @use "@/shared/design-system/mixins" as *;
 
-// Editorial tooltip — pure frosted glass (no colour): the page blurs through,
-// a hairline edge, sharp corners, theme-aware text. No arrow, no accent.
+// Editorial tooltip — near-transparent frosted glass (pure blur, 6% tint),
+// mono uppercase label, hairline, sharp corners. The pointer is a rotated glass
+// square sharing the chip's border + glass, so it reads as one material.
+// (--on-media = white over the dark hero, dark on a light page.)
 .content {
+  position: relative;
   z-index: 1100;
   max-inline-size: 18rem;
-  padding: 0.45rem 0.75rem;
+  padding: 0.4rem 0.7rem;
   border: 0.0625rem solid var(--media-hairline-strong);
   color: var(--on-media);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   line-height: 1.4;
-  letter-spacing: 0.01em;
   box-shadow: 0 0.5rem 1.5rem -0.5rem rgb(0 0 0 / 0.3);
   animation: tip-in 0.16s var(--ease-out);
-  @include media-glass($blur: var(--blur-frame), $glass: 68%);
+  @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
+
+  // Pointer — a 45°-rotated square with the same border + glass. Only the two
+  // outer edges keep their border, so it forms a clean «^» that matches the
+  // chip. Radix's own arrow is hidden (below).
+  &::after {
+    content: "";
+    position: absolute;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    transform: rotate(45deg);
+    border: 0.0625rem solid var(--media-hairline-strong);
+    pointer-events: none;
+    @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
+  }
+}
+
+.content[data-side="bottom"]::after {
+  inset-block-start: -0.28rem;
+  inset-inline-start: 50%;
+  margin-inline-start: -0.25rem;
+  border-inline-end: 0;
+  border-block-end: 0;
+}
+.content[data-side="top"]::after {
+  inset-block-end: -0.28rem;
+  inset-inline-start: 50%;
+  margin-inline-start: -0.25rem;
+  border-inline-start: 0;
+  border-block-start: 0;
+}
+.content[data-side="right"]::after {
+  inset-inline-start: -0.28rem;
+  inset-block-start: 50%;
+  margin-block-start: -0.25rem;
+  border-inline-end: 0;
+  border-block-start: 0;
+}
+.content[data-side="left"]::after {
+  inset-inline-end: -0.28rem;
+  inset-block-start: 50%;
+  margin-block-start: -0.25rem;
+  border-inline-start: 0;
+  border-block-end: 0;
 }
 
 @keyframes tip-in {
@@ -24,6 +72,7 @@
   }
 }
 
+// Radix's built-in arrow — replaced by the ::after square above.
 .arrow {
   display: none;
 }
