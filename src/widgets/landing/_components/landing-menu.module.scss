@@ -12,8 +12,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  inline-size: 2.75rem;
-  block-size: 2.75rem;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
   margin-inline-end: -0.5rem; // optical: pull to the gutter edge
   padding: 0;
   border: 0;
@@ -23,19 +23,28 @@
   // overlay's theme-aware fg (dark on the light sheet in light theme).
   color: var(--hdr-fg, var(--on-image));
   cursor: pointer;
-  transition: transform var(--duration-fast) var(--ease-spring);
+  transition:
+    color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
   @include btn-press(0.9);
 
   &[aria-expanded="true"] {
     color: var(--on-media);
+  }
+  // Same affordance as the other icon controls (accent + faint highlight).
+  &:hover,
+  &:focus-visible {
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--hdr-fg, currentColor) 10%, transparent);
   }
 }
 
 .burgerBox {
   position: relative;
   display: block;
-  inline-size: 1.5rem;
-  block-size: 1rem;
+  inline-size: 1.25rem;
+  block-size: 0.75rem;
 }
 
 .line {
@@ -578,19 +587,20 @@
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
+  transition: color var(--duration-base) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent);
+  }
 }
 
 .socials {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.125rem;
 
   a {
-    display: inline-flex;
+    @include icon-btn;
     color: var(--on-media-muted);
-  }
-  svg {
-    inline-size: 1.375rem;
-    block-size: 1.375rem;
   }
 }

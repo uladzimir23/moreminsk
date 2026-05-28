@@ -141,7 +141,7 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-inline-start: auto; // push the cluster to the right of the bar
 }
 
@@ -161,23 +161,13 @@
   @include respond-to("xl") {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.125rem;
   }
 }
 
 .social {
-  display: inline-flex;
+  @include icon-btn;
   color: var(--hdr-fg-muted);
-  transition: color 0.2s ease;
-
-  svg {
-    inline-size: 1.125rem;
-    block-size: 1.125rem;
-  }
-
-  &:hover {
-    color: var(--color-accent);
-  }
 }
 
 // Phone — inline at ≥xl, otherwise in the burger menu.
@@ -194,7 +184,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--hdr-fg);
+    color: var(--color-accent);
   }
 
   @include respond-to("xl") {

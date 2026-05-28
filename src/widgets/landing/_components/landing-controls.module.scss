@@ -12,40 +12,12 @@
 }
 
 .theme {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  inline-size: 2rem;
-  block-size: 2rem;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform var(--duration-fast) var(--ease-spring);
-  @include btn-press(0.9);
-
-  &:hover {
-    background: color-mix(in srgb, currentColor 12%, transparent);
-  }
+  @include icon-btn;
 }
 
 .icon {
-  inline-size: 1.0625rem;
-  block-size: 1.0625rem;
-  transition: transform var(--duration-medium) var(--ease-spring);
-}
-// Sun/moon spins a touch on hover.
-.theme:hover .icon {
-  transform: rotate(55deg);
-}
-@include reduced-motion {
-  .theme:hover .icon {
-    transform: none;
-  }
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
 }
 
 .sep {

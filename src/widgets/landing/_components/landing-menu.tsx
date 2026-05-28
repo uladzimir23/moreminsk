@@ -94,9 +94,9 @@ export function LandingMenu() {
   // ── Burger → X, two-stage: the lines first converge to centre, then the
   // top/bottom rotate into the cross (middle fades out). ──
   const lineTop: Variants = {
-    closed: { y: -5, rotate: 0, transition: { duration: 0.35, ease: EASE } },
+    closed: { y: -4, rotate: 0, transition: { duration: 0.35, ease: EASE } },
     open: {
-      y: [-5, 0, 0],
+      y: [-4, 0, 0],
       rotate: [0, 0, 45],
       transition: { duration: 0.45, times: [0, 0.55, 1] },
     },
@@ -106,9 +106,9 @@ export function LandingMenu() {
     open: { opacity: 0, scaleX: 0.2, transition: { duration: 0.2 } },
   };
   const lineBot: Variants = {
-    closed: { y: 5, rotate: 0, transition: { duration: 0.35, ease: EASE } },
+    closed: { y: 4, rotate: 0, transition: { duration: 0.35, ease: EASE } },
     open: {
-      y: [5, 0, 0],
+      y: [4, 0, 0],
       rotate: [0, 0, -45],
       transition: { duration: 0.45, times: [0, 0.55, 1] },
     },

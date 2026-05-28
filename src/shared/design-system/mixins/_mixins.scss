@@ -307,6 +307,41 @@
   }
 }
 
+// ── Icon control — one consistent hit-area + hover for header/menu icons ─────
+// Square hit-area ($size) with a centred icon ($icon). Hover: colour → accent +
+// a faint square highlight (the «affordance» that shows the tappable area).
+// Colour inherits (rides --hdr-fg / --on-media). Pair with no extra per-icon
+// effects so every icon control reads identically.
+@mixin icon-btn($size: 2.5rem, $icon: 1.25rem) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: $size;
+  block-size: $size;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+  @include btn-press(0.9);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--hdr-fg, currentColor) 10%, transparent);
+  }
+
+  svg {
+    inline-size: $icon;
+    block-size: $icon;
+  }
+}
+
 @property --cta-angle {
   syntax: "<angle>";
   initial-value: 0deg;
