@@ -4,9 +4,9 @@ import type { Service } from "@/entities/service/model/types";
 // пакетов 2ч/4ч. fromPrice = ставка самой дешёвой подходящей яхты (EVA 150 /
 // MARIO 180) → видимое «от X BYN/час». Все яхты доступны под любую услугу.
 //
-// 2026-05-26: набор расширен до реального состава moreminsk.by (см.
-// raw-media/scraped/facts.md): возвращена «Свадьба», добавлены парусная/моторная
-// прогулки и мастер-класс. «Корпоратив» — наш SEO-актив, на оригинале страницы нет.
+// 2026-05-27: «Свадьба» убрана по просьбе заказчика. Набор — парусная/моторная
+// прогулки, день рождения, корпоратив, свидание, девичник, фотосессия,
+// мастер-класс. «Корпоратив» — наш SEO-актив, на оригинале страницы его нет.
 export const SERVICES: ReadonlyArray<Service> = [
   {
     slug: "progulka-parusnaya",
@@ -25,15 +25,6 @@ export const SERVICES: ReadonlyArray<Service> = [
     icon: "Ship",
     fromPrice: 180,
     suitableYachts: ["mario"],
-  },
-  {
-    slug: "svadba",
-    h1: "Свадьба на яхте в Минске",
-    shortTitle: "Свадьба",
-    utp: "Церемония и фуршет на палубе, фото-зона у штурвала, до 10 гостей",
-    icon: "Heart",
-    fromPrice: 150,
-    suitableYachts: ["bravo", "alfa", "mario", "eva"],
   },
   {
     slug: "den-rozhdeniya",
