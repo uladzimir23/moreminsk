@@ -20,6 +20,8 @@ type Props = {
   tags?: readonly string[];
   zoomable?: boolean;
   eager?: boolean;
+  /** Frame matches the active photo's orientation (no letterbox bars). */
+  adaptiveFrame?: boolean;
   onActiveChange?: (index: number) => void;
 };
 
@@ -30,10 +32,13 @@ export function YachtGallery({
   tags,
   zoomable = false,
   eager = false,
+  adaptiveFrame = false,
   onActiveChange,
 }: Props) {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  // Aspect ratio of the active photo (read on load) — drives the adaptive frame.
+  const [frameAr, setFrameAr] = useState<number | null>(null);
 
   // Render only a 2-frame window (active + outgoing) of the hero photo stack
   // instead of all 8 × bg+fg — holding every full-res photo decoded was the
@@ -52,6 +57,21 @@ export function YachtGallery({
   useEffect(() => {
     onActiveChange?.(activePhotoIdx);
   }, [activePhotoIdx, onActiveChange]);
+
+  // Read the active photo's natural aspect for the adaptive frame. A detached
+  // Image() fires onload even for cached photos (an <img> onLoad can be missed
+  // if it was already `complete` before React attached the handler).
+  useEffect(() => {
+    if (!adaptiveFrame) return;
+    const img = new window.Image();
+    img.onload = () => {
+      if (img.naturalWidth && img.naturalHeight) setFrameAr(img.naturalWidth / img.naturalHeight);
+    };
+    img.src = photos[activePhotoIdx];
+    return () => {
+      img.onload = null;
+    };
+  }, [adaptiveFrame, activePhotoIdx, photos]);
 
   const nextPhoto = useCallback(() => {
     setActivePhotoIdx((i) => (i + 1) % photos.length);
@@ -173,12 +193,21 @@ export function YachtGallery({
     </>
   );
 
+  const frameClass = adaptiveFrame
+    ? `${styles.heroFrame} ${styles.heroFrameAdaptive}`
+    : styles.heroFrame;
+  const frameStyle =
+    adaptiveFrame && frameAr
+      ? ({ "--frame-ar": String(frameAr) } as React.CSSProperties)
+      : undefined;
+
   return (
     <div className={styles.gallery}>
       {zoomable ? (
         <button
           type="button"
-          className={styles.heroFrame}
+          className={frameClass}
+          style={frameStyle}
           onClick={handleFrameClick}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
@@ -187,7 +216,12 @@ export function YachtGallery({
           {frameInner}
         </button>
       ) : (
-        <div className={styles.heroFrame} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div
+          className={frameClass}
+          style={frameStyle}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           {frameInner}
         </div>
       )}

@@ -35,6 +35,7 @@ export function GallerySection() {
           alts={alts}
           tags={tags}
           name="Минское море"
+          adaptiveFrame
           onActiveChange={setBgIdx}
         />
       </div>

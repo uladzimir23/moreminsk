@@ -55,6 +55,19 @@
   }
 }
 
+// Adaptive frame (opt-in): on desktop the frame matches the active photo's
+// aspect (--frame-ar set inline on load) so portrait/landscape shots fill it
+// with no letterbox bars. Width derived from a target height; container caps it.
+// Mobile keeps the full-bleed cover poster below.
+.heroFrameAdaptive {
+  @media (min-width: 56.25rem) {
+    aspect-ratio: var(--frame-ar, 4 / 3);
+    inline-size: min(100%, calc(38rem * var(--frame-ar, 1.333)));
+    block-size: auto;
+    margin-inline: auto;
+  }
+}
+
 // Magnifier badge that hints the frame is clickable for zoom.
 .zoomHint {
   position: absolute;
