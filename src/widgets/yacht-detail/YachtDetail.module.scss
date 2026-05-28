@@ -1,114 +1,6 @@
 @use "@/shared/design-system/mixins" as *;
 
-.hero {
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  padding-block: var(--space-3xl) var(--space-2xl);
-  background: var(--color-background);
-
-  &::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inline-size: 28rem;
-    block-size: 28rem;
-    inset-block-start: -10rem;
-    inset-inline-end: -8rem;
-    border-radius: 50%;
-    background: var(--color-primary-soft);
-    filter: blur(6rem);
-    opacity: 0.5;
-    pointer-events: none;
-
-    @include dark-mode {
-      background: var(--color-accent-soft);
-      opacity: 0.35;
-    }
-  }
-}
-
-.container {
-  inline-size: min(100% - 2 * var(--space-md), 68rem);
-  margin-inline: auto;
-
-  @include respond-to("md") {
-    inline-size: min(100% - 2 * var(--space-xl), 68rem);
-  }
-}
-
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-block-end: var(--space-md);
-  font-size: var(--text-sm);
-  color: var(--color-foreground-muted);
-}
-
-.breadcrumbLink {
-  color: var(--color-foreground-muted);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out);
-
-  &:hover {
-    color: var(--color-foreground);
-  }
-
-  @include focus-ring($offset: 0.125rem);
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 0 var(--space-sm);
-  font-size: var(--text-sm);
-  font-weight: var(--primitive-weight-semibold);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-primary);
-}
-
-.eyebrowIcon {
-  inline-size: 1.125rem;
-  block-size: 1.125rem;
-}
-
-.badge {
-  margin-inline-start: 0.25rem;
-  padding-block: 0.125rem;
-  padding-inline: 0.5rem;
-  border-radius: var(--card-radius);
-  background: color-mix(in oklch, var(--color-accent) 16%, transparent);
-  color: var(--color-accent);
-  font-size: var(--text-xs);
-  letter-spacing: 0.06em;
-}
-
-.h1 {
-  margin: 0 0 var(--space-sm);
-  font-size: var(--text-4xl);
-  font-weight: var(--primitive-weight-bold);
-  line-height: var(--primitive-leading-tight);
-  letter-spacing: var(--primitive-tracking-tight);
-  color: var(--color-foreground);
-  text-wrap: balance;
-
-  @include respond-to("md") {
-    font-size: var(--text-5xl);
-  }
-}
-
-.utp {
-  margin: 0 0 var(--space-lg);
-  font-size: var(--text-lg);
-  line-height: var(--primitive-leading-relaxed);
-  color: var(--color-foreground-muted);
-  max-inline-size: 44rem;
-  text-wrap: pretty;
-}
-
+// ── Hero children (rendered inside <PageHero>) ─────────────────────────────
 .specs {
   display: flex;
   flex-wrap: wrap;
@@ -174,136 +66,154 @@
   block-size: 1.125rem;
 }
 
+// ── Media content sections (canon: media-bg + SectionHeader + glass) ───────
 .section {
-  padding-block: var(--space-2xl);
-  background: var(--color-background);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(3.5rem, 9vh, 6.5rem);
+  background: var(--media-bg);
+  color: var(--on-media);
 
-  &.alt {
-    background: var(--color-surface-alt);
+  & + & {
+    border-block-start: 0.0625rem solid var(--media-hairline);
   }
 }
 
-.sectionTitle {
-  margin: 0 0 var(--space-md);
-  font-size: var(--text-2xl);
-  font-weight: var(--primitive-weight-semibold);
-  color: var(--color-foreground);
-
-  @include respond-to("md") {
-    font-size: var(--text-3xl);
-  }
+.sectionBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.features {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-sm);
-  margin: 0;
-  padding: 0;
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
+}
+
+// ── 01 · На борту ──────────────────────────────────────────────────────────
+.featureGrid {
   list-style: none;
+  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.625rem, 1.4vw, 1rem);
 
-  @include respond-to("sm") {
-    grid-template-columns: repeat(2, 1fr);
+  @include respond-below("sm") {
+    grid-template-columns: 1fr;
   }
 }
 
-.feature {
+.featureCard {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  font-size: var(--text-base);
-  color: var(--color-foreground);
+  gap: 0.875rem;
+  padding: clamp(1rem, 2vw, 1.375rem);
+  border: 0.0625rem solid var(--media-hairline);
+  border-radius: var(--card-radius);
+  @include media-glass($glass: 6%, $opaque: 90%);
 }
 
 .featureIcon {
-  flex-shrink: 0;
-  inline-size: 1.125rem;
-  block-size: 1.125rem;
-  color: var(--color-primary);
+  display: inline-flex;
+  flex: none;
+  color: var(--on-media-accent);
+
+  svg {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    display: block;
+  }
 }
 
-// ── Tech passport ────────────────────────────────────────────────────────────
+.featureLabel {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--on-media);
+}
 
+// ── 02 · Техпаспорт ────────────────────────────────────────────────────────
 .specSheet {
-  margin: 0;
-  max-inline-size: 44rem;
+  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
+  max-inline-size: 50rem;
   display: grid;
   grid-template-columns: 1fr;
 
   @include respond-to("md") {
     grid-template-columns: repeat(2, 1fr);
-    column-gap: var(--space-2xl);
+    column-gap: clamp(2rem, 5vw, 4rem);
   }
 }
+
 .specRow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-md);
-  padding-block: 0.75rem;
-  border-block-end: 0.0625rem solid var(--color-border-hairline);
+  gap: 1rem;
+  padding-block: 0.85rem;
+  border-block-end: 0.0625rem solid var(--media-hairline);
 }
+
 .specLabel {
   margin: 0;
-  color: var(--color-foreground-muted);
-  font-size: var(--text-sm);
+  color: var(--on-media-subtle);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
+
 .specValue {
   margin: 0;
-  color: var(--color-foreground);
-  font-weight: var(--primitive-weight-semibold);
+  color: var(--on-media);
+  font-weight: 600;
   text-align: end;
   font-feature-settings: "tnum", "lnum";
 }
+
 .specNote {
-  margin-block: var(--space-md) 0;
-  color: var(--color-foreground-muted);
-  font-size: var(--text-sm);
+  margin: clamp(1.5rem, 3vh, 2rem) 0 0;
+  color: var(--on-media-subtle);
+  font-size: 0.8125rem;
   font-style: italic;
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
-
-  @include respond-to("md") {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.galleryImg {
-  inline-size: 100%;
-  aspect-ratio: var(--photo-card-aspect);
-  object-fit: cover;
-  border-radius: var(--card-radius);
-  background: var(--color-surface-alt);
-}
-
+// ── 04 · Поводы (chips) ────────────────────────────────────────────────────
 .chips {
+  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: 0.5rem;
   list-style: none;
-  margin: 0;
   padding: 0;
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding-block: 0.5rem;
-  padding-inline: var(--space-md);
-  border: 0.0625rem solid var(--color-border-hairline);
-  border-radius: var(--card-radius);
-  background: var(--color-surface);
-  color: var(--color-foreground);
-  font-size: var(--text-sm);
+  gap: 0.4rem;
+  padding-block: 0.6rem;
+  padding-inline: 1rem;
+  border: 0.0625rem solid var(--media-hairline-strong);
+  color: var(--on-media);
+  font-size: 0.875rem;
   text-decoration: none;
-
-  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
+  @include media-glass($glass: 6%, $opaque: 90%);
   @include btn-press;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--on-media-accent);
+    color: var(--on-media-accent);
+  }
 
   &:hover .chipIcon {
     transform: translateX(0.25rem);
@@ -316,31 +226,106 @@
   transition: transform var(--duration-base) var(--ease-spring);
 }
 
+// ── 05 · Другие яхты ───────────────────────────────────────────────────────
+.otherGrid {
+  list-style: none;
+  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+
+  @include respond-below("md") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.otherCard {
+  display: flex;
+  flex-direction: column;
+  border: 0.0625rem solid var(--media-hairline);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--on-media);
+  transition: border-color var(--duration-base) var(--ease-out);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--on-media-accent);
+  }
+}
+
+.otherPhoto {
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--media-bg) 70%, transparent);
+
+  img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.otherBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: clamp(0.85rem, 1.6vw, 1.1rem);
+}
+
+.otherType {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-media-subtle);
+}
+
+.otherName {
+  font-size: 1.25rem;
+  font-weight: var(--primitive-weight-bold);
+  line-height: 1.1;
+  color: var(--on-media);
+}
+
+.otherPrice {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.8125rem;
+  color: var(--on-media);
+  font-feature-settings: "tnum", "lnum";
+}
+
+// ── Final CTA band ─────────────────────────────────────────────────────────
 .finalCta {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
-  padding-block: var(--space-2xl);
-  padding-inline: var(--space-lg);
-  border: 0.0625rem solid var(--color-border-hairline);
+  gap: 1rem;
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  border: 0.0625rem solid var(--media-hairline-strong);
   border-radius: var(--card-radius);
-  background: var(--color-surface);
   text-align: center;
+  @include media-glass($glass: 8%, $opaque: 88%);
 }
 
 .finalCtaTitle {
   margin: 0;
-  font-size: var(--text-2xl);
-  font-weight: var(--primitive-weight-bold);
-  color: var(--color-foreground);
-  text-wrap: balance;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--on-media);
 }
 
 .finalCtaLead {
   margin: 0;
-  max-inline-size: 32rem;
-  font-size: var(--text-base);
-  line-height: var(--primitive-leading-relaxed);
-  color: var(--color-foreground-muted);
+  max-inline-size: 34rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--on-media-subtle);
 }

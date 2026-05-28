@@ -39,6 +39,14 @@ export default async function YachtSlugPage({ params }: Props) {
 
   const photos = PHOTOS_BY_YACHT[slug as YachtSlug] ?? [];
   const services = SERVICES.filter((s) => s.suitableYachts.includes(yacht.slug));
+  const others = YACHTS.filter((y) => y.slug !== slug).map((y) => ({
+    slug: y.slug,
+    name: y.name,
+    type: y.type,
+    pricePerHour: y.pricePerHour,
+    badge: y.badge,
+    cover: (PHOTOS_BY_YACHT[y.slug as YachtSlug] ?? [])[0] ?? "",
+  }));
 
   return (
     <main>
@@ -55,7 +63,7 @@ export default async function YachtSlugPage({ params }: Props) {
           ),
         ]}
       />
-      <YachtDetail yacht={yacht} photos={photos} services={services} />
+      <YachtDetail yacht={yacht} photos={photos} services={services} others={others} />
     </main>
   );
 }
