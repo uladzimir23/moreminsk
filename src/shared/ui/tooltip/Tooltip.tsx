@@ -18,7 +18,6 @@ export function Tooltip({ content, children }: Props) {
         <RadixTooltip.Portal>
           <RadixTooltip.Content className={styles.content} sideOffset={6} collisionPadding={12}>
             {content}
-            <RadixTooltip.Arrow className={styles.arrow} />
           </RadixTooltip.Content>
         </RadixTooltip.Portal>
       </RadixTooltip.Root>
