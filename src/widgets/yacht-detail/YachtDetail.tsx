@@ -186,6 +186,18 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
                 </li>
               </ul>
 
+              <ul className={styles.badges} aria-label="Что включено">
+                {yacht.features.map((f) => {
+                  const Icon = FEATURE_ICONS[f] ?? Check;
+                  return (
+                    <li key={f} className={styles.badge}>
+                      <Icon className={styles.badgeIcon} aria-hidden="true" />
+                      {f}
+                    </li>
+                  );
+                })}
+              </ul>
+
               <div className={styles.priceRow}>
                 <span className={styles.priceFrom}>от</span>
                 <span className={styles.priceValue}>{yacht.pricePerHour}</span>
@@ -228,28 +240,6 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
           </div>
         </section>
       )}
-
-      {/* ── Что включено ────────────────────────────────────────────────── */}
-      <section className={styles.block} aria-labelledby={id("included")}>
-        <div className={styles.blockInner}>
-          <h2 id={id("included")} className={styles.blockTitle}>
-            Что включено
-          </h2>
-          <ul className={styles.featureGrid}>
-            {yacht.features.map((f) => {
-              const Icon = FEATURE_ICONS[f] ?? Check;
-              return (
-                <li key={f} className={styles.featureCard}>
-                  <span className={styles.featureIcon} aria-hidden="true">
-                    <Icon strokeWidth={1.5} />
-                  </span>
-                  <span className={styles.featureLabel}>{f}</span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
 
       {/* ── Под что берут (SEO) ─────────────────────────────────────────── */}
       {services.length > 0 && (

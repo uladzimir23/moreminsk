@@ -323,46 +323,33 @@
   font-style: italic;
 }
 
-// ── Что включено ───────────────────────────────────────────────────────────
-.featureGrid {
-  list-style: none;
-  margin: 0;
+// ── Бейджи «что включено» (в buy-box, под specs) ──────────────────────────
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.1rem 0 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.625rem, 1.4vw, 1rem);
-
-  @include respond-below("sm") {
-    grid-template-columns: 1fr;
-  }
+  list-style: none;
 }
 
-.featureCard {
-  display: flex;
+.badge {
+  display: inline-flex;
   align-items: center;
-  gap: 0.875rem;
-  padding: clamp(1rem, 2vw, 1.375rem);
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
   border: 0.0625rem solid var(--media-hairline);
   border-radius: var(--card-radius);
-  @include media-glass($glass: 6%, $opaque: 90%);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--on-media-muted);
 }
 
-.featureIcon {
-  display: inline-flex;
+.badgeIcon {
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
   flex: none;
   color: var(--on-media-accent);
-
-  svg {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-    display: block;
-  }
-}
-
-.featureLabel {
-  font-size: 0.9375rem;
-  line-height: 1.3;
-  color: var(--on-media);
 }
 
 // ── Под что берут (chips) ──────────────────────────────────────────────────
