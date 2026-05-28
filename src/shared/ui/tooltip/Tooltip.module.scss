@@ -1,9 +1,11 @@
 @use "@/shared/design-system/mixins" as *;
 
 // Editorial tooltip — near-transparent frosted glass (pure blur, 6% tint),
-// mono uppercase label, hairline, sharp corners. The pointer is a rotated glass
-// square sharing the chip's border + glass, so it reads as one material.
-// (--on-media = white over the dark hero, dark on a light page.)
+// mono uppercase label, hairline, sharp corners. The pointer is a clip-path
+// triangle sitting flush on the edge (no overlap → no stacked-backdrop-filter
+// darkening): a hairline-coloured triangle (::before) peeks ~1px around a
+// slightly smaller glass triangle (::after) → a bordered glass arrow that
+// matches the chip. (--on-media = white over the hero, dark on a light page.)
 .content {
   position: relative;
   z-index: 1100;
@@ -21,48 +23,105 @@
   animation: tip-in 0.16s var(--ease-out);
   @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
 
-  // Pointer — a 45°-rotated square with the same border + glass. Only the two
-  // outer edges keep their border, so it forms a clean «^» that matches the
-  // chip. Radix's own arrow is hidden (below).
+  &::before,
   &::after {
     content: "";
     position: absolute;
-    inline-size: 0.5rem;
-    block-size: 0.5rem;
-    transform: rotate(45deg);
-    border: 0.0625rem solid var(--media-hairline-strong);
     pointer-events: none;
+  }
+  // Border layer (под стеклом) — sits 1px proud on the visible edges.
+  &::before {
+    background: var(--media-hairline-strong);
+  }
+  // Glass layer (поверх) — same material as the chip.
+  &::after {
     @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
   }
 }
 
-.content[data-side="bottom"]::after {
-  inset-block-start: -0.28rem;
-  inset-inline-start: 50%;
-  margin-inline-start: -0.25rem;
-  border-inline-end: 0;
-  border-block-end: 0;
+// ── Arrow per side (flush on the edge facing the trigger) ──────────────────
+// bottom: chip below trigger → arrow on top, points up.
+.content[data-side="bottom"] {
+  &::before,
+  &::after {
+    inset-inline-start: 50%;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  }
+  &::before {
+    inline-size: 0.8rem;
+    block-size: 0.44rem;
+    inset-block-start: -0.44rem;
+    margin-inline-start: -0.4rem;
+  }
+  &::after {
+    inline-size: 0.66rem;
+    block-size: 0.36rem;
+    inset-block-start: -0.36rem;
+    margin-inline-start: -0.33rem;
+  }
 }
-.content[data-side="top"]::after {
-  inset-block-end: -0.28rem;
-  inset-inline-start: 50%;
-  margin-inline-start: -0.25rem;
-  border-inline-start: 0;
-  border-block-start: 0;
+
+// top: chip above trigger → arrow on bottom, points down.
+.content[data-side="top"] {
+  &::before,
+  &::after {
+    inset-inline-start: 50%;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  }
+  &::before {
+    inline-size: 0.8rem;
+    block-size: 0.44rem;
+    inset-block-end: -0.44rem;
+    margin-inline-start: -0.4rem;
+  }
+  &::after {
+    inline-size: 0.66rem;
+    block-size: 0.36rem;
+    inset-block-end: -0.36rem;
+    margin-inline-start: -0.33rem;
+  }
 }
-.content[data-side="right"]::after {
-  inset-inline-start: -0.28rem;
-  inset-block-start: 50%;
-  margin-block-start: -0.25rem;
-  border-inline-end: 0;
-  border-block-start: 0;
+
+// right: chip to the right of trigger → arrow on left, points left.
+.content[data-side="right"] {
+  &::before,
+  &::after {
+    inset-block-start: 50%;
+    clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+  }
+  &::before {
+    inline-size: 0.44rem;
+    block-size: 0.8rem;
+    inset-inline-start: -0.44rem;
+    margin-block-start: -0.4rem;
+  }
+  &::after {
+    inline-size: 0.36rem;
+    block-size: 0.66rem;
+    inset-inline-start: -0.36rem;
+    margin-block-start: -0.33rem;
+  }
 }
-.content[data-side="left"]::after {
-  inset-inline-end: -0.28rem;
-  inset-block-start: 50%;
-  margin-block-start: -0.25rem;
-  border-inline-start: 0;
-  border-block-end: 0;
+
+// left: chip to the left of trigger → arrow on right, points right.
+.content[data-side="left"] {
+  &::before,
+  &::after {
+    inset-block-start: 50%;
+    clip-path: polygon(100% 50%, 0% 0%, 0% 100%);
+  }
+  &::before {
+    inline-size: 0.44rem;
+    block-size: 0.8rem;
+    inset-inline-end: -0.44rem;
+    margin-block-start: -0.4rem;
+  }
+  &::after {
+    inline-size: 0.36rem;
+    block-size: 0.66rem;
+    inset-inline-end: -0.36rem;
+    margin-block-start: -0.33rem;
+  }
 }
 
 @keyframes tip-in {
@@ -72,7 +131,6 @@
   }
 }
 
-// Radix's built-in arrow — replaced by the ::after square above.
 .arrow {
   display: none;
 }
