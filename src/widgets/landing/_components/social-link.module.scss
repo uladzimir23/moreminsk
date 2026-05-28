@@ -1,0 +1,51 @@
+@use "@/shared/design-system/mixins" as *;
+
+// Same hit-area as the other icon controls; the hover «affordance» here is the
+// mono → brand cross-fade (no colour/box change).
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  color: inherit;
+  cursor: pointer;
+  @include btn-press(0.9);
+}
+
+.mono,
+.brand {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  transform: translate(-50%, -50%);
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+.mono svg {
+  inline-size: 100%;
+  block-size: 100%;
+  display: block;
+}
+.brand {
+  opacity: 0;
+}
+
+.link:hover .mono,
+.link:focus-visible .mono {
+  opacity: 0;
+}
+.link:hover .brand,
+.link:focus-visible .brand {
+  opacity: 1;
+}
+
+@include reduced-motion {
+  .mono,
+  .brand {
+    transition: none;
+  }
+}

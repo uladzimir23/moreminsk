@@ -32,15 +32,12 @@
   &[aria-expanded="true"] {
     color: var(--on-media);
   }
-  // Same affordance as the other icon controls (accent + soft glow, no fill).
-  &:hover,
-  &:focus-visible {
-    color: var(--color-accent);
-  }
+  // Affordance: a soft glow only — the X keeps the header colour (logo/theme),
+  // no accent fill, so it stays consistent over the hero.
   &:hover .burgerBox,
   &:focus-visible .burgerBox {
     filter: drop-shadow(
-      0 0.0625rem 0.375rem color-mix(in srgb, var(--color-accent) 55%, transparent)
+      0 0.0625rem 0.375rem color-mix(in srgb, var(--color-accent) 45%, transparent)
     );
   }
 }
@@ -98,9 +95,10 @@
   gap: 2rem;
   padding-block-start: clamp(1.5rem, 4vh, 2.5rem);
 
-  // Below xl the fixed subheader floats over the top — clear it.
+  // Below xl the fixed subheader floats over the top — clear it + leave a
+  // comfortable gap before the first nav link.
   @include respond-below("xl") {
-    padding-block-start: 3.5rem;
+    padding-block-start: 5.5rem;
   }
 
   @include respond-to("lg") {
@@ -604,9 +602,5 @@
   display: flex;
   align-items: center;
   gap: 0.125rem;
-
-  a {
-    @include icon-btn;
-    color: var(--on-media-muted);
-  }
+  color: var(--on-media-muted);
 }
