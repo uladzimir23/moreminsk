@@ -83,6 +83,11 @@
   gap: 2rem;
   padding-block-start: clamp(1.5rem, 4vh, 2.5rem);
 
+  // Below xl the fixed subheader floats over the top — clear it.
+  @include respond-below("xl") {
+    padding-block-start: 3.5rem;
+  }
+
   @include respond-to("lg") {
     grid-template-columns: minmax(0, 24rem) 1fr;
     gap: clamp(2rem, 6vw, 5rem);
@@ -544,16 +549,26 @@
   color: var(--on-media-muted);
 }
 
-// Subheader — quick-contacts bar pinned under the fixed header (was the bottom
-// «foot»; moved up so the body can top-align without clipping).
+// Subheader — quick-contacts bar. Mobile only (≥xl the header keeps its own
+// .actions when the menu is open). Fixed under the header — outside the body
+// flow, like the fleet catalog's sticky quick-book bar.
 .subheader {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block-end: 1rem;
-  border-block-end: 1px solid var(--media-hairline);
+  display: none;
+
+  @include respond-below("xl") {
+    position: fixed;
+    inset-block-start: var(--landing-header-h, 3.5rem);
+    inset-inline: 0;
+    z-index: 305;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.75rem;
+    padding-inline: clamp(1.25rem, 5vw, 5rem);
+    border-block-end: 1px solid var(--media-hairline);
+    @include media-glass($glass: 90%);
+  }
 }
 
 .phone {

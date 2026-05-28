@@ -47,14 +47,11 @@
   --hdr-fg-strong: var(--on-media-strong);
   --hdr-fg-muted: var(--on-media-muted);
 
-  // Open state: the overlay carries the nav + contacts + CTA + toggles, so the
-  // header collapses to just the logo + the burger-X over the sheet. (.nav is
-  // the desktop horizontal links — hidden too, else they'd float above the
-  // z-300 overlay on the z-999 header.)
+  // Open state: keep the right-side .actions (phone / socials / CTA / theme)
+  // visible — the body starts below the header, so they read as the desktop
+  // contacts source (the menu's mobile subheader is hidden ≥xl). Only the
+  // horizontal nav + «Яхты» pill hide, to avoid duplicating the overlay nav.
   .nav,
-  .phone,
-  .socials,
-  .cta,
   .fleetBtn {
     display: none;
   }
