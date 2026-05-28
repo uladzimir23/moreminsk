@@ -198,8 +198,8 @@ export function CinematicHero({ pinned = false }: CinematicHeroProps) {
         </h1>
 
         <p className={styles.sub}>
-          Прогулки, мероприятия и свидания на закате на Минском водохранилище — от 150 BYN/час,
-          бронирование за минуту.
+          Свидание, день рождения, девичник или закатный вечер на воде. Минское море, от 150 BYN/час
+          — бронируем за минуту.
         </p>
 
         <div className={styles.ctas}>
