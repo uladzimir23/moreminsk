@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
+import clsx from "clsx";
 import {
   ArrowRight,
   CalendarDays,
@@ -20,7 +21,7 @@ import {
   Wine,
   type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { YachtCarousel } from "./YachtCarousel";
 import styles from "./YachtDetail.module.scss";
 
@@ -63,6 +64,38 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
   const { open } = usePanel();
   // Active gallery photo → drives the ambient wash behind the product hero.
   const [bgIdx, setBgIdx] = useState(0);
+  // Quick-book bar docks under the header once the hero (with the primary
+  // name · price · CTA) has scrolled above the header line.
+  const heroRef = useRef<HTMLElement>(null);
+  const [docked, setDocked] = useState(false);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const headerH =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--landing-header-h"),
+        ) || 56;
+      const r = hero.getBoundingClientRect();
+      const show = r.bottom <= headerH + 8;
+      setDocked((v) => (v === show ? v : show));
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   const specs = yacht.specs;
   const specRows: Array<{ label: string; value: string }> = specs
@@ -86,8 +119,23 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
 
   return (
     <article className={styles.page}>
+      {/* Quick-book bar — duplicate name · price · CTA, docks after the hero. */}
+      <div className={clsx(styles.stickyBar, docked && styles.stickyBarDocked)}>
+        <div className={styles.stickyInfo}>
+          <span className={styles.stickyName}>{yacht.name}</span>
+          <span className={styles.stickyPrice}>от {yacht.pricePerHour} BYN/ч</span>
+        </div>
+        <button
+          type="button"
+          className={styles.stickyBook}
+          onClick={() => open("order", { yacht: yacht.slug })}
+        >
+          Забронировать
+        </button>
+      </div>
+
       {/* ── Product hero: gallery + buy-box ─────────────────────────────── */}
-      <section className={styles.hero} aria-labelledby={id("title")}>
+      <section className={styles.hero} ref={heroRef} aria-labelledby={id("title")}>
         {photos.length > 0 && (
           <AmbientBackdrop images={photos} activeIndex={bgIdx} className={styles.heroBg} />
         )}

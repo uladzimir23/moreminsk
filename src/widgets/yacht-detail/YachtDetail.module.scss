@@ -4,6 +4,75 @@
   color: var(--on-media);
 }
 
+// ── Quick-book bar (dup name · price · CTA) — like the catalog's ───────────
+.stickyBar {
+  position: fixed;
+  inset-block-start: var(--landing-header-h, 3.5rem);
+  inset-inline: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem clamp(1rem, 4vw, 5rem);
+  border-block-end: 0.0625rem solid var(--media-hairline);
+  @include media-glass($glass: 90%);
+
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  pointer-events: none;
+  transition:
+    opacity 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+
+  &.stickyBarDocked {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+.stickyInfo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.stickyName {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  font-weight: var(--primitive-weight-medium);
+  font-size: 1.0625rem;
+  color: var(--on-media-strong);
+}
+
+.stickyPrice {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--on-media-muted);
+  white-space: nowrap;
+}
+
+.stickyBook {
+  flex: none;
+  padding: 0.5rem 0.875rem;
+  border: 0;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+
+  @include btn-press;
+}
+
 // ── Product hero: name → gallery + buy-box ─────────────────────────────────
 .hero {
   position: relative;
