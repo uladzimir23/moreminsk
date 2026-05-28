@@ -8,7 +8,6 @@ import raw from "./scraped-photos.json";
 
 export type YachtSlug = "eva" | "alfa" | "mario" | "bravo";
 
-const YACHTS: ReadonlyArray<YachtSlug> = ["eva", "alfa", "mario", "bravo"];
 const withBaseAll = (urls: ReadonlyArray<string>): ReadonlyArray<string> => urls.map(withBase);
 
 // 240px thumbnail variant living in a `tn/` subfolder beside each photo
@@ -31,13 +30,30 @@ export const COVER_BY_YACHT: Readonly<Record<YachtSlug, string>> = {
   bravo: PHOTOS_BY_YACHT.bravo[0],
 };
 
-// Flat list — yacht cover first, then 2 extras from each — for the gallery
-// section. Yacht-tagged so a future <Gallery filter=…> can pivot on it.
-export const GALLERY: ReadonlyArray<{ url: string; yacht: YachtSlug; alt: string }> =
-  YACHTS.flatMap((y) =>
-    PHOTOS_BY_YACHT[y].slice(0, 4).map((url) => ({
-      url,
-      yacht: y,
-      alt: `Яхта ${y.toUpperCase()} на Минском море`,
-    })),
-  );
+// Curated gallery — photos supplied by the client (Telegram 2026-05-27), hosted
+// in public/gallery/. The `yacht` tag drives the /galereya filter chips (loose
+// grouping for a marketing gallery); `alt` describes the scene for SR + SEO.
+export const GALLERY: ReadonlyArray<{ url: string; yacht: YachtSlug; alt: string }> = (
+  [
+    {
+      src: "/gallery/sail-sunset.jpg",
+      yacht: "bravo",
+      alt: "Парусная яхта на закате на Минском море",
+    },
+    { src: "/gallery/sail-day.jpg", yacht: "alfa", alt: "Под парусом в ясный день" },
+    { src: "/gallery/deck-evening.jpg", yacht: "eva", alt: "Вечер на палубе яхты" },
+    { src: "/gallery/cabin.jpg", yacht: "bravo", alt: "Каюта с диванами под палубой" },
+    { src: "/gallery/table.jpg", yacht: "alfa", alt: "Стол с угощением в кокпите" },
+    {
+      src: "/gallery/motor-aerial.jpg",
+      yacht: "mario",
+      alt: "Моторная яхта на закате, вид сверху",
+    },
+    { src: "/gallery/motor-bow.jpg", yacht: "mario", alt: "Нос моторной яхты на спокойной воде" },
+    { src: "/gallery/motor-sunset.jpg", yacht: "mario", alt: "Закатная прогулка под мотором" },
+    { src: "/gallery/sunset-deck.jpg", yacht: "eva", alt: "Закат с борта яхты" },
+    { src: "/gallery/sunset-sea.jpg", yacht: "bravo", alt: "Закат над Минским морем" },
+    { src: "/gallery/aerial-people.jpg", yacht: "alfa", alt: "Компания на яхте, вид сверху" },
+    { src: "/gallery/mast.jpg", yacht: "bravo", alt: "Мачта на фоне неба" },
+  ] as const
+).map((g) => ({ url: withBase(g.src), yacht: g.yacht, alt: g.alt }));
