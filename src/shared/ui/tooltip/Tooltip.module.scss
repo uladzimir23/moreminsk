@@ -33,9 +33,12 @@
   &::before {
     background: var(--media-hairline-strong);
   }
-  // Glass layer (поверх) — same material as the chip.
+  // Fill layer (поверх). No backdrop-filter: a clip-path on the same element
+  // suppresses backdrop-filter, so media-glass would fall back to its opaque
+  // 96% --media-bg → a dark triangle. A plain 6% tint lets the backdrop show
+  // through (unblurred, but the arrow is tiny) → matches the near-clear chip.
   &::after {
-    @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
+    background: color-mix(in srgb, var(--media-bg) 6%, transparent);
   }
 }
 
@@ -50,13 +53,13 @@
   &::before {
     inline-size: 0.8rem;
     block-size: 0.44rem;
-    inset-block-start: -0.44rem;
+    inset-block-start: -0.5rem;
     margin-inline-start: -0.4rem;
   }
   &::after {
     inline-size: 0.66rem;
     block-size: 0.36rem;
-    inset-block-start: -0.36rem;
+    inset-block-start: -0.42rem;
     margin-inline-start: -0.33rem;
   }
 }
@@ -71,13 +74,13 @@
   &::before {
     inline-size: 0.8rem;
     block-size: 0.44rem;
-    inset-block-end: -0.44rem;
+    inset-block-end: -0.5rem;
     margin-inline-start: -0.4rem;
   }
   &::after {
     inline-size: 0.66rem;
     block-size: 0.36rem;
-    inset-block-end: -0.36rem;
+    inset-block-end: -0.42rem;
     margin-inline-start: -0.33rem;
   }
 }
@@ -92,13 +95,13 @@
   &::before {
     inline-size: 0.44rem;
     block-size: 0.8rem;
-    inset-inline-start: -0.44rem;
+    inset-inline-start: -0.5rem;
     margin-block-start: -0.4rem;
   }
   &::after {
     inline-size: 0.36rem;
     block-size: 0.66rem;
-    inset-inline-start: -0.36rem;
+    inset-inline-start: -0.42rem;
     margin-block-start: -0.33rem;
   }
 }
@@ -113,13 +116,13 @@
   &::before {
     inline-size: 0.44rem;
     block-size: 0.8rem;
-    inset-inline-end: -0.44rem;
+    inset-inline-end: -0.5rem;
     margin-block-start: -0.4rem;
   }
   &::after {
     inline-size: 0.36rem;
     block-size: 0.66rem;
-    inset-inline-end: -0.36rem;
+    inset-inline-end: -0.42rem;
     margin-block-start: -0.33rem;
   }
 }
