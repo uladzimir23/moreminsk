@@ -1,9 +1,8 @@
 @use "@/shared/design-system/mixins" as *;
 
-// Same hit-area as the other icon controls; the hover «affordance» here is the
-// mono → brand cross-fade (no colour/box change).
+// Same hit-area as the other icon controls; the hover affordance is a colour
+// shift to the platform brand colour (--brand) — same glyph, no shape change.
 .link {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -12,40 +11,21 @@
   block-size: 2.5rem;
   color: inherit;
   cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out);
   @include btn-press(0.9);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--brand, var(--color-accent));
+  }
 }
 
-.mono,
-.brand {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  inline-size: 1.25rem;
-  block-size: 1.25rem;
-  transform: translate(-50%, -50%);
-  transition: opacity var(--duration-base) var(--ease-out);
-}
-.mono svg {
-  inline-size: 100%;
-  block-size: 100%;
-  display: block;
-}
-.brand {
-  opacity: 0;
-}
+.icon {
+  display: inline-flex;
 
-.link:hover .mono,
-.link:focus-visible .mono {
-  opacity: 0;
-}
-.link:hover .brand,
-.link:focus-visible .brand {
-  opacity: 1;
-}
-
-@include reduced-motion {
-  .mono,
-  .brand {
-    transition: none;
+  svg {
+    block-size: 1.15rem;
+    inline-size: auto;
+    display: block;
   }
 }

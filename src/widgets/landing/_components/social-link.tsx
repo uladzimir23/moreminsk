@@ -1,34 +1,33 @@
 "use client";
 
-import { withBase } from "@/shared/lib/base-path";
 import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 import clsx from "clsx";
 import styles from "./social-link.module.scss";
 
-// Social icon: monochrome glyph (currentColor — rides the header/menu fg) at
-// rest, cross-fading to the real brand logo on hover/focus. Brand SVGs live in
-// public/social/ (Telegram blue disc, Instagram gradient).
+// Social icon — same monochrome glyph (currentColor) in both states; on
+// hover/focus the colour shifts to the platform's brand colour (--brand). No
+// shape change.
 type Platform = "telegram" | "instagram";
 
 const DATA: Record<
   Platform,
-  { href: string; label: string; brand: string; mono: React.ReactNode }
+  { href: string; label: string; brand: string; icon: React.ReactNode }
 > = {
   telegram: {
     href: "https://t.me/moreminsk",
     label: "Telegram",
-    brand: "/social/telegram.svg",
-    mono: (
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M21.5 4.3 18.6 19c-.2 1-.8 1.2-1.6.7l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.36-.3-.08-.5-.55-.2l-10.1 6.4-4.4-1.4c-.95-.3-.97-.95.2-1.4L20 3c.8-.3 1.5.2 1.5 1.3z" />
+    brand: "#34AADF",
+    icon: (
+      <svg viewBox="0 0 50 43" fill="currentColor" aria-hidden="true">
+        <path d="M3.06541 18.7224C3.06541 18.7224 25.1792 9.2852 32.8486 5.96214C35.7887 4.63303 45.759 0.379493 45.759 0.379493C45.759 0.379493 50.3608 -1.48127 49.9773 3.03791C49.8494 4.89885 48.8268 11.4118 47.8043 18.4566C46.2703 28.4256 44.6086 39.3248 44.6086 39.3248C44.6086 39.3248 44.353 42.3821 42.18 42.9137C40.007 43.4454 36.4277 41.053 35.7887 40.5211C35.2773 40.1225 26.2018 34.141 22.8783 31.2168C21.9835 30.4193 20.961 28.8244 23.0061 26.9634C27.6078 22.5771 33.1043 17.1274 36.4277 13.6716C37.9617 12.0764 39.4955 8.35473 33.1043 12.8739C24.0288 19.387 15.081 25.5013 15.081 25.5013C15.081 25.5013 13.0357 26.8304 9.20102 25.6341C5.36614 24.438 0.892247 22.8429 0.892247 22.8429C0.892247 22.8429 -2.17538 20.8491 3.06541 18.7224Z" />
       </svg>
     ),
   },
   instagram: {
     href: "https://instagram.com/moreminsk.by",
     label: "Instagram",
-    brand: "/social/instagram.svg",
-    mono: (
+    brand: "#E1306C",
+    icon: (
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -50,16 +49,13 @@ export function SocialLink({ platform, className }: { platform: Platform; classN
     <Tooltip content={d.label}>
       <a
         className={clsx(styles.link, className)}
+        style={{ "--brand": d.brand } as React.CSSProperties}
         href={d.href}
         target="_blank"
         rel="noreferrer"
         aria-label={d.label}
       >
-        <span className={styles.mono} aria-hidden="true">
-          {d.mono}
-        </span>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className={styles.brand} src={withBase(d.brand)} alt="" aria-hidden="true" />
+        <span className={styles.icon}>{d.icon}</span>
       </a>
     </Tooltip>
   );
