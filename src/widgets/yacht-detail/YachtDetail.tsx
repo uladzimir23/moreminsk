@@ -2,27 +2,24 @@
 
 import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
+import { BookingForm } from "@/features/booking/BookingForm";
+import { useBookingStore } from "@/features/booking/model/store";
 import { Link } from "@/i18n/navigation";
-import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
 import clsx from "clsx";
 import {
   ArrowRight,
-  CalendarDays,
   Check,
-  Clock,
   Fuel,
   Music,
   Sailboat,
   UserRound,
-  Users,
   Waves,
   Wine,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { YachtCarousel } from "./YachtCarousel";
 import styles from "./YachtDetail.module.scss";
 
 const TYPE_LABEL: Record<Yacht["type"], string> = {
@@ -31,7 +28,6 @@ const TYPE_LABEL: Record<Yacht["type"], string> = {
   "sail-motor": "Парусно-моторная яхта",
 };
 
-// Onboard feature label → icon. Falls back to a check for anything unmapped.
 const FEATURE_ICONS: Record<string, LucideIcon> = {
   Капитан: UserRound,
   Топливо: Fuel,
@@ -57,18 +53,23 @@ type Props = {
   others: ReadonlyArray<OtherYacht>;
 };
 
-// Product-card layout. Desktop: scrolling content (gallery → description → spec
-// sheet → occasions) on the left, a sticky booking card on the right. Mobile:
-// single column (gallery → booking → details) + a docked quick-book bar.
+// Product-card layout, 50/50 on desktop. Left: gallery → description → spec
+// sheet → occasions → rest-of-fleet catalog (scrolls). Right: a sticky booking
+// widget — the full <BookingForm/> wizard (date/time → contact → summary),
+// pre-seeded with this yacht. Mobile: one column (gallery → booking → details).
 export function YachtDetail({ yacht, photos, services, others }: Props) {
-  const { open } = usePanel();
-  // Active gallery photo → drives the ambient wash behind the product area.
   const [bgIdx, setBgIdx] = useState(0);
-  // Quick-book bar docks once the product area's name/CTA scroll above the
-  // header line (mobile only — desktop keeps the sticky booking card visible).
   const heroRef = useRef<HTMLElement>(null);
+  const bookRef = useRef<HTMLDivElement>(null);
   const [docked, setDocked] = useState(false);
+  const hydrate = useBookingStore((s) => s.hydrateFromPayload);
 
+  // Seed the inline booking wizard with this yacht (jumps past Step 1).
+  useEffect(() => {
+    hydrate({ yachtSlug: yacht.slug, source: "inline-form" }, "inline-form");
+  }, [hydrate, yacht.slug]);
+
+  // Mobile quick-book bar — docks while the product area is in view.
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;
@@ -80,7 +81,7 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
           getComputedStyle(document.documentElement).getPropertyValue("--landing-header-h"),
         ) || 56;
       const r = hero.getBoundingClientRect();
-      const show = r.top <= -120 && r.bottom > headerH + 120;
+      const show = r.top <= -160 && r.bottom > headerH + 160;
       setDocked((v) => (v === show ? v : show));
     };
     const onScroll = () => {
@@ -96,6 +97,9 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
       window.removeEventListener("resize", onScroll);
     };
   }, []);
+
+  const scrollToBook = () =>
+    bookRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const specs = yacht.specs;
   const specRows: Array<{ label: string; value: string }> = specs
@@ -119,17 +123,13 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
 
   return (
     <article className={styles.page}>
-      {/* Quick-book bar — dup name · price · CTA, docks after the hero (mobile). */}
+      {/* Mobile quick-book bar — scrolls to the inline widget. */}
       <div className={clsx(styles.stickyBar, docked && styles.stickyBarDocked)}>
         <div className={styles.stickyInfo}>
           <span className={styles.stickyName}>{yacht.name}</span>
           <span className={styles.stickyPrice}>от {yacht.pricePerHour} BYN/ч</span>
         </div>
-        <button
-          type="button"
-          className={styles.stickyBook}
-          onClick={() => open("order", { yacht: yacht.slug })}
-        >
+        <button type="button" className={styles.stickyBook} onClick={scrollToBook}>
           Забронировать
         </button>
       </div>
@@ -175,57 +175,36 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
               )}
             </div>
 
-            {/* Right col — sticky booking card */}
-            <aside className={styles.bookCol}>
+            {/* Right col — sticky booking widget */}
+            <aside className={styles.bookCol} ref={bookRef}>
               <div className={styles.bookCard}>
-                <div className={styles.priceRow}>
-                  <span className={styles.priceFrom}>от</span>
-                  <span className={styles.priceValue}>{yacht.pricePerHour}</span>
-                  <span className={styles.priceUnit}>BYN / час</span>
+                <div className={styles.bookHead}>
+                  <span className={styles.bookEyebrow}>Бронирование {yacht.name}</span>
+                  <span className={styles.priceRow}>
+                    <span className={styles.priceFrom}>от</span>
+                    <span className={styles.priceValue}>{yacht.pricePerHour}</span>
+                    <span className={styles.priceUnit}>BYN / час</span>
+                  </span>
                 </div>
-
-                <ul className={styles.quickSpecs}>
-                  <li className={styles.quickSpec}>
-                    <Users className={styles.quickIcon} aria-hidden="true" />
-                    до {yacht.capacity} гостей
-                  </li>
-                  <li className={styles.quickSpec}>
-                    <Clock className={styles.quickIcon} aria-hidden="true" />
-                    мин. {yacht.minHours} ч
-                  </li>
-                </ul>
-
-                <button
-                  type="button"
-                  className={styles.cta}
-                  onClick={() => open("order", { yacht: yacht.slug })}
-                >
-                  <CalendarDays className={styles.ctaIcon} aria-hidden="true" />
-                  Забронировать
-                </button>
-
-                <p className={styles.bookNote}>Капитан и топливо в цене · ответим за 30 минут</p>
-
-                <div className={styles.included}>
-                  <span className={styles.includedLabel}>В стоимости</span>
-                  <ul className={styles.badges}>
-                    {yacht.features.map((f) => {
-                      const Icon = FEATURE_ICONS[f] ?? Check;
-                      return (
-                        <li key={f} className={styles.badge}>
-                          <Icon className={styles.badgeIcon} aria-hidden="true" />
-                          {f}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
+                <BookingForm />
               </div>
             </aside>
 
-            {/* Left col, row 2 — description + spec sheet + occasions */}
+            {/* Left col, row 2 — description, badges, specs, occasions, fleet */}
             <div className={styles.details}>
               <p className={styles.lead}>{yacht.description}</p>
+
+              <ul className={styles.badges} aria-label="В стоимости">
+                {yacht.features.map((f) => {
+                  const Icon = FEATURE_ICONS[f] ?? Check;
+                  return (
+                    <li key={f} className={styles.badge}>
+                      <Icon className={styles.badgeIcon} aria-hidden="true" />
+                      {f}
+                    </li>
+                  );
+                })}
+              </ul>
 
               {specRows.length > 0 && (
                 <section className={styles.detailBlock} aria-labelledby={id("specs")}>
@@ -265,22 +244,44 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
                   </ul>
                 </section>
               )}
+
+              {others.length > 0 && (
+                <section className={styles.detailBlock} aria-labelledby={id("fleet")}>
+                  <h2 id={id("fleet")} className={styles.blockTitle}>
+                    Другие яхты
+                  </h2>
+                  <ul className={styles.otherList}>
+                    {others.map((o) => (
+                      <li key={o.slug}>
+                        <Link href={`/fleet/${o.slug}`} className={styles.otherCard}>
+                          <span className={styles.otherPhoto}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={o.cover}
+                              alt={`Яхта ${o.name}`}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </span>
+                          <span className={styles.otherBody}>
+                            <span className={styles.otherType}>
+                              {TYPE_LABEL[o.type]}
+                              {o.badge === "flagship" ? " · флагман" : ""}
+                            </span>
+                            <span className={styles.otherName}>{o.name}</span>
+                            <span className={styles.otherPrice}>от {o.pricePerHour} BYN/ч</span>
+                          </span>
+                          <ArrowRight className={styles.otherArrow} aria-hidden="true" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </div>
           </div>
         </div>
       </section>
-
-      {/* Другие яхты — full-width cross-sell carousel */}
-      {others.length > 0 && (
-        <section className={styles.fleetSection} aria-labelledby={id("fleet")}>
-          <div className={styles.fleetHead}>
-            <h2 id={id("fleet")} className={styles.blockTitle}>
-              Другие яхты
-            </h2>
-          </div>
-          <YachtCarousel items={others} />
-        </section>
-      )}
     </article>
   );
 }
