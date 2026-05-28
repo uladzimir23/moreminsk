@@ -1,10 +1,17 @@
+import { YACHTS } from "@/shared/content/yachts";
+import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { PageHero } from "@/shared/ui/page-hero/PageHero";
 import { PageShell } from "@/shared/ui/page-hero/PageShell";
+import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { COVER_BY_YACHT, GALLERY } from "@/widgets/landing/_data/photos";
+import { GalleryGrid } from "./GalleryGrid";
 import styles from "./GalleryPage.module.scss";
 
-// Dedicated /galereya page — the full photo set in a grid (the home section is
-// a single-frame viewer; this is the «see everything» destination).
+const YACHT_COVERS = YACHTS.map((y) => COVER_BY_YACHT[y.slug as keyof typeof COVER_BY_YACHT]);
+
+// Dedicated /galereya page — the full photo set as an interactive masonry grid
+// (click → lightbox), filterable by yacht. The home section is a single-frame
+// viewer; this is the «see everything» destination.
 export function GalleryPage() {
   return (
     <PageShell
@@ -21,30 +28,9 @@ export function GalleryPage() {
       }
     >
       <section className={styles.section} aria-labelledby="gallery-title">
-        <div className={styles.container}>
-          {[
-            GALLERY.slice(0, Math.ceil(GALLERY.length / 2)),
-            GALLERY.slice(Math.ceil(GALLERY.length / 2)),
-          ].map((row, r) => (
-            <div className={styles.marquee} key={r}>
-              <div className={`${styles.track}${r === 1 ? ` ${styles.trackReverse}` : ""}`}>
-                {/* Row rendered twice so translateX(-50%) loops seamlessly. */}
-                {[...row, ...row].map((shot, i) => (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    key={`${shot.url}-${i}`}
-                    className={styles.shot}
-                    src={shot.url}
-                    alt={i < row.length ? shot.alt : ""}
-                    aria-hidden={i < row.length ? undefined : true}
-                    loading={r === 0 && i < 3 ? "eager" : "lazy"}
-                    decoding="async"
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <AmbientBackdrop images={YACHT_COVERS} activeIndex={0} className={styles.sectionBg} />
+        <SectionHeader eyebrow="Галерея" title="Кадры" accent="с воды" tone="media" framed />
+        <GalleryGrid photos={GALLERY} />
       </section>
     </PageShell>
   );

@@ -1,126 +1,223 @@
 @use "@/shared/design-system/mixins" as *;
 
-.hero {
-  padding-block: var(--space-3xl) var(--space-xl);
-  background: var(--color-background);
-}
-
-.container {
-  inline-size: min(100% - 2 * var(--space-md), 72rem);
-  margin-inline: auto;
-
-  @include respond-to("md") {
-    inline-size: min(100% - 2 * var(--space-xl), 72rem);
-  }
-}
-
-.breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-block-end: var(--space-md);
-  font-size: var(--text-sm);
-  color: var(--color-foreground-muted);
-}
-
-.crumbLink {
-  color: var(--color-foreground-muted);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-out);
-
-  &:hover {
-    color: var(--color-foreground);
-  }
-
-  @include focus-ring($offset: 0.125rem);
-}
-
-.h1 {
-  margin: 0 0 var(--space-sm);
-  font-size: var(--text-4xl);
-  font-weight: var(--primitive-weight-bold);
-  line-height: var(--primitive-leading-tight);
-  letter-spacing: var(--primitive-tracking-tight);
-  color: var(--color-foreground);
-  text-wrap: balance;
-
-  @include respond-to("md") {
-    font-size: var(--text-5xl);
-  }
-}
-
-.lead {
-  margin: 0;
-  max-inline-size: 44rem;
-  font-size: var(--text-lg);
-  line-height: var(--primitive-leading-relaxed);
-  color: var(--color-foreground-muted);
-  text-wrap: pretty;
-}
+// /galereya — media-секция + masonry-сетка (CSS columns, без кропа) + фильтр-чипы
+// + клик-лайтбокс. Острые углы. Лайтбокс — паттерн из YachtGallery.
 
 .section {
-  padding-block: var(--space-xl) var(--space-3xl);
-  background: var(--color-background);
-}
-
-// Marquee rows — each track holds its row twice and slides exactly one copy
-// width (-50%) for a seamless loop; rows run opposite directions, pause on
-// hover. Edges fade via a mask. Reduced-motion falls back to a manual scroll.
-.marquee {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  -webkit-mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-  mask: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-
-  & + & {
-    margin-block-start: var(--space-sm);
-  }
+  padding-block: clamp(3.5rem, 9vh, 6rem);
+  background: var(--media-bg);
+  color: var(--on-media);
+}
+.sectionBg {
+  border-radius: 0;
 }
 
-.track {
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--section-max);
+  margin: clamp(1.5rem, 4vh, 2.5rem) auto 0;
+  padding-inline: var(--section-gutter);
+}
+
+// ── Filter chips ───────────────────────────────────────────────────────────
+.filters {
   display: flex;
-  inline-size: max-content;
-  animation: gallery-marquee 52s linear infinite;
-  will-change: transform;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: clamp(1rem, 2.5vw, 1.5rem);
+}
+.chip,
+.chipActive {
+  padding: 0.5rem 1rem;
+  border: 0.0625rem solid var(--media-glass-border);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include focus-ring;
+}
+.chip {
+  color: var(--on-media-muted);
+  @include media-glass;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
 
   &:hover {
-    animation-play-state: paused;
+    color: var(--on-media);
+    border-color: var(--color-accent);
   }
 }
-
-.trackReverse {
-  animation-name: gallery-marquee-rev;
+.chipActive {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
-.shot {
-  flex: none;
-  block-size: clamp(9rem, 20vw, 15rem);
-  inline-size: auto;
-  margin-inline-end: var(--space-sm);
-  border-radius: var(--card-radius);
-  background: var(--color-surface-alt);
-  object-fit: cover;
-}
+// ── Masonry grid (columns → keep each photo's natural aspect, no crop) ──────
+.grid {
+  columns: 2;
+  column-gap: clamp(0.5rem, 1.5vw, 0.875rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 
-@keyframes gallery-marquee {
-  to {
-    transform: translateX(-50%);
+  @include respond-to("md") {
+    columns: 3;
+  }
+  @include respond-to("lg") {
+    columns: 4;
   }
 }
-@keyframes gallery-marquee-rev {
+.tile {
+  break-inside: avoid;
+  margin-block-end: clamp(0.5rem, 1.5vw, 0.875rem);
+}
+.tileBtn {
+  display: block;
+  inline-size: 100%;
+  padding: 0;
+  border: 0.0625rem solid var(--media-glass-border);
+  background: var(--media-bg-deep);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--duration-base) var(--ease-out);
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
+  &:hover .tileImg {
+    transform: scale(1.05);
+  }
+  @include focus-ring;
+  @include reduced-motion {
+    &:hover .tileImg {
+      transform: none;
+    }
+  }
+}
+.tileImg {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  transition: transform 0.5s var(--ease-out);
+}
+
+// ── Lightbox (YachtGallery pattern) ────────────────────────────────────────
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 6vw, 5rem);
+  background: rgb(8 10 14 / 0.82);
+  backdrop-filter: blur(1.5rem) saturate(1.2);
+  cursor: zoom-out;
+  animation: lb-in 0.3s ease both;
+}
+.lightboxImg {
+  max-inline-size: min(92vw, 75rem);
+  max-block-size: 88vh;
+  object-fit: contain;
+  cursor: default;
+  box-shadow: 0 2.5rem 7.5rem rgb(0 0 0 / 0.6);
+  animation: lb-img-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lbClose,
+.lbNav {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(255 255 255 / 0.1);
+  border: 0.0625rem solid rgb(255 255 255 / 0.25);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+.lbClose {
+  inset-block-start: clamp(1rem, 3vw, 2rem);
+  inset-inline-end: clamp(1rem, 3vw, 2rem);
+  inline-size: 3rem;
+  block-size: 3rem;
+  @include btn-press;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.18);
+    border-color: rgb(255 255 255 / 0.5);
+  }
+  svg {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+}
+.lbNav {
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+
+  &:hover {
+    background: rgb(255 255 255 / 0.18);
+    border-color: var(--color-accent);
+  }
+  svg {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+}
+.lbPrev {
+  inset-inline-start: clamp(0.75rem, 3vw, 2.5rem);
+}
+.lbNext {
+  inset-inline-end: clamp(0.75rem, 3vw, 2.5rem);
+}
+.lbCounter {
+  position: absolute;
+  inset-block-end: clamp(1rem, 3vw, 2rem);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 1rem;
+  background: rgb(0 0 0 / 0.5);
+  color: #fff;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  font-feature-settings: "tnum", "lnum";
+}
+
+@keyframes lb-in {
   from {
-    transform: translateX(-50%);
+    opacity: 0;
   }
   to {
-    transform: translateX(0);
+    opacity: 1;
   }
 }
-
-@include reduced-motion {
-  .track {
-    animation: none;
+@keyframes lb-img-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  .marquee {
-    overflow-x: auto;
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@include reduced-motion {
+  .lightbox,
+  .lightboxImg {
+    animation: none;
   }
 }
