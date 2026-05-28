@@ -1,6 +1,8 @@
-// «03 · Галерея» — section shell only. The viewer itself is now <YachtGallery>
-// (frame + thumbs + arrows, fed the flat GALLERY set); the section just centres
-// it under the framed SectionHeader, over the ambient backdrop.
+// «03 · Галерея» — auto-marquee teaser. Two rows of photos slide in opposite
+// directions over the ambient backdrop, with a soft edge-fade; hover pauses the
+// row and gently zooms the photo. Full grid + lightbox lives on /galereya.
+
+@use "@/shared/design-system/mixins" as *;
 
 .section {
   position: relative;
@@ -11,13 +13,92 @@
   color: var(--on-media);
 }
 
-// Centres the gallery under the framed SectionHeader. Capped narrower than the
-// full section width — the YachtGallery frame is 4:3, so at full --section-max it
-// grew to ~960px tall (portrait photos → wide letterbox). 50rem keeps it sane.
-.viewer {
+.rail {
   position: relative;
   z-index: 1;
-  max-width: 58rem;
-  margin: 0 auto;
-  padding-inline: var(--section-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  margin-block-start: clamp(1.75rem, 4vh, 2.75rem);
+  // Soft fade so cards recede into the edges instead of hard-cutting.
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.row {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  inline-size: max-content;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+  animation: mm-gallery-marquee 70s linear infinite;
+  will-change: transform;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+.trackReverse {
+  animation-direction: reverse;
+}
+
+@keyframes mm-gallery-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.shot {
+  flex: 0 0 auto;
+  block-size: clamp(9rem, 18vw, 14rem);
+  inline-size: auto; // natural aspect at a fixed height → no crop, mixed orientations
+  display: block;
+  border: 0.0625rem solid var(--media-glass-border);
+  background: var(--media-bg-deep);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+.shot:hover {
+  transform: scale(1.04);
+}
+
+@include reduced-motion {
+  .track {
+    animation: none;
+  }
+  .shot:hover {
+    transform: none;
+  }
+}
+
+// ── «Вся галерея» link ─────────────────────────────────────────────────────
+.more {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin-block-start: clamp(1.5rem, 3.5vh, 2.5rem);
+}
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 0.0625rem solid var(--media-hairline-strong);
+  border-radius: var(--btn-radius);
+  color: var(--on-media);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  @include btn-fill;
+  @include btn-press;
+}
+.moreIcon {
+  inline-size: 1rem;
+  block-size: 1rem;
 }
