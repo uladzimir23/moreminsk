@@ -1,11 +1,11 @@
 @use "@/shared/design-system/mixins" as *;
 
 // Editorial tooltip — near-transparent frosted glass (pure blur, 6% tint),
-// mono uppercase label, hairline, sharp corners. The pointer is a clip-path
-// triangle sitting flush on the edge (no overlap → no stacked-backdrop-filter
-// darkening): a hairline-coloured triangle (::before) peeks ~1px around a
-// slightly smaller glass triangle (::after) → a bordered glass arrow that
-// matches the chip. (--on-media = white over the hero, dark on a light page.)
+// mono uppercase label, hairline, sharp corners. The pointer is a single
+// clip-path triangle filled with the chip's border colour (a clip-path on the
+// element suppresses backdrop-filter, so a glass arrow can't be done here — a
+// solid hairline-coloured triangle matches the border instead).
+// (--on-media = white over the hero, dark on a light page.)
 .content {
   position: relative;
   z-index: 1100;
@@ -23,108 +23,53 @@
   animation: tip-in 0.16s var(--ease-out);
   @include media-glass($blur: var(--blur-frame), $glass: 6%, $opaque: 96%);
 
-  &::before,
   &::after {
     content: "";
     position: absolute;
     pointer-events: none;
-  }
-  // Border layer (под стеклом) — sits 1px proud on the visible edges.
-  &::before {
     background: var(--media-hairline-strong);
-  }
-  // Fill layer (поверх). No backdrop-filter: a clip-path on the same element
-  // suppresses backdrop-filter, so media-glass would fall back to its opaque
-  // 96% --media-bg → a dark triangle. A plain 6% tint lets the backdrop show
-  // through (unblurred, but the arrow is tiny) → matches the near-clear chip.
-  &::after {
-    background: color-mix(in srgb, var(--media-bg) 6%, transparent);
   }
 }
 
-// ── Arrow per side (flush on the edge facing the trigger) ──────────────────
+// ── Arrow per side (lifted 1px off the edge facing the trigger) ────────────
 // bottom: chip below trigger → arrow on top, points up.
-.content[data-side="bottom"] {
-  &::before,
-  &::after {
-    inset-inline-start: 50%;
-    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-  }
-  &::before {
-    inline-size: 0.8rem;
-    block-size: 0.44rem;
-    inset-block-start: -0.5rem;
-    margin-inline-start: -0.4rem;
-  }
-  &::after {
-    inline-size: 0.66rem;
-    block-size: 0.36rem;
-    inset-block-start: -0.42rem;
-    margin-inline-start: -0.33rem;
-  }
+.content[data-side="bottom"]::after {
+  inline-size: 0.8rem;
+  block-size: 0.44rem;
+  inset-block-start: -0.5rem;
+  inset-inline-start: 50%;
+  margin-inline-start: -0.4rem;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
 // top: chip above trigger → arrow on bottom, points down.
-.content[data-side="top"] {
-  &::before,
-  &::after {
-    inset-inline-start: 50%;
-    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-  }
-  &::before {
-    inline-size: 0.8rem;
-    block-size: 0.44rem;
-    inset-block-end: -0.5rem;
-    margin-inline-start: -0.4rem;
-  }
-  &::after {
-    inline-size: 0.66rem;
-    block-size: 0.36rem;
-    inset-block-end: -0.42rem;
-    margin-inline-start: -0.33rem;
-  }
+.content[data-side="top"]::after {
+  inline-size: 0.8rem;
+  block-size: 0.44rem;
+  inset-block-end: -0.5rem;
+  inset-inline-start: 50%;
+  margin-inline-start: -0.4rem;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
 }
 
 // right: chip to the right of trigger → arrow on left, points left.
-.content[data-side="right"] {
-  &::before,
-  &::after {
-    inset-block-start: 50%;
-    clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
-  }
-  &::before {
-    inline-size: 0.44rem;
-    block-size: 0.8rem;
-    inset-inline-start: -0.5rem;
-    margin-block-start: -0.4rem;
-  }
-  &::after {
-    inline-size: 0.36rem;
-    block-size: 0.66rem;
-    inset-inline-start: -0.42rem;
-    margin-block-start: -0.33rem;
-  }
+.content[data-side="right"]::after {
+  inline-size: 0.44rem;
+  block-size: 0.8rem;
+  inset-inline-start: -0.5rem;
+  inset-block-start: 50%;
+  margin-block-start: -0.4rem;
+  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
 }
 
 // left: chip to the left of trigger → arrow on right, points right.
-.content[data-side="left"] {
-  &::before,
-  &::after {
-    inset-block-start: 50%;
-    clip-path: polygon(100% 50%, 0% 0%, 0% 100%);
-  }
-  &::before {
-    inline-size: 0.44rem;
-    block-size: 0.8rem;
-    inset-inline-end: -0.5rem;
-    margin-block-start: -0.4rem;
-  }
-  &::after {
-    inline-size: 0.36rem;
-    block-size: 0.66rem;
-    inset-inline-end: -0.42rem;
-    margin-block-start: -0.33rem;
-  }
+.content[data-side="left"]::after {
+  inline-size: 0.44rem;
+  block-size: 0.8rem;
+  inset-inline-end: -0.5rem;
+  inset-block-start: 50%;
+  margin-block-start: -0.4rem;
+  clip-path: polygon(100% 50%, 0% 0%, 0% 100%);
 }
 
 @keyframes tip-in {
