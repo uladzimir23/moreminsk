@@ -1,53 +1,171 @@
 @use "@/shared/design-system/mixins" as *;
 
-// ── Hero children (rendered inside <PageHero>) ─────────────────────────────
-.specs {
+.page {
+  color: var(--on-media);
+}
+
+// ── Product hero: name → gallery + buy-box ─────────────────────────────────
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--media-bg);
+  color: var(--on-media);
+  padding-block: calc(var(--appbar-height, 4rem) + clamp(1.5rem, 4vh, 3rem)) clamp(3rem, 7vh, 5rem);
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
+}
+
+.crumbs {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-md);
-  margin: 0 0 var(--space-lg);
+  gap: 0.4rem;
+  margin-block-end: clamp(1.5rem, 3vh, 2.5rem);
+  font-size: 0.8125rem;
+  color: var(--on-media-subtle);
+
+  a {
+    color: var(--on-media-subtle);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+      color: var(--on-media);
+    }
+  }
+
+  [aria-current] {
+    color: var(--on-media);
+  }
+}
+
+.heroHead {
+  margin-block-end: clamp(1.5rem, 4vh, 2.5rem);
+  display: grid;
+  gap: 0.5rem;
+}
+
+.type {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-media-subtle);
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--on-media);
+}
+
+.product {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+
+  @include respond-below("lg") {
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 5vw, 2.5rem);
+  }
+}
+
+.galleryCol {
+  min-width: 0;
+}
+
+.buyBox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.lead {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--on-media-muted);
+  max-inline-size: 38rem;
+}
+
+.quickSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.25rem 0 0;
   padding: 0;
   list-style: none;
 }
 
-.spec {
+.quickSpec {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  font-size: var(--text-base);
-  color: var(--color-foreground);
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  color: var(--on-media);
 }
 
-.specIcon {
-  inline-size: 1.125rem;
-  block-size: 1.125rem;
-  color: var(--color-foreground-muted);
+.quickIcon {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  color: var(--on-media-subtle);
 }
 
-.specPriceWrap {
-  display: inline-flex;
+.priceRow {
+  display: flex;
   align-items: baseline;
-  gap: 0.375rem;
-  margin-inline-start: auto;
+  gap: 0.4rem;
+  margin-block-start: 0.25rem;
 }
 
-.specPrice {
-  font-size: var(--text-xl);
-  font-weight: var(--primitive-weight-bold);
-  color: var(--color-foreground);
+.priceFrom {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-media-subtle);
+}
+
+.priceValue {
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--on-media);
   font-feature-settings: "tnum", "lnum";
 }
 
-.specUnit {
-  font-size: var(--text-sm);
-  color: var(--color-foreground-muted);
+.priceUnit {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--on-media-muted);
 }
 
-.heroCta {
+.cta {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
+  justify-content: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  margin-block-start: 0.5rem;
   min-block-size: var(--btn-height-lg);
   padding-inline: var(--space-xl);
   border: 0;
@@ -61,84 +179,37 @@
   @include btn-press;
 }
 
-.heroCtaIcon {
+.ctaIcon {
   inline-size: 1.125rem;
   block-size: 1.125rem;
 }
 
-// ── Media content sections (canon: media-bg + SectionHeader + glass) ───────
-.section {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding-block: clamp(3.5rem, 9vh, 6.5rem);
+// ── Content blocks (plain product-page sections) ───────────────────────────
+.block {
   background: var(--media-bg);
   color: var(--on-media);
-
-  & + & {
-    border-block-start: 0.0625rem solid var(--media-hairline);
-  }
+  padding-block: clamp(2.75rem, 7vh, 4.5rem);
+  border-block-start: 0.0625rem solid var(--media-hairline);
 }
 
-.sectionBg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.inner {
-  position: relative;
-  z-index: 1;
+.blockInner {
   max-width: 90rem;
   margin: 0 auto;
   padding-inline: clamp(1.5rem, 6vw, 5rem);
 }
 
-// ── 01 · На борту ──────────────────────────────────────────────────────────
-.featureGrid {
-  list-style: none;
-  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: clamp(0.625rem, 1.4vw, 1rem);
-
-  @include respond-below("sm") {
-    grid-template-columns: 1fr;
-  }
-}
-
-.featureCard {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: clamp(1rem, 2vw, 1.375rem);
-  border: 0.0625rem solid var(--media-hairline);
-  border-radius: var(--card-radius);
-  @include media-glass($glass: 6%, $opaque: 90%);
-}
-
-.featureIcon {
-  display: inline-flex;
-  flex: none;
-  color: var(--on-media-accent);
-
-  svg {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-    display: block;
-  }
-}
-
-.featureLabel {
-  font-size: 0.9375rem;
-  line-height: 1.3;
+.blockTitle {
+  margin: 0 0 clamp(1.5rem, 3.5vh, 2.25rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--on-media);
 }
 
-// ── 02 · Техпаспорт ────────────────────────────────────────────────────────
+// ── Техпаспорт ─────────────────────────────────────────────────────────────
 .specSheet {
-  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
+  margin: 0;
   max-inline-size: 50rem;
   display: grid;
   grid-template-columns: 1fr;
@@ -183,13 +254,55 @@
   font-style: italic;
 }
 
-// ── 04 · Поводы (chips) ────────────────────────────────────────────────────
+// ── Что включено ───────────────────────────────────────────────────────────
+.featureGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.625rem, 1.4vw, 1rem);
+
+  @include respond-below("sm") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureCard {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: clamp(1rem, 2vw, 1.375rem);
+  border: 0.0625rem solid var(--media-hairline);
+  border-radius: var(--card-radius);
+  @include media-glass($glass: 6%, $opaque: 90%);
+}
+
+.featureIcon {
+  display: inline-flex;
+  flex: none;
+  color: var(--on-media-accent);
+
+  svg {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    display: block;
+  }
+}
+
+.featureLabel {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  color: var(--on-media);
+}
+
+// ── Под что берут (chips) ──────────────────────────────────────────────────
 .chips {
-  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   list-style: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -224,108 +337,4 @@
   inline-size: 0.875rem;
   block-size: 0.875rem;
   transition: transform var(--duration-base) var(--ease-spring);
-}
-
-// ── 05 · Другие яхты ───────────────────────────────────────────────────────
-.otherGrid {
-  list-style: none;
-  margin: clamp(2rem, 5vh, 3.5rem) 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-
-  @include respond-below("md") {
-    grid-template-columns: 1fr;
-  }
-}
-
-.otherCard {
-  display: flex;
-  flex-direction: column;
-  border: 0.0625rem solid var(--media-hairline);
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  text-decoration: none;
-  color: var(--on-media);
-  transition: border-color var(--duration-base) var(--ease-out);
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--on-media-accent);
-  }
-}
-
-.otherPhoto {
-  display: block;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--media-bg) 70%, transparent);
-
-  img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    display: block;
-  }
-}
-
-.otherBody {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: clamp(0.85rem, 1.6vw, 1.1rem);
-}
-
-.otherType {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--on-media-subtle);
-}
-
-.otherName {
-  font-size: 1.25rem;
-  font-weight: var(--primitive-weight-bold);
-  line-height: 1.1;
-  color: var(--on-media);
-}
-
-.otherPrice {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
-  color: var(--on-media);
-  font-feature-settings: "tnum", "lnum";
-}
-
-// ── Final CTA band ─────────────────────────────────────────────────────────
-.finalCta {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 3rem);
-  border: 0.0625rem solid var(--media-hairline-strong);
-  border-radius: var(--card-radius);
-  text-align: center;
-  @include media-glass($glass: 8%, $opaque: 88%);
-}
-
-.finalCtaTitle {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--on-media);
-}
-
-.finalCtaLead {
-  margin: 0;
-  max-inline-size: 34rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: var(--on-media-subtle);
 }

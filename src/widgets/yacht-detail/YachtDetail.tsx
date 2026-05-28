@@ -5,9 +5,6 @@ import type { Yacht } from "@/entities/yacht/model/types";
 import { Link } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
-import { PageHero } from "@/shared/ui/page-hero/PageHero";
-import { PageShell } from "@/shared/ui/page-hero/PageShell";
-import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
 import {
   ArrowRight,
@@ -24,6 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { YachtCarousel } from "./YachtCarousel";
 import styles from "./YachtDetail.module.scss";
 
 const TYPE_LABEL: Record<Yacht["type"], string> = {
@@ -58,9 +56,12 @@ type Props = {
   others: ReadonlyArray<OtherYacht>;
 };
 
+// Product-card layout: name + gallery + buy-box up top, then spec sheet, what's
+// included, what it's booked for (SEO), and a cross-sell carousel of the rest of
+// the fleet. No editorial per-section headers — plain product-page блоки.
 export function YachtDetail({ yacht, photos, services, others }: Props) {
   const { open } = usePanel();
-  // Active gallery photo — drives the ambient wash behind the photo section.
+  // Active gallery photo → drives the ambient wash behind the product hero.
   const [bgIdx, setBgIdx] = useState(0);
 
   const specs = yacht.specs;
@@ -84,84 +85,85 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
   const id = (suffix: string) => `yacht-${yacht.slug}-${suffix}`;
 
   return (
-    <PageShell
-      hero={
-        <PageHero
-          crumbs={[
-            { label: "Главная", href: "/" },
-            { label: "Флот", href: "/fleet" },
-            { label: yacht.name },
-          ]}
-          eyebrow={`${TYPE_LABEL[yacht.type]}${yacht.badge === "flagship" ? " · флагман" : ""}`}
-          title="Яхта"
-          accent={yacht.name}
-          lead={yacht.description}
-          image={photos[0]}
-          titleId={id("title")}
-        >
-          <ul className={styles.specs}>
-            <li className={styles.spec}>
-              <Users className={styles.specIcon} aria-hidden="true" />
-              до {yacht.capacity} гостей
-            </li>
-            <li className={styles.spec}>
-              <Clock className={styles.specIcon} aria-hidden="true" />
-              мин. {yacht.minHours} ч
-            </li>
-            <li className={styles.specPriceWrap}>
-              <span className={styles.specPrice}>от {yacht.pricePerHour} BYN</span>
-              <span className={styles.specUnit}>в час</span>
-            </li>
-          </ul>
+    <article className={styles.page}>
+      {/* ── Product hero: gallery + buy-box ─────────────────────────────── */}
+      <section className={styles.hero} aria-labelledby={id("title")}>
+        {photos.length > 0 && (
+          <AmbientBackdrop images={photos} activeIndex={bgIdx} className={styles.heroBg} />
+        )}
+        <div className={styles.heroInner}>
+          <nav className={styles.crumbs} aria-label="Хлебные крошки">
+            <Link href="/">Главная</Link>
+            <span aria-hidden="true">/</span>
+            <Link href="/fleet">Флот</Link>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{yacht.name}</span>
+          </nav>
 
-          <button
-            type="button"
-            className={styles.heroCta}
-            onClick={() => open("order", { yacht: yacht.slug })}
-          >
-            <CalendarDays className={styles.heroCtaIcon} aria-hidden="true" />
-            Посмотреть даты
-          </button>
-        </PageHero>
-      }
-    >
-      {/* 01 · На борту */}
-      <section className={styles.section} aria-labelledby={id("onboard")}>
-        <div className={styles.inner}>
-          <SectionHeader
-            eyebrow="01 · На борту"
-            title="В аренду входит"
-            accent="всё для выхода."
-            tone="media"
-            id={id("onboard")}
-          />
-          <ul className={styles.featureGrid}>
-            {yacht.features.map((f) => {
-              const Icon = FEATURE_ICONS[f] ?? Check;
-              return (
-                <li key={f} className={styles.featureCard}>
-                  <span className={styles.featureIcon} aria-hidden="true">
-                    <Icon strokeWidth={1.5} />
-                  </span>
-                  <span className={styles.featureLabel}>{f}</span>
+          <header className={styles.heroHead}>
+            <span className={styles.type}>
+              {TYPE_LABEL[yacht.type]}
+              {yacht.badge === "flagship" ? " · флагман" : ""}
+            </span>
+            <h1 id={id("title")} className={styles.name}>
+              {yacht.name}
+            </h1>
+          </header>
+
+          <div className={styles.product}>
+            <div className={styles.galleryCol}>
+              {photos.length > 0 && (
+                <YachtGallery
+                  photos={photos}
+                  name={yacht.name}
+                  zoomable
+                  adaptiveFrame
+                  eager
+                  onActiveChange={setBgIdx}
+                />
+              )}
+            </div>
+
+            <div className={styles.buyBox}>
+              <p className={styles.lead}>{yacht.description}</p>
+
+              <ul className={styles.quickSpecs}>
+                <li className={styles.quickSpec}>
+                  <Users className={styles.quickIcon} aria-hidden="true" />
+                  до {yacht.capacity} гостей
                 </li>
-              );
-            })}
-          </ul>
+                <li className={styles.quickSpec}>
+                  <Clock className={styles.quickIcon} aria-hidden="true" />
+                  мин. {yacht.minHours} ч
+                </li>
+              </ul>
+
+              <div className={styles.priceRow}>
+                <span className={styles.priceFrom}>от</span>
+                <span className={styles.priceValue}>{yacht.pricePerHour}</span>
+                <span className={styles.priceUnit}>BYN / час</span>
+              </div>
+
+              <button
+                type="button"
+                className={styles.cta}
+                onClick={() => open("order", { yacht: yacht.slug })}
+              >
+                <CalendarDays className={styles.ctaIcon} aria-hidden="true" />
+                Забронировать
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 02 · Техпаспорт */}
+      {/* ── Техпаспорт ──────────────────────────────────────────────────── */}
       {specRows.length > 0 && (
-        <section className={styles.section} aria-labelledby={id("specs")}>
-          <div className={styles.inner}>
-            <SectionHeader
-              eyebrow="02 · Техпаспорт"
-              title="Сухие"
-              accent="цифры."
-              tone="media"
-              id={id("specs")}
-            />
+        <section className={styles.block} aria-labelledby={id("specs")}>
+          <div className={styles.blockInner}>
+            <h2 id={id("specs")} className={styles.blockTitle}>
+              Технический паспорт
+            </h2>
             <dl className={styles.specSheet}>
               {specRows.map((row) => (
                 <div key={row.label} className={styles.specRow}>
@@ -179,43 +181,35 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
         </section>
       )}
 
-      {/* 03 · Фото */}
-      {photos.length > 0 && (
-        <section
-          className={`${styles.section} ${styles.sectionMedia}`}
-          aria-labelledby={id("photos")}
-        >
-          <AmbientBackdrop images={photos} activeIndex={bgIdx} className={styles.sectionBg} />
-          <div className={styles.inner}>
-            <SectionHeader
-              eyebrow="03 · Фото"
-              title="Яхта в"
-              accent="кадре."
-              tone="media"
-              id={id("photos")}
-            />
-            <YachtGallery
-              photos={photos}
-              name={yacht.name}
-              zoomable
-              adaptiveFrame
-              onActiveChange={setBgIdx}
-            />
-          </div>
-        </section>
-      )}
+      {/* ── Что включено ────────────────────────────────────────────────── */}
+      <section className={styles.block} aria-labelledby={id("included")}>
+        <div className={styles.blockInner}>
+          <h2 id={id("included")} className={styles.blockTitle}>
+            Что включено
+          </h2>
+          <ul className={styles.featureGrid}>
+            {yacht.features.map((f) => {
+              const Icon = FEATURE_ICONS[f] ?? Check;
+              return (
+                <li key={f} className={styles.featureCard}>
+                  <span className={styles.featureIcon} aria-hidden="true">
+                    <Icon strokeWidth={1.5} />
+                  </span>
+                  <span className={styles.featureLabel}>{f}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </section>
 
-      {/* 04 · Поводы */}
+      {/* ── Под что берут (SEO) ─────────────────────────────────────────── */}
       {services.length > 0 && (
-        <section className={styles.section} aria-labelledby={id("services")}>
-          <div className={styles.inner}>
-            <SectionHeader
-              eyebrow="04 · Поводы"
-              title="Под что"
-              accent="берут."
-              tone="media"
-              id={id("services")}
-            />
+        <section className={styles.block} aria-labelledby={id("services")}>
+          <div className={styles.blockInner}>
+            <h2 id={id("services")} className={styles.blockTitle}>
+              Под что берут
+            </h2>
             <ul className={styles.chips}>
               {services.map((s) => (
                 <li key={s.slug}>
@@ -230,63 +224,17 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
         </section>
       )}
 
-      {/* 05 · Другие яхты */}
+      {/* ── Другие яхты (cross-sell carousel) ───────────────────────────── */}
       {others.length > 0 && (
-        <section className={styles.section} aria-labelledby={id("fleet")}>
-          <div className={styles.inner}>
-            <SectionHeader
-              eyebrow="05 · Флот"
-              title="Другие"
-              accent="яхты."
-              tone="media"
-              id={id("fleet")}
-            />
-            <ul className={styles.otherGrid}>
-              {others.map((o) => (
-                <li key={o.slug}>
-                  <Link href={`/fleet/${o.slug}`} className={styles.otherCard}>
-                    <span className={styles.otherPhoto}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={o.cover} alt={`Яхта ${o.name}`} loading="lazy" decoding="async" />
-                    </span>
-                    <span className={styles.otherBody}>
-                      <span className={styles.otherType}>
-                        {TYPE_LABEL[o.type]}
-                        {o.badge === "flagship" ? " · флагман" : ""}
-                      </span>
-                      <span className={styles.otherName}>{o.name}</span>
-                      <span className={styles.otherPrice}>от {o.pricePerHour} BYN/ч</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <section className={styles.block} aria-labelledby={id("fleet")}>
+          <div className={styles.blockInner}>
+            <h2 id={id("fleet")} className={styles.blockTitle}>
+              Другие яхты
+            </h2>
           </div>
+          <YachtCarousel items={others} />
         </section>
       )}
-
-      {/* Final CTA */}
-      <section className={`${styles.section} ${styles.sectionMedia}`}>
-        {photos.length > 0 && (
-          <AmbientBackdrop images={photos} activeIndex={0} className={styles.sectionBg} />
-        )}
-        <div className={styles.inner}>
-          <div className={styles.finalCta}>
-            <h2 className={styles.finalCtaTitle}>Забронировать {yacht.name}</h2>
-            <p className={styles.finalCtaLead}>
-              Напишите — ответим за 30 минут, подскажем свободные окна и зафиксируем авансом 30%.
-            </p>
-            <button
-              type="button"
-              className={styles.heroCta}
-              onClick={() => open("order", { yacht: yacht.slug })}
-            >
-              Оставить заявку
-              <ArrowRight className={styles.heroCtaIcon} aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </section>
-    </PageShell>
+    </article>
   );
 }
