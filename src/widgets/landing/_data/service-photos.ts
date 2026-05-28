@@ -8,7 +8,7 @@ const SERVICE_PHOTO: Record<string, { yacht: YachtSlug; idx: number }> = {
   "den-rozhdeniya": { yacht: "alfa", idx: 2 },
   korporativ: { yacht: "bravo", idx: 0 },
   svidanie: { yacht: "eva", idx: 0 },
-  devichnik: { yacht: "alfa", idx: 6 },
+  devichnik: { yacht: "alfa", idx: 7 },
   fotosessiya: { yacht: "eva", idx: 5 },
   "master-klass": { yacht: "alfa", idx: 0 },
 };
