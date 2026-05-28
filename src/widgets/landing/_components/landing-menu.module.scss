@@ -56,7 +56,10 @@
   z-index: 300;
   display: flex;
   flex-direction: column;
-  padding: 1.125rem clamp(1.25rem, 5vw, 5rem) clamp(1.5rem, 6vw, 2.5rem);
+  // Clear the fixed header at the top so the subheader + body start below it.
+  padding-block-start: var(--landing-header-h, 4.5rem);
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+  padding-block-end: clamp(1.5rem, 6vw, 2.5rem);
   color: var(--on-media);
   // The overlay is portaled to <body>, outside the header — feed --hdr-fg the
   // overlay fg so any --hdr-fg consumer rendered inside (LandingControls) flips
@@ -70,20 +73,19 @@
   @include media-glass($blur: var(--blur-frame), $glass: 78%, $opaque: 96%);
 }
 
-// Two-pane body: the (narrower) nav list + a desktop preview pane, vertically
-// centred in the sheet. On mobile the preview collapses and the list is full.
+// Two-pane body: the (narrower) nav list + a desktop preview pane. Top-aligned
+// (was centred → tall preview content clipped); the overlay scrolls if needed.
 .body {
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 2rem;
-  padding-block: 2rem;
+  padding-block-start: clamp(1.5rem, 4vh, 2.5rem);
 
   @include respond-to("lg") {
     grid-template-columns: minmax(0, 24rem) 1fr;
     gap: clamp(2rem, 6vw, 5rem);
-    align-items: center;
   }
 }
 
@@ -197,12 +199,6 @@
   @include btn-press;
 }
 
-// ── Controls + footer block ────────────────────────────────────────────────
-
-.controls {
-  margin-block-start: 1.75rem;
-}
-
 // ── Preview pane (desktop only) ─────────────────────────────────────────────
 // A blurb + an explicit page link for the hovered/active item, to the right of
 // the list. Hidden on mobile (the list itself is the nav there).
@@ -211,7 +207,7 @@
 
   @include respond-to("lg") {
     display: block;
-    align-self: center;
+    align-self: start;
     max-inline-size: 40rem;
     padding-inline-start: clamp(2rem, 4vw, 3.5rem);
     border-inline-start: 1px solid var(--media-hairline);
@@ -548,14 +544,16 @@
   color: var(--on-media-muted);
 }
 
-.foot {
+// Subheader — quick-contacts bar pinned under the fixed header (was the bottom
+// «foot»; moved up so the body can top-align without clipping).
+.subheader {
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-block-start: 2rem;
-  padding-block-start: 1.5rem;
-  border-block-start: 1px solid var(--media-hairline);
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--media-hairline);
 }
 
 .phone {

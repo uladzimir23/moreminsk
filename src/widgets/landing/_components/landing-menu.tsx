@@ -5,7 +5,6 @@ import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { LandingControls } from "./landing-controls";
 import { MenuPreview } from "./landing-menu-preview";
 import styles from "./landing-menu.module.scss";
 
@@ -184,6 +183,48 @@ export function LandingMenu() {
                 animate="open"
                 exit="closed"
               >
+                {/* Subheader — quick contacts, sits under the fixed header. */}
+                <motion.div
+                  className={styles.subheader}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: reduce ? 0 : 0.3, duration: 0.4, ease: EASE }}
+                >
+                  <a href="tel:+375296953636" className={styles.phone}>
+                    +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
+                  </a>
+                  <div className={styles.socials}>
+                    <a
+                      href="https://t.me/moreminsk"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Telegram"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M21.5 4.3 18.6 19c-.2 1-.8 1.2-1.6.7l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.36-.3-.08-.5-.55-.2l-10.1 6.4-4.4-1.4c-.95-.3-.97-.95.2-1.4L20 3c.8-.3 1.5.2 1.5 1.3z" />
+                      </svg>
+                    </a>
+                    <a
+                      href="https://instagram.com/moreminsk.by"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Instagram"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="5" />
+                        <circle cx="12" cy="12" r="4" />
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                      </svg>
+                    </a>
+                  </div>
+                </motion.div>
+
                 <div className={styles.body}>
                   <motion.nav className={styles.nav} variants={list} aria-label="Меню">
                     {LINKS.map((l, i) => (
@@ -222,10 +263,6 @@ export function LandingMenu() {
                     >
                       Забронировать
                     </motion.button>
-
-                    <motion.div className={styles.controls} variants={item}>
-                      <LandingControls />
-                    </motion.div>
                   </motion.nav>
 
                   {/* Desktop-only preview pane — a blurb + an explicit page link
@@ -266,47 +303,6 @@ export function LandingMenu() {
                     </AnimatePresence>
                   </motion.aside>
                 </div>
-
-                <motion.div
-                  className={styles.foot}
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: reduce ? 0 : 0.4, duration: 0.45, ease: EASE }}
-                >
-                  <a href="tel:+375296953636" className={styles.phone}>
-                    +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
-                  </a>
-                  <div className={styles.socials}>
-                    <a
-                      href="https://t.me/moreminsk"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="Telegram"
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M21.5 4.3 18.6 19c-.2 1-.8 1.2-1.6.7l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.36-.3-.08-.5-.55-.2l-10.1 6.4-4.4-1.4c-.95-.3-.97-.95.2-1.4L20 3c.8-.3 1.5.2 1.5 1.3z" />
-                      </svg>
-                    </a>
-                    <a
-                      href="https://instagram.com/moreminsk.by"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="Instagram"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        aria-hidden="true"
-                      >
-                        <rect x="3" y="3" width="18" height="18" rx="5" />
-                        <circle cx="12" cy="12" r="4" />
-                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                      </svg>
-                    </a>
-                  </div>
-                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>,

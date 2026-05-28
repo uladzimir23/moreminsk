@@ -55,7 +55,6 @@
   .phone,
   .socials,
   .cta,
-  .controls,
   .fleetBtn {
     display: none;
   }
@@ -149,13 +148,13 @@
   margin-inline-start: auto; // push the cluster to the right of the bar
 }
 
-// Theme + locale cluster — inline at ≥xl, otherwise in the burger menu footer.
+// Theme toggle — persistent on every breakpoint, sits right before the burger.
+// Stays above the burger overlay (z over 300) so it's clickable while the menu
+// is open and flips with the sheet (--hdr-fg → on-media via the :has rule above).
 .controls {
-  display: none;
-
-  @include respond-to("xl") {
-    display: flex;
-  }
+  display: flex;
+  position: relative;
+  z-index: 305;
 }
 
 // Social links — inline at ≥xl (after the phone), otherwise in the burger menu.
