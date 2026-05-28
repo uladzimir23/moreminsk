@@ -32,11 +32,16 @@
   &[aria-expanded="true"] {
     color: var(--on-media);
   }
-  // Same affordance as the other icon controls (accent + faint highlight).
+  // Same affordance as the other icon controls (accent + soft glow, no fill).
   &:hover,
   &:focus-visible {
     color: var(--color-accent);
-    background: color-mix(in srgb, var(--hdr-fg, currentColor) 10%, transparent);
+  }
+  &:hover .burgerBox,
+  &:focus-visible .burgerBox {
+    filter: drop-shadow(
+      0 0.0625rem 0.375rem color-mix(in srgb, var(--color-accent) 55%, transparent)
+    );
   }
 }
 
@@ -45,6 +50,7 @@
   display: block;
   inline-size: 1.25rem;
   block-size: 0.75rem;
+  transition: filter var(--duration-base) var(--ease-out);
 }
 
 .line {

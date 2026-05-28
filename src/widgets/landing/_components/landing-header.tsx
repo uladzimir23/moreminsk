@@ -3,6 +3,7 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import { Logo } from "@/shared/ui/logo/Logo";
+import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 import { useEffect, useRef, useState } from "react";
 import { LandingControls } from "./landing-controls";
 import styles from "./landing-header.module.scss";
@@ -110,36 +111,40 @@ export function LandingHeader() {
             +375&nbsp;29&nbsp;695&nbsp;36&nbsp;36
           </a>
           <div className={styles.socials}>
-            <a
-              className={styles.social}
-              href="https://t.me/moreminsk"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Telegram"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M21.5 4.3 18.6 19c-.2 1-.8 1.2-1.6.7l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.36-.3-.08-.5-.55-.2l-10.1 6.4-4.4-1.4c-.95-.3-.97-.95.2-1.4L20 3c.8-.3 1.5.2 1.5 1.3z" />
-              </svg>
-            </a>
-            <a
-              className={styles.social}
-              href="https://instagram.com/moreminsk.by"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                aria-hidden="true"
+            <Tooltip content="Telegram">
+              <a
+                className={styles.social}
+                href="https://t.me/moreminsk"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Telegram"
               >
-                <rect x="3" y="3" width="18" height="18" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-              </svg>
-            </a>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M21.5 4.3 18.6 19c-.2 1-.8 1.2-1.6.7l-4.4-3.2-2.1 2c-.2.2-.4.4-.9.4l.3-4.5 8.2-7.4c.36-.3-.08-.5-.55-.2l-10.1 6.4-4.4-1.4c-.95-.3-.97-.95.2-1.4L20 3c.8-.3 1.5.2 1.5 1.3z" />
+                </svg>
+              </a>
+            </Tooltip>
+            <Tooltip content="Instagram">
+              <a
+                className={styles.social}
+                href="https://instagram.com/moreminsk.by"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+            </Tooltip>
           </div>
           <button type="button" className={styles.cta} onClick={() => open("order")}>
             Забронировать

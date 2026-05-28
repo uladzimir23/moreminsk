@@ -326,19 +326,26 @@
   cursor: pointer;
   transition:
     color var(--duration-base) var(--ease-out),
-    background-color var(--duration-base) var(--ease-out),
     transform var(--duration-fast) var(--ease-spring);
   @include btn-press(0.9);
 
+  // Unobtrusive: no container fill — just accent colour + a soft glow behind the
+  // icon glyph (drop-shadow, so it hugs the shape rather than a box).
   &:hover,
   &:focus-visible {
     color: var(--color-accent);
-    background: color-mix(in srgb, var(--hdr-fg, currentColor) 10%, transparent);
+  }
+  &:hover svg,
+  &:focus-visible svg {
+    filter: drop-shadow(
+      0 0.0625rem 0.375rem color-mix(in srgb, var(--color-accent) 55%, transparent)
+    );
   }
 
   svg {
     inline-size: $icon;
     block-size: $icon;
+    transition: filter var(--duration-base) var(--ease-out);
   }
 }
 

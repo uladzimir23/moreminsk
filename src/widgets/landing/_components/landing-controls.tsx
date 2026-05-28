@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "@/shared/lib/theme/useTheme";
+import { Tooltip } from "@/shared/ui/tooltip/Tooltip";
 import clsx from "clsx";
 import { Moon, Sun } from "lucide-react";
 import styles from "./landing-controls.module.scss";
@@ -14,18 +15,20 @@ export function LandingControls({ className }: { className?: string }) {
 
   return (
     <div className={clsx(styles.root, className)}>
-      <button
-        type="button"
-        className={styles.theme}
-        onClick={() => setPreference(theme === "dark" ? "light" : "dark")}
-        aria-label={theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"}
-      >
-        {theme === "dark" ? (
-          <Sun className={styles.icon} aria-hidden="true" />
-        ) : (
-          <Moon className={styles.icon} aria-hidden="true" />
-        )}
-      </button>
+      <Tooltip content={theme === "dark" ? "Светлая тема" : "Тёмная тема"}>
+        <button
+          type="button"
+          className={styles.theme}
+          onClick={() => setPreference(theme === "dark" ? "light" : "dark")}
+          aria-label={theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"}
+        >
+          {theme === "dark" ? (
+            <Sun className={styles.icon} aria-hidden="true" />
+          ) : (
+            <Moon className={styles.icon} aria-hidden="true" />
+          )}
+        </button>
+      </Tooltip>
     </div>
   );
 }
