@@ -298,8 +298,8 @@
   transition: opacity var(--duration-base) var(--ease-out);
 
   svg {
-    inline-size: 1.05rem;
     block-size: 1.05rem;
+    inline-size: auto; // mark is wider than tall (204:178) — keep aspect via viewBox
   }
 }
 .fleetBtn:hover .fleetSail,

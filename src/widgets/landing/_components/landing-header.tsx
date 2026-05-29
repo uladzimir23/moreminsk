@@ -3,6 +3,7 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import { Logo } from "@/shared/ui/logo/Logo";
+import { LogoMark } from "@/shared/ui/logo/LogoMark";
 import { useEffect, useRef, useState } from "react";
 import { LandingControls } from "./landing-controls";
 import styles from "./landing-header.module.scss";
@@ -63,19 +64,10 @@ export function LandingHeader() {
 
         {/* «Яхты» pill leads the bar (first interactive item after the brand). */}
         <Link href="/fleet" className={styles.fleetBtn} aria-label="Смотреть флот">
-          {/* Yacht sails across behind the label on hover — echoes the logo
-              mark. Sits behind the text; the label swaps Яхты → Флот. */}
+          {/* Brand mark sails across behind the label on hover — same SVG as
+              the lockup logo, two-tone via --logo-ink + scarlet sail fixed. */}
           <span className={styles.fleetSail} aria-hidden="true">
-            <svg viewBox="0 0 28 28" fill="none" focusable="false">
-              <path d="M13 5 L13 18 L5 18 Z" fill="currentColor" />
-              <path d="M15 9 L15 18 L21.5 18 Z" fill="currentColor" opacity="0.55" />
-              <path
-                d="M3 21 q5 2 10 0 t10 0"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-            </svg>
+            <LogoMark />
           </span>
           <span className={styles.fleetWords}>
             <span className={styles.fleetWordRest}>Яхты</span>
