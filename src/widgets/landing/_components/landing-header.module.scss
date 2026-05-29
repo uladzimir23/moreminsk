@@ -37,6 +37,15 @@
   @include media-glass($glass: 82%);
 }
 
+// Light-theme paper contexts (frosted header + burger-open overlay) — flip the
+// logo to the Figma «light» variant (navy fill + grey hand-drawn outline).
+// Dark theme keeps the default «dark» variant (currentColor = white sails).
+:global(.light-theme) .scrolled,
+:global(.light-theme) .header:has([aria-expanded="true"]) {
+  --logo-ink: #0d005d;
+  --logo-stroke: #dfdfdf;
+}
+
 // While the burger menu is open, the logo + «Яхты» button (z 305) sit ABOVE
 // the overlay (z 300), so the persistent chrome must adopt the overlay's
 // theme-aware fg — otherwise white-over-hero text vanishes on the light sheet.
