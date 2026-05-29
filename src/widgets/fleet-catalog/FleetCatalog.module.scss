@@ -137,7 +137,10 @@
   grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.75fr);
   gap: clamp(1.75rem, 4vw, 3.5rem);
   align-items: center;
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+  // Контент в общий контейнер сайта (как футер/секции главной): центрируем по
+  // --section-max + гаттер. Блюр-подложка (.cardBg) остаётся full-bleed.
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+  padding-inline: calc(max(0rem, (100% - var(--section-max)) / 2) + var(--section-gutter));
   color: var(--color-foreground);
 
   // Hairline between stacked full-bleed cards.
