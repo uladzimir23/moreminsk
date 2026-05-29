@@ -12,11 +12,13 @@ import { SocialLink } from "./social-link";
 // «Яхты» pill leads the bar; «Главная» is the first text link right after it.
 const NAV = [
   { href: "/", label: "Главная" },
+  { href: "/fleet", label: "Флот" },
   { href: "/services", label: "Услуги" },
   { href: "/ceny", label: "Цены" },
   { href: "/galereya", label: "Галерея" },
   { href: "/otzyvy", label: "Отзывы" },
   { href: "/contacts", label: "Контакты" },
+  { href: "/sertifikaty", label: "🎁 Сертификаты" },
 ];
 
 export function LandingHeader() {
