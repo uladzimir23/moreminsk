@@ -4,7 +4,7 @@
   color: var(--on-media);
 }
 
-// ── Quick-book bar (mobile only) ──────────────────────────────────────────
+// ── Quick-book bar (mobile only — desktop keeps the sticky booking card) ──
 .stickyBar {
   display: none;
 
@@ -86,6 +86,8 @@
     clamp(3rem, 7vh, 5rem);
 }
 
+// Blurred photo wash — its own clipped layer so it never clips the sticky
+// booking column (overflow on a sticky ancestor would break it).
 .bgClip {
   position: absolute;
   inset: 0;
@@ -154,13 +156,13 @@
   color: var(--on-media);
 }
 
-// ── 50/50 grid: gallery + details left, booking widget right ──────────────
+// ── 2-col grid (desktop): gallery + details left, booking card right ──────
 .grid {
   display: grid;
   gap: clamp(1.5rem, 4vw, 2.5rem);
 
   @include respond-to("lg") {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 23rem);
     column-gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
   }
@@ -176,8 +178,6 @@
 }
 
 .bookCol {
-  scroll-margin-block-start: 5rem;
-
   @include respond-to("lg") {
     grid-column: 2;
     grid-row: 1 / span 2;
@@ -191,7 +191,6 @@
   display: flex;
   flex-direction: column;
   gap: clamp(2rem, 4vh, 3rem);
-  min-width: 0;
 
   @include respond-to("lg") {
     grid-column: 1;
@@ -199,7 +198,7 @@
   }
 }
 
-// ── Booking widget (right) ─────────────────────────────────────────────────
+// ── Booking card ───────────────────────────────────────────────────────────
 .bookCard {
   display: flex;
   flex-direction: column;
@@ -207,24 +206,7 @@
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
   border: 0.0625rem solid var(--media-hairline-strong);
   border-radius: var(--card-radius);
-  @include media-glass($glass: 12%, $opaque: 90%);
-}
-
-.bookHead {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding-block-end: 1rem;
-  border-block-end: 0.0625rem solid var(--media-hairline);
-}
-
-.bookEyebrow {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--on-media-subtle);
+  @include media-glass($glass: 10%, $opaque: 88%);
 }
 
 .priceRow {
@@ -243,7 +225,7 @@
 }
 
 .priceValue {
-  font-size: 1.9rem;
+  font-size: 2rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--on-media);
@@ -256,20 +238,83 @@
   color: var(--on-media-muted);
 }
 
-// ── Left-column content ─────────────────────────────────────────────────────
-.lead {
+.quickSpecs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
   margin: 0;
-  font-size: 1.0625rem;
-  line-height: 1.6;
-  color: var(--on-media-muted);
-  max-inline-size: 46rem;
+  padding: 0;
+  list-style: none;
+}
+
+.quickSpec {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  color: var(--on-media);
+}
+
+.quickIcon {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  color: var(--on-media-subtle);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  inline-size: 100%;
+  min-block-size: var(--btn-height-lg);
+  padding-inline: var(--space-lg);
+  border: 0;
+  border-radius: var(--btn-radius);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--primitive-weight-semibold);
+  cursor: pointer;
+
+  @include btn-cta;
+  @include btn-press;
+}
+
+.ctaIcon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.bookNote {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--on-media-subtle);
+}
+
+.included {
+  margin-block-start: 0.25rem;
+  padding-block-start: 1rem;
+  border-block-start: 0.0625rem solid var(--media-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.includedLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-media-subtle);
 }
 
 .badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin: -0.75rem 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -291,6 +336,15 @@
   block-size: 0.875rem;
   flex: none;
   color: var(--on-media-accent);
+}
+
+// ── Left-column detail blocks ──────────────────────────────────────────────
+.lead {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--on-media-muted);
+  max-inline-size: 46rem;
 }
 
 .detailBlock {
@@ -393,83 +447,16 @@
   transition: transform var(--duration-base) var(--ease-spring);
 }
 
-// ── Другие яхты (catalog list in the left column) ──────────────────────────
-.otherList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-}
-
-.otherCard {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  border: 0.0625rem solid var(--media-hairline);
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  text-decoration: none;
+// ── Другие яхты (full-width carousel) ──────────────────────────────────────
+.fleetSection {
+  background: var(--media-bg);
   color: var(--on-media);
-  transition: border-color var(--duration-base) var(--ease-out);
-
-  &:hover,
-  &:focus-visible {
-    border-color: var(--on-media-accent);
-  }
+  padding-block: clamp(2.75rem, 7vh, 4.5rem);
+  border-block-start: 0.0625rem solid var(--media-hairline);
 }
 
-.otherPhoto {
-  flex: none;
-  inline-size: 4.5rem;
-  aspect-ratio: 3 / 4;
-  background: color-mix(in srgb, var(--media-bg) 70%, transparent);
-
-  img {
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    display: block;
-  }
-}
-
-.otherBody {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding-block: 0.5rem;
-}
-
-.otherType {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--on-media-subtle);
-}
-
-.otherName {
-  font-size: 1.1rem;
-  font-weight: var(--primitive-weight-bold);
-  line-height: 1.05;
-  color: var(--on-media);
-}
-
-.otherPrice {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
-  color: var(--on-media-muted);
-  font-feature-settings: "tnum", "lnum";
-}
-
-.otherArrow {
-  flex: none;
-  inline-size: 1rem;
-  block-size: 1rem;
-  margin-inline-end: 0.875rem;
-  color: var(--on-media-subtle);
+.fleetHead {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
 }
