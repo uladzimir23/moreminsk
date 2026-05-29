@@ -481,20 +481,6 @@
   transition: transform var(--duration-base) var(--ease-spring);
 }
 
-// ── Другие яхты (full-width carousel) ──────────────────────────────────────
-.fleetSection {
-  background: var(--media-bg);
-  color: var(--on-media);
-  padding-block: clamp(2.75rem, 7vh, 4.5rem);
-  border-block-start: 0.0625rem solid var(--media-hairline);
-}
-
-.fleetHead {
-  max-width: 90rem;
-  margin: 0 auto;
-  padding-inline: clamp(1.5rem, 6vw, 5rem);
-}
-
 // ── Mobile booking popup (Radix Dialog bottom-sheet) ───────────────────────
 .dlgOverlay {
   position: fixed;

@@ -271,22 +271,19 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
                   </ul>
                 </section>
               )}
+
+              {others.length > 0 && (
+                <section className={styles.detailBlock} aria-labelledby={id("fleet")}>
+                  <h2 id={id("fleet")} className={styles.blockTitle}>
+                    Другие яхты
+                  </h2>
+                  <YachtCarousel items={others} />
+                </section>
+              )}
             </div>
           </div>
         </div>
       </section>
-
-      {/* Другие яхты — full-width cross-sell carousel */}
-      {others.length > 0 && (
-        <section className={styles.fleetSection} aria-labelledby={id("fleet")}>
-          <div className={styles.fleetHead}>
-            <h2 id={id("fleet")} className={styles.blockTitle}>
-              Другие яхты
-            </h2>
-          </div>
-          <YachtCarousel items={others} />
-        </section>
-      )}
 
       {/* Mobile booking popup — same QuickBooking form as the desktop inline. */}
       <Dialog.Root open={bookOpen} onOpenChange={setBookOpen}>
