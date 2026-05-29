@@ -156,7 +156,14 @@
 }
 
 // Zigzag: swap the gallery to the right on desktop on alternate rows (on mobile
-// the gallery is always on top, source order).
+// the gallery is always on top, source order). Mirror the column tracks too, so
+// the gallery keeps the WIDE 1.4fr track on both sides — otherwise reversed rows
+// dropped it into the narrow 0.75fr track and the photo shrank.
+.rowReverse {
+  @include respond-to("md") {
+    grid-template-columns: minmax(16rem, 0.75fr) minmax(0, 1.4fr);
+  }
+}
 .rowReverse .gallerySlot {
   @include respond-to("md") {
     order: 2;
