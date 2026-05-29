@@ -2,10 +2,11 @@
 
 import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
+import { QuickBooking } from "@/features/booking/QuickBooking";
 import { Link } from "@/i18n/navigation";
-import { usePanel } from "@/shared/lib/panel/usePanel";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
+import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import {
   ArrowRight,
@@ -19,6 +20,7 @@ import {
   Users,
   Waves,
   Wine,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -61,9 +63,10 @@ type Props = {
 // sheet → occasions) on the left, a sticky booking card on the right. Mobile:
 // single column (gallery → booking → details) + a docked quick-book bar.
 export function YachtDetail({ yacht, photos, services, others }: Props) {
-  const { open } = usePanel();
   // Active gallery photo → drives the ambient wash behind the product area.
   const [bgIdx, setBgIdx] = useState(0);
+  // Mobile booking popup (desktop shows the form inline instead).
+  const [bookOpen, setBookOpen] = useState(false);
   // Quick-book bar docks once the product area's name/CTA scroll above the
   // header line (mobile only — desktop keeps the sticky booking card visible).
   const heroRef = useRef<HTMLElement>(null);
@@ -125,11 +128,7 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
           <span className={styles.stickyName}>{yacht.name}</span>
           <span className={styles.stickyPrice}>от {yacht.pricePerHour} BYN/ч</span>
         </div>
-        <button
-          type="button"
-          className={styles.stickyBook}
-          onClick={() => open("order", { yacht: yacht.slug })}
-        >
+        <button type="button" className={styles.stickyBook} onClick={() => setBookOpen(true)}>
           Забронировать
         </button>
       </div>
@@ -175,50 +174,57 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
               )}
             </div>
 
-            {/* Right col — sticky booking card */}
+            {/* Right col — sticky booking widget */}
             <aside className={styles.bookCol}>
               <div className={styles.bookCard}>
-                <div className={styles.priceRow}>
-                  <span className={styles.priceFrom}>от</span>
-                  <span className={styles.priceValue}>{yacht.pricePerHour}</span>
-                  <span className={styles.priceUnit}>BYN / час</span>
+                <div className={styles.bookHead}>
+                  <span className={styles.bookEyebrow}>Бронирование</span>
+                  <div className={styles.priceRow}>
+                    <span className={styles.priceFrom}>от</span>
+                    <span className={styles.priceValue}>{yacht.pricePerHour}</span>
+                    <span className={styles.priceUnit}>BYN / час</span>
+                  </div>
                 </div>
 
-                <ul className={styles.quickSpecs}>
-                  <li className={styles.quickSpec}>
-                    <Users className={styles.quickIcon} aria-hidden="true" />
-                    до {yacht.capacity} гостей
-                  </li>
-                  <li className={styles.quickSpec}>
-                    <Clock className={styles.quickIcon} aria-hidden="true" />
-                    мин. {yacht.minHours} ч
-                  </li>
-                </ul>
+                {/* Desktop — booking form inline */}
+                <div className={styles.formInline}>
+                  <QuickBooking yacht={{ name: yacht.name }} />
+                </div>
 
-                <button
-                  type="button"
-                  className={styles.cta}
-                  onClick={() => open("order", { yacht: yacht.slug })}
-                >
-                  <CalendarDays className={styles.ctaIcon} aria-hidden="true" />
-                  Забронировать
-                </button>
-
-                <p className={styles.bookNote}>Капитан и топливо в цене · ответим за 30 минут</p>
-
-                <div className={styles.included}>
-                  <span className={styles.includedLabel}>В стоимости</span>
-                  <ul className={styles.badges}>
-                    {yacht.features.map((f) => {
-                      const Icon = FEATURE_ICONS[f] ?? Check;
-                      return (
-                        <li key={f} className={styles.badge}>
-                          <Icon className={styles.badgeIcon} aria-hidden="true" />
-                          {f}
-                        </li>
-                      );
-                    })}
+                {/* Mobile — minimalist block, opens the form in a popup */}
+                <div className={styles.bookMini}>
+                  <ul className={styles.quickSpecs}>
+                    <li className={styles.quickSpec}>
+                      <Users className={styles.quickIcon} aria-hidden="true" />
+                      до {yacht.capacity} гостей
+                    </li>
+                    <li className={styles.quickSpec}>
+                      <Clock className={styles.quickIcon} aria-hidden="true" />
+                      мин. {yacht.minHours} ч
+                    </li>
                   </ul>
+
+                  <button type="button" className={styles.cta} onClick={() => setBookOpen(true)}>
+                    <CalendarDays className={styles.ctaIcon} aria-hidden="true" />
+                    Забронировать
+                  </button>
+
+                  <p className={styles.bookNote}>Капитан и топливо в цене · ответим за 30 минут</p>
+
+                  <div className={styles.included}>
+                    <span className={styles.includedLabel}>В стоимости</span>
+                    <ul className={styles.badges}>
+                      {yacht.features.map((f) => {
+                        const Icon = FEATURE_ICONS[f] ?? Check;
+                        return (
+                          <li key={f} className={styles.badge}>
+                            <Icon className={styles.badgeIcon} aria-hidden="true" />
+                            {f}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </aside>
@@ -281,6 +287,25 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
           <YachtCarousel items={others} />
         </section>
       )}
+
+      {/* Mobile booking popup — same QuickBooking form as the desktop inline. */}
+      <Dialog.Root open={bookOpen} onOpenChange={setBookOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className={styles.dlgOverlay} />
+          <Dialog.Content className={styles.dlgContent} aria-describedby={undefined}>
+            <div className={styles.dlgHandle} aria-hidden="true" />
+            <header className={styles.dlgHeader}>
+              <Dialog.Title className={styles.dlgTitle}>Бронирование {yacht.name}</Dialog.Title>
+              <Dialog.Close asChild>
+                <button type="button" className={styles.dlgClose} aria-label="Закрыть">
+                  <X aria-hidden="true" />
+                </button>
+              </Dialog.Close>
+            </header>
+            <QuickBooking yacht={{ name: yacht.name }} />
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </article>
   );
 }
