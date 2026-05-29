@@ -5,6 +5,7 @@ import type { Yacht } from "@/entities/yacht/model/types";
 import { QuickBooking } from "@/features/booking/QuickBooking";
 import { Link } from "@/i18n/navigation";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
+import { StickyCrumbs } from "@/shared/ui/sticky-crumbs/StickyCrumbs";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
@@ -122,6 +123,14 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
 
   return (
     <article className={styles.page}>
+      <StickyCrumbs
+        crumbs={[
+          { label: "Главная", href: "/" },
+          { label: "Флот", href: "/fleet" },
+          { label: yacht.name },
+        ]}
+      />
+
       {/* Quick-book bar — dup name · price · CTA, docks after the hero (mobile). */}
       <div className={clsx(styles.stickyBar, docked && styles.stickyBarDocked)}>
         <div className={styles.stickyInfo}>
@@ -141,14 +150,6 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
         </div>
 
         <div className={styles.heroInner}>
-          <nav className={styles.crumbs} aria-label="Хлебные крошки">
-            <Link href="/">Главная</Link>
-            <span aria-hidden="true">/</span>
-            <Link href="/fleet">Флот</Link>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">{yacht.name}</span>
-          </nav>
-
           <header className={styles.heroHead}>
             <span className={styles.type}>
               {TYPE_LABEL[yacht.type]}

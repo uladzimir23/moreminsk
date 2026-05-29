@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
+import { StickyCrumbs } from "@/shared/ui/sticky-crumbs/StickyCrumbs";
 import clsx from "clsx";
 import { type ReactNode, useEffect, useRef } from "react";
 import styles from "./PageHero.module.scss";
@@ -79,55 +79,38 @@ export function PageHero({
   }, []);
 
   return (
-    <section ref={heroRef} className={clsx(styles.hero, align === "center" && styles.center)}>
-      {image && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img className={styles.bg} src={image} alt="" aria-hidden="true" decoding="async" />
-      )}
-      <span className={styles.wash} aria-hidden="true" />
-
-      <div ref={innerRef} className={styles.inner}>
-        {crumbs && crumbs.length > 0 && (
-          <nav className={styles.crumbs} aria-label="Хлебные крошки">
-            {crumbs.map((c, i) => (
-              <span key={c.label} className={styles.crumbItem}>
-                {c.href ? (
-                  <Link href={c.href} className={styles.crumbLink}>
-                    {c.label}
-                  </Link>
-                ) : (
-                  <span aria-current="page">{c.label}</span>
-                )}
-                {i < crumbs.length - 1 && (
-                  <span className={styles.crumbSep} aria-hidden="true">
-                    /
-                  </span>
-                )}
-              </span>
-            ))}
-          </nav>
+    <>
+      {crumbs && crumbs.length > 0 && <StickyCrumbs crumbs={crumbs} />}
+      <section ref={heroRef} className={clsx(styles.hero, align === "center" && styles.center)}>
+        {image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className={styles.bg} src={image} alt="" aria-hidden="true" decoding="async" />
         )}
-        {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
-        <h1 id={titleId} className={styles.title}>
-          {title}
-          {accent && <span className={styles.accent}> {accent}</span>}
-        </h1>
-        {lead && <p className={styles.lead}>{lead}</p>}
-        {children && <div className={styles.extra}>{children}</div>}
-      </div>
+        <span className={styles.wash} aria-hidden="true" />
 
-      <span ref={cueRef} className={styles.scrollCue} aria-hidden="true">
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-      </span>
-    </section>
+        <div ref={innerRef} className={styles.inner}>
+          {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
+          <h1 id={titleId} className={styles.title}>
+            {title}
+            {accent && <span className={styles.accent}> {accent}</span>}
+          </h1>
+          {lead && <p className={styles.lead}>{lead}</p>}
+          {children && <div className={styles.extra}>{children}</div>}
+        </div>
+
+        <span ref={cueRef} className={styles.scrollCue} aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
+      </section>
+    </>
   );
 }

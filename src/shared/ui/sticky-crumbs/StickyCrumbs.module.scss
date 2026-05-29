@@ -1,0 +1,68 @@
+@use "@/shared/design-system/mixins" as *;
+
+// Bar height, shared so hosts can offset top padding / stack bars under it.
+:global(:root) {
+  --crumbs-bar-h: 2.5rem;
+}
+
+.bar {
+  position: fixed;
+  inset-block-start: var(--landing-header-h, 3.5rem);
+  inset-inline: 0;
+  z-index: 95; // под хедером (999), над контентом
+  block-size: var(--crumbs-bar-h, 2.5rem);
+  display: flex;
+  align-items: center;
+  border-block-end: 0.0625rem solid var(--color-border-hairline);
+  background-color: color-mix(in srgb, var(--color-background) 72%, transparent);
+  // Standard only — Lightning CSS autoprefixes -webkit (см. glass-effect).
+  backdrop-filter: blur(0.75rem) saturate(1.2);
+}
+
+.inner {
+  inline-size: 100%;
+  max-inline-size: 90rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-foreground-muted);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: none;
+
+  &:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.link {
+  color: var(--color-foreground-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+}
+
+.sep {
+  color: var(--color-foreground-subtle);
+}
+
+.item [aria-current] {
+  color: var(--color-foreground);
+}
