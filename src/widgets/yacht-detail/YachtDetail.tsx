@@ -167,7 +167,6 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
                   photos={photos}
                   name={yacht.name}
                   zoomable
-                  adaptiveFrame
                   eager
                   onActiveChange={setBgIdx}
                 />
