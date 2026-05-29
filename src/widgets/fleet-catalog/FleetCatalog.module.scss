@@ -29,10 +29,10 @@
   display: none;
 
   @media (max-width: 56.25rem) {
-    // Fixed sub-header at the header level (not sticky inside the section), so it
-    // floats under the main header independent of the section's scroll/clip.
+    // Fixed sub-header below the header + crumbs bar (not sticky inside the
+    // section), so it floats under them independent of the section's scroll/clip.
     position: fixed;
-    inset-block-start: var(--landing-header-h, 3.5rem);
+    inset-block-start: calc(var(--landing-header-h, 3.5rem) + var(--crumbs-bar-h, 1.75rem));
     inset-inline: 0;
     z-index: 90; // under the header (999) + burger overlay, above page content
     display: flex;
