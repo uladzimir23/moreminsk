@@ -166,6 +166,33 @@
   text-wrap: pretty;
 }
 
+// Optional bullet list under an answer (e.g. «Что входит»).
+.bullets {
+  list-style: none;
+  margin: 0;
+  padding-block-end: var(--space-md);
+  padding-inline: var(--space-lg);
+  display: grid;
+  gap: 0.4375rem;
+}
+.bullet {
+  position: relative;
+  padding-inline-start: 1.125rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-foreground-muted);
+}
+.bullet::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0.25rem;
+  inset-block-start: 0.5625rem;
+  inline-size: 0.3125rem;
+  block-size: 0.3125rem;
+  border-radius: 50%;
+  background: var(--color-accent-2);
+}
+
 .ctaCard {
   display: flex;
   flex-direction: column;

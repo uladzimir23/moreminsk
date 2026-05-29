@@ -63,6 +63,15 @@ export function FaqPage() {
                       </Accordion.Header>
                       <Accordion.Content className={styles.content}>
                         <p className={styles.answer}>{item.answer}</p>
+                        {item.bullets && (
+                          <ul className={styles.bullets}>
+                            {item.bullets.map((b) => (
+                              <li key={b} className={styles.bullet}>
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </Accordion.Content>
                     </Accordion.Item>
                   ))}

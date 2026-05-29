@@ -163,14 +163,27 @@ export function imageGallerySchema(name: string, images: ReadonlyArray<string>) 
   };
 }
 
-export function faqPageSchema(items: ReadonlyArray<{ question: string; answer: string }>) {
+export function faqPageSchema(
+  items: ReadonlyArray<{
+    question: string;
+    answer: string;
+    bullets?: ReadonlyArray<string>;
+  }>,
+) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
+    mainEntity: items.map((item) => {
+      // Bullets get merged into the answer text so search engines see the full
+      // inventory (Google reads acceptedAnswer.text, not the surrounding DOM).
+      const text = item.bullets?.length
+        ? `${item.answer} ${item.bullets.join(" · ")}`
+        : item.answer;
+      return {
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text },
+      };
+    }),
   };
 }

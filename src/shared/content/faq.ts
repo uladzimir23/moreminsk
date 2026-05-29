@@ -2,6 +2,10 @@ export type FaqItem = {
   id: string;
   question: string;
   answer: string;
+  /** Optional bullet list rendered after the answer paragraph (e.g. «Что входит»
+   *  expands into the full inventory). For schema/SEO they get concatenated
+   *  back into the answer string. */
+  bullets?: ReadonlyArray<string>;
   /** Tag set — used to filter FAQs by service page or general. First tag = primary group. */
   tags: ReadonlyArray<string>;
 };
@@ -40,7 +44,18 @@ export const FAQ: ReadonlyArray<FaqItem> = [
     id: "price-includes",
     question: "Что входит в стоимость?",
     answer:
-      "Капитан, топливо, базовое оборудование (спасжилеты, пледы, посуда под напитки). Еда, декор, торт, фотограф — дополнительно.",
+      "Капитан и топливо — всегда в цене. С яхтой даём всё необходимое для прогулки. Еда, декор, торт, фотограф — дополнительно.",
+    bullets: [
+      "Вся яхта — только для вашей компании",
+      "Капитан с опытом",
+      "Поднимаем паруса по желанию",
+      "Даём постоять за штурвалом",
+      "Аудиосистема",
+      "Живописный маршрут по морю",
+      "Пледы и спасжилеты",
+      "Одноразовая посуда",
+      "Чешки и бахилы, каюта и морской туалет на борту",
+    ],
     tags: ["payment", "general"],
   },
   {

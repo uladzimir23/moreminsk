@@ -56,6 +56,15 @@ export function FaqSection() {
                   className={`${styles.inlineAnswer} ${i === active ? styles.inlineAnswerOpen : ""}`}
                 >
                   {item.answer}
+                  {item.bullets && (
+                    <ul className={styles.bullets}>
+                      {item.bullets.map((b) => (
+                        <li key={b} className={styles.bullet}>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </li>
             ))}
@@ -65,6 +74,15 @@ export function FaqSection() {
             <div className={styles.panelInner} key={active}>
               <p className={styles.panelQ}>{activeItem.question}</p>
               <p className={styles.panelA}>{activeItem.answer}</p>
+              {activeItem.bullets && (
+                <ul className={styles.bullets}>
+                  {activeItem.bullets.map((b) => (
+                    <li key={b} className={styles.bullet}>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              )}
               <a href="#contact" className={styles.panelLink}>
                 Остались вопросы? Напишите →
               </a>

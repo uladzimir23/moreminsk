@@ -192,6 +192,33 @@
   color: var(--on-media-muted);
   flex: 1 1 auto;
 }
+
+// Optional bullet list under the answer (e.g. «Что входит» expands the inventory).
+// Used in both layouts — mobile inline answer + desktop panel.
+.bullets {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4375rem;
+}
+.bullet {
+  position: relative;
+  padding-inline-start: 1.125rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--on-media-muted);
+}
+.bullet::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0.25rem;
+  inset-block-start: 0.5625rem;
+  inline-size: 0.3125rem;
+  block-size: 0.3125rem;
+  border-radius: 50%;
+  background: var(--color-accent-2);
+}
 .panelInner {
   display: flex;
   flex-direction: column;
