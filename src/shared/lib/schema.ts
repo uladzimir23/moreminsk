@@ -1,7 +1,6 @@
 import type { Service } from "@/entities/service/model/types";
 import type { Yacht } from "@/entities/yacht/model/types";
 import { CONTACTS } from "@/shared/content/contacts";
-import type { FaqItem } from "@/shared/content/faq";
 import { SITE, localeUrl } from "./seo";
 
 // Stable @id anchors so nodes can reference each other across pages.
@@ -164,7 +163,7 @@ export function imageGallerySchema(name: string, images: ReadonlyArray<string>) 
   };
 }
 
-export function faqPageSchema(items: ReadonlyArray<FaqItem>) {
+export function faqPageSchema(items: ReadonlyArray<{ question: string; answer: string }>) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",

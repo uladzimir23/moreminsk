@@ -1,0 +1,248 @@
+@use "@/shared/design-system/mixins" as *;
+
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(3rem, 8vh, 6rem);
+  background: var(--media-bg);
+  color: var(--on-media);
+}
+
+.sectionBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
+}
+
+// ── Offer: gallery + copy ──────────────────────────────────────────────────
+.grid {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-block-start: clamp(1.5rem, 4vh, 2.5rem);
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.galleryCol {
+  min-width: 0;
+}
+
+.offer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.offerPara {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--on-media-muted);
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 0.5rem;
+  padding-block-start: 1rem;
+  border-block-start: 0.0625rem solid var(--media-hairline);
+}
+
+.priceIcon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  flex: none;
+  color: var(--on-media-accent);
+}
+
+.priceLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-media-subtle);
+}
+
+.priceValue {
+  margin-inline-start: auto;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--on-media);
+  font-feature-settings: "tnum", "lnum";
+}
+
+.season {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--on-media-subtle);
+}
+
+.seasonIcon {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: none;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  margin-block-start: 0.5rem;
+  min-block-size: var(--btn-height-lg);
+  padding-inline: var(--space-xl);
+  border: 0;
+  border-radius: var(--btn-radius);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--primitive-weight-semibold);
+  cursor: pointer;
+
+  @include btn-cta;
+  @include btn-press;
+}
+
+.ctaIcon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+// ── FAQ ──────────────────────────────────────────────────────────────────
+.faqSection {
+  border-block-start: 0.0625rem solid var(--media-hairline);
+}
+
+.faqList {
+  list-style: none;
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.faqItem {
+  padding: clamp(1rem, 2vw, 1.375rem);
+  border: 0.0625rem solid var(--media-hairline);
+  border-radius: var(--card-radius);
+  @include media-glass($glass: 6%, $opaque: 90%);
+}
+
+.faqQ {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--on-media);
+}
+
+.faqA {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--on-media-muted);
+}
+
+// ── Booking popup (bottom-sheet) ───────────────────────────────────────────
+.dlgOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgb(0 0 0 / 0.5);
+  animation: dlg-fade 0.25s var(--ease-out);
+}
+
+.dlgContent {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 1001;
+  max-block-size: 92vh;
+  overflow-y: auto;
+  padding: 0.75rem clamp(1rem, 5vw, 1.5rem) calc(1.5rem + env(safe-area-inset-bottom));
+  background: var(--color-background);
+  border-start-start-radius: 1rem;
+  border-start-end-radius: 1rem;
+  border-block-start: 0.0625rem solid var(--color-border-hairline);
+  animation: dlg-up 0.35s var(--ease-out);
+}
+
+.dlgHandle {
+  inline-size: 2.25rem;
+  block-size: 0.25rem;
+  margin: 0 auto 0.75rem;
+  border-radius: var(--radius-full, 999px);
+  background: color-mix(in srgb, var(--color-foreground) 20%, transparent);
+}
+
+.dlgHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 1rem;
+}
+
+.dlgTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: var(--primitive-weight-semibold);
+  color: var(--color-foreground);
+}
+
+.dlgClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  flex: none;
+  border: 0;
+  background: none;
+  color: var(--color-foreground-muted);
+  cursor: pointer;
+  @include btn-press;
+
+  svg {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+
+  &:hover {
+    color: var(--color-foreground);
+  }
+}
+
+@keyframes dlg-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dlg-up {
+  from {
+    transform: translateY(100%);
+  }
+}

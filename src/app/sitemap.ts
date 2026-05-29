@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/otzyvy",
     "/contacts",
     "/faq",
+    "/sertifikaty",
   ];
   const yachtPaths = YACHTS.map((y) => `/fleet/${y.slug}`);
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);

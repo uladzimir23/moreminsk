@@ -143,6 +143,9 @@ export function LandingFooter() {
           <Link className={styles.link} href="/faq">
             Вопросы
           </Link>
+          <Link className={styles.link} href="/sertifikaty">
+            Сертификаты
+          </Link>
         </nav>
 
         <div className={styles.col}>
