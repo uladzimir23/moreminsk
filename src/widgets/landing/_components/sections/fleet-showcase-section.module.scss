@@ -140,14 +140,31 @@
 .tabActive::after {
   content: "";
   position: absolute;
-  bottom: -1.0625rem; // sits on top of the .tabs row bottom border
+  bottom: -0.05rem; // tucked right under the word
   left: 0;
   right: 0;
-  height: 0.3rem;
+  height: 0.5rem;
   background: var(--color-accent);
+  // Fixed mask period (1.3333rem = 0.5rem × 16/6) so the auto-drift loops seamlessly.
   mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='6'%20viewBox='0%200%2016%206'%3E%3Cpath%20d='M0%203%20q4%20-2.4%208%200%20t8%200'%20fill='none'%20stroke='%23fff'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E")
-    left center / auto 100% repeat-x;
+    0 center / 1.3333rem 100% repeat-x;
+  // Gently drifts left one wave period — same idle motion as the logo waterline.
+  animation: mm-tab-wave 7s linear infinite;
 }
+
+@keyframes mm-tab-wave {
+  to {
+    mask-position: -1.3333rem center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab::after,
+  .tabActive::after {
+    animation: none;
+  }
+}
+
 .tab::after {
   clip-path: inset(0 100% 0 0);
   transition: clip-path var(--duration-base) var(--ease-spring);
@@ -186,7 +203,7 @@
   }
   .tabActive::after,
   .tab::after {
-    bottom: 0.125rem;
+    bottom: -0.225rem;
     filter: none;
   }
 }
