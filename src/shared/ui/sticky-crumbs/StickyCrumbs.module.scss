@@ -2,7 +2,7 @@
 
 // Bar height, shared so hosts can offset top padding / stack bars under it.
 :global(:root) {
-  --crumbs-bar-h: 2.5rem;
+  --crumbs-bar-h: 1.75rem;
 }
 
 .bar {
@@ -10,7 +10,7 @@
   inset-block-start: var(--landing-header-h, 3.5rem);
   inset-inline: 0;
   z-index: 95; // под хедером (999), над контентом
-  block-size: var(--crumbs-bar-h, 2.5rem);
+  block-size: var(--crumbs-bar-h, 1.75rem);
   display: flex;
   align-items: center;
   border-block-end: 0.0625rem solid var(--color-border-hairline);
@@ -21,9 +21,8 @@
 
 .inner {
   inline-size: 100%;
-  max-inline-size: 90rem;
-  margin-inline: auto;
-  padding-inline: clamp(1.5rem, 6vw, 5rem);
+  // Падинг как у quick-book sticky-бара — крошки встают ровно по тому же краю.
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
   display: flex;
   align-items: center;
   gap: 0.4rem;

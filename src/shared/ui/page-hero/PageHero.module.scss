@@ -13,7 +13,7 @@
   background: var(--color-background);
   // Clear the fixed header + sticky crumbs bar at the top; gutter on the sides.
   padding: calc(
-      var(--landing-header-h, 5rem) + var(--crumbs-bar-h, 2.5rem) + clamp(2rem, 6vh, 4rem)
+      var(--landing-header-h, 5rem) + var(--crumbs-bar-h, 1.75rem) + clamp(2rem, 6vh, 4rem)
     )
     clamp(1.5rem, 6vw, 5rem) clamp(4rem, 10vh, 7rem);
 }
