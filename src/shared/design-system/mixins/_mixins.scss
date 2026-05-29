@@ -373,12 +373,15 @@
   overflow: hidden;
   border: 0;
   background-color: var(--color-accent);
-  // Our logo sloop (white jib + scarlet main) sails along the bottom edge on
-  // hover — echoes the «Яхты» pill. Parked off the left edge at rest; a hover
-  // TRANSITION (not an animation) carries it across once, then it resets instantly
-  // on leave. Must not use `animation` here: that would override a consumer's
-  // entrance animation on the button and make it replay on hover-out.
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2024'%3E%3Cpath%20d='M12.7%204L6%2018.5h6.7Z'%20fill='%23ffffff'/%3E%3Cpath%20d='M13.3%202.5v16h7.7Z'%20fill='%23ff3b47'/%3E%3Cpath%20d='M3%2021q4%202%208%200t8%200t8%200'%20fill='none'%20stroke='%23ffffff'%20stroke-width='1.6'%20stroke-linecap='round'/%3E%3C/svg%3E");
+  // Our new Figma mark (white sails + scarlet + wave) sails along the bottom
+  // edge on hover — echoes the «Яхты» pill. Parked off the left edge at rest;
+  // a hover TRANSITION (not an animation) carries it across once, then it
+  // resets instantly on leave. Must not use `animation` here: that would
+  // override a consumer's entrance animation and make it replay on hover-out.
+  // Sails baked to white (#fff) since the button bg is the accent fill — same
+  // as the «dark» Figma variant (matches what LogoMark renders via currentColor
+  // on a dark/over-hero context).
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20204%20178'%3E%3Cpath%20d='M102%200C122.264%2050.7705%20125%2086%20104.5%20131.5C136.5%20128.5%20152%20134%20189.5%20158C184.356%2075.5767%20173.997%2038.4837%20102%200Z'%20fill='%23ffffff'/%3E%3Cpath%20d='M100.5%2014C90.3569%2064.6305%2068.567%20119.035%2028%20158.5C60.1184%20144.352%2069.9999%20139.5%2096.5%20132C116%2094%20114.274%2050.7681%20100.5%2014Z'%20fill='%23ff2400'/%3E%3Cpath%20d='M100%20140.631C69.3245%20146.131%2069.0808%20152.534%200%20177.131C72.8409%20174.537%2073.572%20159.56%20108.5%20157.5C143.428%20155.44%20153.676%20177.131%20203.5%20177.131C151.5%20142.631%20130.676%20135.131%20100%20140.631Z'%20fill='%23ffffff'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-size: 1.1rem auto;
   background-position: -2rem bottom;
