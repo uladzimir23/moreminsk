@@ -48,7 +48,7 @@
   font-style: italic;
   font-weight: var(--primitive-weight-medium);
   font-size: 1.0625rem;
-  color: var(--on-media-strong);
+  color: var(--color-accent-2);
 }
 
 .stickyPrice {
@@ -155,7 +155,7 @@
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: var(--on-media);
+  color: var(--color-accent-2); // алый — фирменный акцент для названий яхт
 }
 
 // ── 2-col grid (desktop): gallery + details left, booking card right ──────

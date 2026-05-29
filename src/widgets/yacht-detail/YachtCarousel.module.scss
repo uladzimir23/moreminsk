@@ -84,6 +84,8 @@
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.02em;
+  // Карточка карусели — форс-тёмный фон (белый текст над фото): берём bright-вариант.
+  color: var(--color-accent-2-bright);
 }
 
 .price {

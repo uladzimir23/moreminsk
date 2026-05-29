@@ -280,7 +280,7 @@
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  color: var(--on-media);
+  color: var(--color-accent-2); // алый — фирменный акцент для названий яхт
 }
 .desc {
   margin: 0;

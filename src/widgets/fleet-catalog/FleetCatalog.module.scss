@@ -70,7 +70,7 @@
   font-style: italic;
   font-weight: var(--primitive-weight-medium);
   font-size: 1.0625rem;
-  color: var(--on-media-strong);
+  color: var(--color-accent-2);
 }
 .stickyPrice {
   font-family: var(--font-mono), monospace;
@@ -227,7 +227,7 @@
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  color: var(--color-foreground);
+  color: var(--color-accent-2); // алый — фирменный акцент для названий яхт
 }
 .nameLink {
   color: inherit;
@@ -235,7 +235,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: var(--color-accent);
+    color: var(--color-accent-2-bright);
   }
 
   @include focus-ring($offset: 0.25rem);
