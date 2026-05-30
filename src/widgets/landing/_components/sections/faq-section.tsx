@@ -3,7 +3,6 @@
 import { FAQ } from "@/shared/content/faq";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useState } from "react";
-import { WaterBackdrop } from "../water-backdrop";
 import styles from "./faq-section.module.scss";
 
 // First 6 «general» questions (per content/faq.ts convention).
@@ -34,7 +33,6 @@ export function FaqSection() {
 
   return (
     <section className={styles.section} id="faq">
-      <WaterBackdrop filterId="faqWater" variant="waves" />
       <div className={styles.inner}>
         <SectionHeader eyebrow="05 · Вопросы" title="Коротко о" accent="главном." tone="media" />
 

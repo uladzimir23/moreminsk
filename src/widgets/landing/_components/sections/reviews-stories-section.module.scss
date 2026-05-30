@@ -7,13 +7,8 @@
 .section {
   position: relative;
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem);
-  background:
-    radial-gradient(
-      ellipse 80% 60% at 50% 0%,
-      color-mix(in srgb, var(--color-accent) 14%, transparent) 0%,
-      transparent 60%
-    ),
-    linear-gradient(180deg, var(--media-bg-elevated) 0%, var(--media-bg) 100%);
+  // Прозрачный фон — пропускает глобальный fixed WaterBackdrop из CinematicLanding.
+  background: transparent;
   color: var(--on-media);
 }
 

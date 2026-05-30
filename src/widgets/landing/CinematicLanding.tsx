@@ -8,6 +8,7 @@ import { FleetShowcaseSection } from "./_components/sections/fleet-showcase-sect
 import { GallerySection } from "./_components/sections/gallery-section";
 import { ReviewsStoriesSection } from "./_components/sections/reviews-stories-section";
 import { ServicesSection } from "./_components/sections/services-section";
+import { WaterBackdrop } from "./_components/water-backdrop";
 
 // Production landing. Header/footer come from the [locale] layout; this composes
 // the pinned video hero + the content stack. The content block is pulled up
@@ -16,6 +17,9 @@ export function CinematicLanding() {
   return (
     <div className={shell.shell} id="top">
       <CinematicHero pinned />
+      <div className={shell.waterBg} aria-hidden="true">
+        <WaterBackdrop filterId="globalWater" variant="waves" />
+      </div>
       <div className={shell.overlap}>
         <FleetShowcaseSection />
         <ServicesSection />

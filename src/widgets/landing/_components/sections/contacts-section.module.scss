@@ -4,7 +4,9 @@
 .section {
   padding: clamp(5rem, 12vh, 8.75rem) clamp(1.5rem, 6vw, 5rem) clamp(3.75rem, 8vh, 6.25rem);
   border-top: 1px solid rgba(128, 128, 128, 0.16);
-  background: var(--color-background);
+  // Прозрачный фон — пропускает глобальный fixed WaterBackdrop из CinematicLanding.
+  background: transparent;
+  color: var(--on-media);
 }
 
 .head {

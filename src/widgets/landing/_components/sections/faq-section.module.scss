@@ -7,11 +7,11 @@
 .section {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
   // Full-bleed (water backdrop spans edge-to-edge); the inner gutter below
   // matches every other section header → title lands on the same 10rem gutter.
   padding-block: clamp(5rem, 12vh, 8.75rem);
-  background: var(--media-bg);
+  // Прозрачный фон — пропускает глобальный fixed WaterBackdrop из CinematicLanding.
+  background: transparent;
   color: var(--on-media);
 }
 
@@ -171,13 +171,19 @@
   overflow: hidden;
   min-block-size: 0;
   padding-inline: 0.25rem;
-  // Pad-bottom только когда раскрыто — иначе создаёт visible spacing
-  // в свёрнутом состоянии (но row=0 спрячет, ок). Держим всегда — проще.
-  padding-block-end: 1.75rem;
   max-inline-size: 40rem;
   font-size: 1rem;
   line-height: 1.65;
   color: var(--on-media-muted);
+
+  // Раньше padding-block-end жил здесь всегда — но padding НЕ подавляется
+  // через min-block-size:0 и был виден полоской при свёрнутом grid-rows:0fr.
+  // Перенёс только в раскрытое состояние, transition анимирует появление.
+  transition: padding-block-end 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.inlineAnswerOpen .inlineAnswerBody {
+  padding-block-end: 1.75rem;
 }
 
 // ── Right: answer panel (desktop only) ───────────────────────────────────

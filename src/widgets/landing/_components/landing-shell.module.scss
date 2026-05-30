@@ -31,6 +31,17 @@
   margin-top: -100vh;
 }
 
+// Глобальный фиксированный WaterBackdrop — виден через прозрачные секции
+// (Reviews-Stories, FAQ, BookingCTA, Contacts). Лежит ниже .overlap (z:2)
+// и выше .heroPin (z:0/1) — водный фон уже виден когда контент поднимается
+// над героем. pointer-events:none — не блокирует клики/скролл.
+.waterBg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
 // Floats at bottom-left so it never collides with hero-internal stamps
 // (which all sit top-left) or scene toggles (top-right).
 .backBar {

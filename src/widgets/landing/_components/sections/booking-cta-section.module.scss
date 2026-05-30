@@ -5,15 +5,10 @@
 
 .section {
   position: relative;
-  overflow: hidden;
   padding: clamp(5rem, 14vh, 10rem) clamp(1.5rem, 6vw, 5rem);
   border-top: 1px solid rgba(128, 128, 128, 0.16);
-  background: linear-gradient(
-    to bottom,
-    var(--color-background) 0%,
-    color-mix(in srgb, var(--color-accent) 6%, var(--color-background)) 70%,
-    color-mix(in srgb, var(--color-accent) 12%, var(--color-background)) 100%
-  );
+  // Прозрачный фон — пропускает глобальный fixed WaterBackdrop из CinematicLanding.
+  background: transparent;
 }
 
 .horizon {
