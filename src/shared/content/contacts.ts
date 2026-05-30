@@ -17,11 +17,23 @@ export const CONTACTS = {
     // Координаты причала с /contacts (2026-04-17): 53.953826, 27.371164.
     mapsUrl: "https://yandex.by/maps/?ll=27.371164,53.953826&z=16&pt=27.371164,53.953826",
   },
-  // Юрлицо — для страницы /documents и счетов юрлицам (Phase 5+).
+  // Юрлицо — для страницы /documents и счетов юрлицам.
   legal: {
     entity: "ИП Киселёва И.А.",
     unp: "590078696",
     legalAddress: "220033, Минск, ул. Фабричная, 30-100",
     registeredAt: "2010-10-11",
+    bank: {
+      account: "BY89MTBK30130001093300027992",
+      currency: "BYN",
+      name: "ЗАО «МТБанк»",
+      bic: "MTBKBY22",
+    },
+  },
+  // Yandex.Maps — POI данных яхт-клуба (oid из URL ?oid=193210462372).
+  // Iframe widget URL ниже встраивается в карту на /contacts; reviewsWidget — на /otzyvy.
+  yandex: {
+    oid: "193210462372",
+    coords: { lat: 53.953826, lon: 27.371164 },
   },
 } as const;
