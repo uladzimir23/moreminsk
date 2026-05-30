@@ -3,7 +3,6 @@
 import { Link } from "@/i18n/navigation";
 import { CONTACTS } from "@/shared/content/contacts";
 import { FAQ } from "@/shared/content/faq";
-import { REVIEWS } from "@/shared/content/reviews";
 import { SERVICES } from "@/shared/content/services";
 import { YACHTS } from "@/shared/content/yachts";
 import type { ReactNode } from "react";
@@ -16,8 +15,6 @@ const TYPE_LABEL = {
   motor: "Моторная",
   "sail-motor": "Парусно-моторная",
 } as const;
-
-const trim = (s: string, n: number) => (s.length > n ? `${s.slice(0, n).trimEnd()}…` : s);
 
 type Props = { index: number; onNavigate: () => void };
 
@@ -137,24 +134,19 @@ export function MenuPreview({ index, onNavigate }: Props) {
         </div>
       );
     case 4: {
-      // Отзывы — rating summary + 2 quotes
-      const avg = (REVIEWS.reduce((sum, r) => sum + r.rating, 0) / REVIEWS.length).toFixed(1);
+      // Отзывы — статичная плашка с переходом на /otzyvy (там Яндекс-виджет).
       return (
         <div className={styles.reviewsSummary}>
           <div className={styles.reviewsScore}>
             <span className={styles.reviewsStars} aria-hidden="true">
               ★★★★★
             </span>
-            <span className={styles.reviewsNum}>{avg}</span>
-            <span className={styles.reviewsCount}>{REVIEWS.length} отзывов</span>
+            <span className={styles.reviewsNum}>5.0</span>
+            <span className={styles.reviewsCount}>Яндекс.Карты</span>
           </div>
-          <ul className={styles.reviewQuotes}>
-            {REVIEWS.slice(0, 2).map((r) => (
-              <li key={r.id} className={styles.reviewQuote}>
-                «{trim(r.text, 96)}»<span className={styles.reviewAuthor}>{r.authorName}</span>
-              </li>
-            ))}
-          </ul>
+          <p className={styles.reviewsHint}>
+            Живые отзывы клиентов с карточки яхт-клуба — без модерации с нашей стороны.
+          </p>
         </div>
       );
     }
