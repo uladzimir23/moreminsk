@@ -5,6 +5,7 @@ import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { servicePhoto } from "../../_data/service-photos";
+import { SectionWaveClip } from "../section-wave-clip";
 import styles from "./services-section.module.scss";
 
 // Responsive carousel: on desktop (≥lg) a wide cinematic banner — blurred
@@ -47,6 +48,8 @@ export function ServicesSection() {
 
   return (
     <section className={styles.section} id="services">
+      <SectionWaveClip id="services-wave-clip" />
+
       {/* Ambient section backdrop — blurred copy of the active service's photo. */}
       <AmbientBackdrop
         images={SERVICES.map((service) => servicePhoto(service.slug).url)}

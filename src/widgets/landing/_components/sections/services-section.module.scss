@@ -25,7 +25,8 @@
   padding: clamp(5rem, 12vh, 8.75rem) 0;
   color: var(--on-media);
 
-  @include section-soft-edges($feather: 6rem);
+  @include section-soft-top($feather: 6rem);
+  clip-path: url("#services-wave-clip");
 }
 
 // ── Head ─────────────────────────────────────────────────────────────────

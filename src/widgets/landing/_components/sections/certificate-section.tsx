@@ -3,6 +3,7 @@ import { CERTIFICATE } from "@/shared/content/certificates";
 import { withBase } from "@/shared/lib/base-path";
 import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
+import { SectionWaveClip } from "../section-wave-clip";
 import styles from "./certificate-section.module.scss";
 
 // «Подарочный сертификат» — single-subject editorial block: blurred ambient
@@ -16,6 +17,7 @@ export function CertificateSection() {
 
   return (
     <section className={styles.section} id="certificate">
+      <SectionWaveClip id="certificate-wave-clip" />
       <AmbientBackdrop images={washPhotos} activeIndex={0} className={styles.bg} />
       <div className={styles.inner}>
         <SectionHeader eyebrow="06 · Подарок" title="Сертификат" accent="на яхту." tone="media" />

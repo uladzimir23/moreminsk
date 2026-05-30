@@ -3,6 +3,7 @@ import { AmbientBackdrop } from "@/shared/ui/ambient-backdrop/AmbientBackdrop";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { ArrowRight } from "lucide-react";
 import { GALLERY } from "../../_data/photos";
+import { SectionWaveClip } from "../section-wave-clip";
 import styles from "./gallery-section.module.scss";
 
 // «03 · Галерея» — auto-marquee teaser: photos slide in two opposite rows with a
@@ -15,6 +16,8 @@ const URLS = GALLERY.map((s) => s.url);
 export function GallerySection() {
   return (
     <section className={styles.section} id="gallery">
+      <SectionWaveClip id="gallery-wave-clip" />
+
       {/* Static ambient wash of the set behind the marquee. */}
       <AmbientBackdrop images={URLS} activeIndex={0} className={styles.bg} />
 
