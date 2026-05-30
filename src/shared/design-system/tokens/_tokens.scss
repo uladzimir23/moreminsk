@@ -421,6 +421,13 @@
     --color-accent-2: #e01e2b;
     --color-accent-2-bright: #ff3b47;
 
+    // Brand mark («light» Figma вариант): indigo-navy ink + hand-drawn outline
+    // вокруг парусов. Драйвят --logo-ink / --logo-stroke в frosted-хедере и
+    // футере (см. landing-header/footer.module.scss). Темный вариант не нужен
+    // — в dark-теме мерк рисуется белым через currentColor (= наследует фон).
+    --color-brand-mark-ink: #0d005d;
+    --color-brand-mark-stroke: #dfdfdf;
+
     // Brand gradient — bright Apple-ish sweep: scarlet → hot pink → violet →
     // electric blue. Drives glowing borders + glints.
     --gradient-brand: linear-gradient(110deg, #ff2638 0%, #ff2d8f 34%, #8b3bff 68%, #2b7bff 100%);

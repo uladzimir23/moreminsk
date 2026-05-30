@@ -23,8 +23,8 @@
 // Light-theme footer = paper bg → show the Figma «light» variant of the logo
 // (navy fill + grey outline). Dark theme keeps default «dark» variant (white).
 :global(.light-theme) .footer {
-  --logo-ink: #0d005d;
-  --logo-stroke: #dfdfdf;
+  --logo-ink: var(--color-brand-mark-ink);
+  --logo-stroke: var(--color-brand-mark-stroke);
 }
 
 // ── Quick call-back capture ────────────────────────────────────────────────

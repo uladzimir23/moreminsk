@@ -42,8 +42,8 @@
 // Dark theme keeps the default «dark» variant (currentColor = white sails).
 :global(.light-theme) .scrolled,
 :global(.light-theme) .header:has([aria-expanded="true"]) {
-  --logo-ink: #0d005d;
-  --logo-stroke: #dfdfdf;
+  --logo-ink: var(--color-brand-mark-ink);
+  --logo-stroke: var(--color-brand-mark-stroke);
 }
 
 // While the burger menu is open, the logo + «Яхты» button (z 305) sit ABOVE
