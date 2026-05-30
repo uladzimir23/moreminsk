@@ -10,10 +10,9 @@ import { GallerySection } from "./_components/sections/gallery-section";
 import { ReviewsStoriesSection } from "./_components/sections/reviews-stories-section";
 import { ServicesSection } from "./_components/sections/services-section";
 
-// Production landing — the design-lab «cinematic» variant promoted as the
-// home page. Header/footer come from the [locale] layout; this composes the
-// pinned video hero + the content stack. The content block is pulled up over
-// the pinned hero (see CinematicHero pinned + .overlap).
+// Production landing. Header/footer come from the [locale] layout; this composes
+// the pinned video hero + the content stack. The content block is pulled up
+// over the pinned hero (see CinematicHero pinned + .overlap).
 export function CinematicLanding() {
   return (
     <div className={shell.shell} id="top">
