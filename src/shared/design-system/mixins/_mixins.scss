@@ -747,36 +747,50 @@
 }
 
 // ── Section soft edges + wave clip ────────────────────────────────────────
-// Применяется НА САМУ `.section` — маска маскирует ВЕСЬ её contents (фото-
-// блюр AmbientBackdrop + контент), что создаёт эффект «блюр за контейнером
-// в overflow». Без цвета — это чистый mask-фильтр.
+// Mask на саму `.section` — чистый фильтр обрезания видимости, без цвета.
+// Composite из двух слоёв: top feather + bottom wave-clip с drift-анимацией.
 //
-// Composite mask из двух слоёв:
-// 1. linear-gradient: top feather от transparent до opaque за $feather (6rem)
-// 2. SVG wave silhouette: opaque верхняя часть + wave-форма на нижнем крае,
-//    которая «вырезает» секцию волнистым контуром (форма повторяет global
-//    waves из water-backdrop — viewBox 2400×620, амплитуда ~3-6px).
-//
-// mask-composite: intersect — pixel виден только если оба слоя opaque там.
+// Слой 1: linear-gradient — top feather (transparent → opaque за $feather).
+// Слой 2: SVG silhouette с одним периодом волны, repeat-x с шагом $period.
+//   Wave peaks направлены ВНИЗ (control point +10 относительно waveline) —
+//   секция «опускается» в виде зубчиков-капель.
+// Анимация: mask-position layer 2 → -1 период (seamless при repeat-x).
 @mixin section-soft-edges($feather: 6rem) {
-  // SVG wave, который растягивается на всю высоту секции:
-  // 0-92% opaque rect + 92-100% wave-форма с silhouette фалится в transparent.
-  // viewBox proportionally — wave amplitude в нижних 8% = ~3-5% от section h.
-  $wave-svg: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%202400%20620'%20preserveAspectRatio='none'%3E%3Crect%20width='2400'%20height='560'%20fill='%23000'/%3E%3Cpath%20d='M0%20560%20q90%20-40%20180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20L2400%20560%20L2400%20620%20L0%20620%20Z'%20fill='%23000'/%3E%3C/svg%3E";
+  $wave-svg: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2060%201000'%20preserveAspectRatio='none'%3E%3Crect%20width='60'%20height='990'%20fill='%23000'/%3E%3Cpath%20d='M0%20990%20q15%2010%2030%200%20t30%200%20L60%201000%20L0%201000%20Z'%20fill='%23000'/%3E%3C/svg%3E";
 
   mask-image: linear-gradient(180deg, transparent 0, black #{$feather}, black 100%), url($wave-svg);
   -webkit-mask-image:
     linear-gradient(180deg, transparent 0, black #{$feather}, black 100%), url($wave-svg);
-  mask-position: top, bottom;
-  -webkit-mask-position: top, bottom;
+  mask-position:
+    top,
+    bottom left;
+  -webkit-mask-position:
+    top,
+    bottom left;
   mask-size:
     100% 100%,
-    100% 100%;
+    12rem 100%;
   -webkit-mask-size:
     100% 100%,
-    100% 100%;
-  mask-repeat: no-repeat, no-repeat;
-  -webkit-mask-repeat: no-repeat, no-repeat;
+    12rem 100%;
+  mask-repeat: no-repeat, repeat-x;
+  -webkit-mask-repeat: no-repeat, repeat-x;
   mask-composite: intersect;
   -webkit-mask-composite: source-in;
+  animation: mm-section-wave-drift 22s linear infinite;
+
+  @include reduced-motion {
+    animation: none;
+  }
+}
+
+@keyframes mm-section-wave-drift {
+  to {
+    mask-position:
+      top,
+      bottom left -12rem;
+    -webkit-mask-position:
+      top,
+      bottom left -12rem;
+  }
 }
