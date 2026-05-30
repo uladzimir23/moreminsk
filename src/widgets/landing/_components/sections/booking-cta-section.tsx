@@ -90,7 +90,7 @@ export function BookingCTASection() {
 
       <div className={styles.grid}>
         <div className={styles.pitch}>
-          <p className={styles.eyebrow}>06 · Бронирование</p>
+          <p className={styles.eyebrow}>07 · Бронирование</p>
           <h2 className={styles.title}>
             Готовы <span className={styles.accent}>выйти в море?</span>
           </h2>
