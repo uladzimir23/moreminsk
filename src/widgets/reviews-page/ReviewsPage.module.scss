@@ -20,7 +20,8 @@
   @include respond-to("lg") {
     // 50/50: виджет отзывов слева, sticky-форма справа, обе колонки одинаковой ширины.
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
+    // Без align-items: start — нужен default stretch, чтобы .bookCol растягивалась
+    // до высоты левой колонки, иначе sticky-форме негде прилипнуть.
   }
 }
 

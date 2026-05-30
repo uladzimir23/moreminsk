@@ -27,6 +27,12 @@
     // Match printed output to screen colors.
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
+
+    // Раньше тут стоял `overflow-x: clip` (превентив iOS-horizontal-scroll от
+    // 100vw элементов), но по CSS spec любой ancestor с overflow ≠ visible
+    // становится containing block для `position: sticky` — это ломало sticky-
+    // формы на /contacts и /otzyvy. Убрал. Если где-то всплывёт горизонтальный
+    // скролл — клипуем точечно в проблемной секции (она внутри изоляции).
   }
 
   :where(body) {
@@ -41,9 +47,6 @@
     font-family: var(--font-body);
     background-color: var(--color-background);
     color: var(--color-foreground);
-
-    // Prevent rare iOS horizontal scroll from 100vw elements.
-    overflow-x: clip;
   }
 
   // ── Interactive elements ──────────────────────────────────────────────────
