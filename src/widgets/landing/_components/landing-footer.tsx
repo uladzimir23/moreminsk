@@ -166,14 +166,11 @@ export function LandingFooter() {
 
       <div className={styles.bottom}>
         <span>© 2026 Минское море. Все права защищены.</span>
-        <span className={styles.legal}>
-          <a className={styles.legalLink} href="#privacy">
-            Политика конфиденциальности
-          </a>
-          <a className={styles.legalLink} href="#offer">
-            Публичная оферта
-          </a>
-        </span>
+        {/* TODO before launch: вернуть «Политика конфиденциальности» + «Публичная
+            оферта» когда страницы /privacy и /oferta будут готовы. Сейчас они
+            фактически отсутствуют — старые анкоры на #privacy/#offer вели в null.
+            Юридически обязательны для сбора телефонов через форму брони (БР
+            закон о защите персональных данных). */}
       </div>
     </footer>
   );
