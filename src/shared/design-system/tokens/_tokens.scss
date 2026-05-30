@@ -303,9 +303,8 @@
     --navbar-height: 3.5rem;
     --sidebar-width: 15rem;
 
-    // App-shell heights per ADR-004 (Appbar 56px top, BottomNav 56px mobile-only).
-    --appbar-height: 3.5rem;
-    --bottomnav-height: 3.5rem;
+    // (ADR-004 appbar/bottomnav токены сняты — оба виджета убраны как dead code,
+    // см. memory/design-mobile-nav-abandoned.)
 
     // Editorial geometry (ADR-009) — sharp rectangles, no capsule.
     --btn-height-sm: 2.25rem;

@@ -280,7 +280,10 @@
   max-width: 80rem;
   margin: clamp(3rem, 6vh, 4.5rem) auto 0;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--media-hairline);
+  // Раньше тут стоял `border-top: 1px solid var(--media-hairline)` — на тёмных
+  // версиях футера была еле заметная разделительная линия. На прозрачном водном
+  // фоне (после global WaterBackdrop) hairline становится контрастной белой
+  // полосой через всю ширину. Убрали — спейсинг создаётся через padding-top.
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -11,20 +11,12 @@
     min-block-size: 100dvh; // mobile Safari: follows dynamic viewport
   }
 
-  // ── App shell offsets (ADR-004) ───────────────────────────────────────────
-  // Fixed Appbar + (mobile) BottomNav overlay the viewport — push content
-  // inside <main> past them. Bottom padding drops to 0 on desktop (md+)
-  // where the bottom-nav is hidden.
-  :where(main) {
-    padding-block-start: var(--appbar-height);
-    padding-block-end: calc(var(--bottomnav-height) + env(safe-area-inset-bottom));
-  }
-
-  @include respond-to("md") {
-    :where(main) {
-      padding-block-end: 0;
-    }
-  }
+  // ADR-004 (Appbar + BottomNav) был отменён — вместо него LandingHeader +
+  // бургер, без bottom-nav. Тут раньше стоял `:where(main) { padding-block-
+  // start: var(--appbar-height); padding-block-end: var(--bottomnav-height) }`
+  // — создавал отступ снизу у inner-страниц под несуществующий BottomNav.
+  // Снято. Если когда-нибудь вернётся mobile-app-навигация — оффсеты делаем
+  // локально в конкретном layout, не глобально через :where(main).
 
   // ── Skip link (a11y: keyboard-only users jump past navigation) ───────────
   .skip-link {
