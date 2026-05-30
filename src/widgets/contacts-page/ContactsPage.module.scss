@@ -19,7 +19,8 @@
   gap: clamp(1.75rem, 4vw, 3rem);
 
   @include respond-to("lg") {
-    grid-template-columns: minmax(0, 1fr) minmax(20rem, 24rem);
+    // 50/50: контент слева, sticky-форма справа, обе колонки одинаковой ширины.
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
   }
 }
