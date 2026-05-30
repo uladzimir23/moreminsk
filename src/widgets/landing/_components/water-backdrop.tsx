@@ -186,7 +186,10 @@ export function WaterBackdrop({
         <svg
           className={styles.svgWaves}
           viewBox="0 0 2400 620"
-          preserveAspectRatio="xMidYMax slice"
+          // `none` = растянуть SVG на весь container без сохранения aspect ratio.
+          // У волн полупрозрачный полу-абстрактный паттерн, вертикальное искажение
+          // не читается; покрывают весь viewport без gap'ов сверху и снизу.
+          preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           {WAVE_LAYERS.map((w) => (

@@ -26,17 +26,16 @@
   height: 100%;
 }
 
-// Layered drifting sine waves (filled sea layers).
-// Прижимаем к низу viewport — `preserveAspectRatio="xMidYMax slice"` со 100%-
-// height + viewBox 2400×620 при широком viewport scale'ит SVG так, что низ
-// волн оказывается выше bottom edge окна (между ними gap «пустой воды»). Чтобы
-// волны лежали ровно на дне — anchor inset-block-end:0 + ограниченная высота.
+// Layered drifting sine waves (filled sea layers). На весь viewport —
+// JSX-атрибут `preserveAspectRatio="none"` растягивает waves без cover/contain
+// fit, так что они идут от самого верха до самого низа container'а независимо
+// от aspect ratio. До этого был `xMidYMax slice` + height:100% и волны
+// «висели» в средине viewport с пустыми зонами сверху и снизу.
 .svgWaves {
   position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
+  inset: 0;
   inline-size: 100%;
-  block-size: min(40rem, 60vh);
+  block-size: 100%;
 }
 .wave1 path,
 .wave2 path,
