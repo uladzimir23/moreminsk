@@ -9,14 +9,19 @@
   isolation: isolate;
   overflow: hidden;
   padding-block: clamp(5rem, 12vh, 8.75rem);
-  background: var(--media-bg);
   color: var(--on-media);
+
+  // Спокойная волна-разделитель на нижнем краю — секция «заканчивается волной».
+  @include section-wave-divider($edge: bottom, $height: 1.5rem);
 }
 
 .bg {
   position: absolute;
   inset: 0;
   z-index: 0;
+
+  // Feather top/bottom — секция плавно растворяется в соседние прозрачные.
+  @include section-soft-feather($feather: 6rem);
 }
 
 .inner {

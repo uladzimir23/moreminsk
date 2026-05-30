@@ -16,7 +16,7 @@ export function GallerySection() {
   return (
     <section className={styles.section} id="gallery">
       {/* Static ambient wash of the set behind the marquee. */}
-      <AmbientBackdrop images={URLS} activeIndex={0} />
+      <AmbientBackdrop images={URLS} activeIndex={0} className={styles.bg} />
 
       <SectionHeader
         eyebrow="03 · Галерея"

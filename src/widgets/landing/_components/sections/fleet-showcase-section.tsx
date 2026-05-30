@@ -65,7 +65,7 @@ export function FleetShowcaseSection() {
     <section className={styles.section} id="fleet">
       {/* Ambient backdrop — same photos as the hero stack, heavily blurred
           and dimmed so the foreground reads white-on-dark. */}
-      <AmbientBackdrop images={photos} activeIndex={bgPhotoIdx} />
+      <AmbientBackdrop images={photos} activeIndex={bgPhotoIdx} className={styles.bg} />
 
       <div className={styles.head}>
         <SectionHeader

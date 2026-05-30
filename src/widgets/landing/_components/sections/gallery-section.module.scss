@@ -9,8 +9,14 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0 clamp(3.75rem, 8vh, 6.25rem);
-  background: var(--media-bg); // fallback before the ambient backdrop paints
   color: var(--on-media);
+
+  @include section-wave-divider($edge: bottom, $height: 1.5rem);
+}
+
+// Photo backdrop fades on top/bottom — переход в соседние прозрачные секции.
+.bg {
+  @include section-soft-feather($feather: 6rem);
 }
 
 .rail {

@@ -23,8 +23,14 @@
   isolation: isolate;
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0;
-  background: var(--media-bg); // fallback before ambient backdrop paints
   color: var(--on-media);
+
+  @include section-wave-divider($edge: bottom, $height: 1.5rem);
+}
+
+// Section-level photo backdrop fades on top/bottom (не путать со slide-локальным `.bg`).
+.sectionBg {
+  @include section-soft-feather($feather: 6rem);
 }
 
 // ── Head ─────────────────────────────────────────────────────────────────

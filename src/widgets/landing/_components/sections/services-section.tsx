@@ -51,6 +51,7 @@ export function ServicesSection() {
       <AmbientBackdrop
         images={SERVICES.map((service) => servicePhoto(service.slug).url)}
         activeIndex={activeIdx}
+        className={styles.sectionBg}
       />
 
       <SectionHeader
