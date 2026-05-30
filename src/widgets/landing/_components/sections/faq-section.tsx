@@ -55,16 +55,20 @@ export function FaqSection() {
                 <div
                   className={`${styles.inlineAnswer} ${i === active ? styles.inlineAnswerOpen : ""}`}
                 >
-                  {item.answer}
-                  {item.bullets && (
-                    <ul className={styles.bullets}>
-                      {item.bullets.map((b) => (
-                        <li key={b} className={styles.bullet}>
-                          {b}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {/* Body обёрнут в дочерний div — он clip'ает overflow, а grid-rows
+                      trick (0fr → 1fr) на родителе плавно анимирует высоту с auto. */}
+                  <div className={styles.inlineAnswerBody}>
+                    {item.answer}
+                    {item.bullets && (
+                      <ul className={styles.bullets}>
+                        {item.bullets.map((b) => (
+                          <li key={b} className={styles.bullet}>
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}

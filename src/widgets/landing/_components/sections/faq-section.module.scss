@@ -145,19 +145,39 @@
 
 // Inline answer — hidden on desktop (answer lives in the side panel),
 // expands under the active question on mobile.
+// Inline-accordion на mobile + tablet (до 53.75rem). На desktop ответ показывается
+// в боковой панели → скрываем полностью.
+// Smooth open/close через grid-rows trick: `grid-template-rows: 0fr → 1fr`
+// плавно интерполирует, body-child имеет `overflow: hidden` + `min-height: 0`
+// чтобы content корректно clip'ался на свёрнутом состоянии. Высота родителей
+// (.item / .list / .grid / .section) растёт автоматически — это всё flow-content.
 .inlineAnswer {
-  display: none;
-}
-@media (max-width: 53.75rem) {
-  .inlineAnswerOpen {
-    display: block;
-    padding: 0 0.25rem 1.75rem;
-    max-width: 40rem;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--on-media-muted);
-    animation: faqFade 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @media (min-width: 53.8125rem) {
+    display: none;
   }
+}
+.inlineAnswerOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.inlineAnswerBody {
+  overflow: hidden;
+  min-block-size: 0;
+  padding-inline: 0.25rem;
+  // Pad-bottom только когда раскрыто — иначе создаёт visible spacing
+  // в свёрнутом состоянии (но row=0 спрячет, ок). Держим всегда — проще.
+  padding-block-end: 1.75rem;
+  max-inline-size: 40rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--on-media-muted);
 }
 
 // ── Right: answer panel (desktop only) ───────────────────────────────────
@@ -256,9 +276,11 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .panelInner,
-  .inlineAnswerOpen {
+  .panelInner {
     animation: none;
+  }
+  .inlineAnswer {
+    transition: none;
   }
   .marker {
     transition: none;
