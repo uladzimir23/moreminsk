@@ -7,7 +7,6 @@ import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { YachtGallery } from "@/shared/ui/yacht-gallery/YachtGallery";
 import { useEffect, useRef, useState } from "react";
 import { PHOTOS_BY_YACHT, type YachtSlug } from "../../_data/photos";
-import { SectionWaveClip } from "../section-wave-clip";
 import styles from "./fleet-showcase-section.module.scss";
 
 const TYPE_LABEL = {
@@ -64,10 +63,6 @@ export function FleetShowcaseSection() {
 
   return (
     <section className={styles.section} id="fleet">
-      {/* Wave clip-path для нижнего края секции — повторяет форму глобальных
-          waves из water-backdrop, animated via SMIL. */}
-      <SectionWaveClip id="fleet-wave-clip" />
-
       {/* Ambient backdrop — same photos as the hero stack, heavily blurred
           and dimmed so the foreground reads white-on-dark. */}
       <AmbientBackdrop images={photos} activeIndex={bgPhotoIdx} className={styles.bg} />

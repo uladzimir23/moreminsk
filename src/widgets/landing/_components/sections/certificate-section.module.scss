@@ -11,10 +11,7 @@
   padding-block: clamp(5rem, 12vh, 8.75rem);
   color: var(--on-media);
 
-  // Mask top feather + clip-path для нижнего волнистого края — wave формула
-  // та же, что у глобального water-backdrop (SectionWaveClip).
-  @include section-soft-top($feather: 6rem);
-  clip-path: url("#certificate-wave-clip");
+  @include section-soft-edges($feather: 6rem);
 }
 
 .bg {
