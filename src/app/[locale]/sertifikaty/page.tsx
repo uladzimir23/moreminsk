@@ -19,6 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: "Подарочный сертификат на прогулку на яхте в Минске",
     description:
       "Подарочный сертификат на прогулку под парусом или мотором по Минскому морю — от 150 BYN. Действует весь сезон, заказать можно онлайн.",
+    // Букет с сертификатом — сильный визуал для соцшеров (Telegram/WhatsApp).
+    images: [CERTIFICATE.photos[0]],
   });
 }
 
