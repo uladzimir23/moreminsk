@@ -11,17 +11,16 @@
   padding-block: clamp(5rem, 12vh, 8.75rem);
   color: var(--on-media);
 
-  // Спокойная волна-разделитель на нижнем краю — секция «заканчивается волной».
-  @include section-wave-divider($edge: bottom, $height: 1.5rem);
+  // Mask на всю секцию: верх feather в прозрачность, низ обрезан волнистым
+  // силуэтом (как у глобального water-backdrop). Блюр AmbientBackdrop сам
+  // плавно растворяется в overflow без жёстких кромок.
+  @include section-soft-edges($feather: 6rem);
 }
 
 .bg {
   position: absolute;
   inset: 0;
   z-index: 0;
-
-  // Feather top/bottom — секция плавно растворяется в соседние прозрачные.
-  @include section-soft-feather($feather: 6rem);
 }
 
 .inner {

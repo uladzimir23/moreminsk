@@ -746,62 +746,37 @@
   @return map.get($z-layers, $layer);
 }
 
-// ── Section soft feather edges ────────────────────────────────────────────
-// Применяется к background-элементу (например AmbientBackdrop.root) внутри
-// opaque-секции. Размывает верхний и нижний край через mask-image gradient —
-// секция плавно растворяется в соседнюю прозрачную секцию вместо жёсткой
-// кромки. Не маскирует контент: используется только на bg-слое.
-@mixin section-soft-feather($feather: 6rem) {
-  mask-image: linear-gradient(
-    180deg,
-    transparent 0,
-    black #{$feather},
-    black calc(100% - #{$feather}),
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    180deg,
-    transparent 0,
-    black #{$feather},
-    black calc(100% - #{$feather}),
-    transparent 100%
-  );
-}
+// ── Section soft edges + wave clip ────────────────────────────────────────
+// Применяется НА САМУ `.section` — маска маскирует ВЕСЬ её contents (фото-
+// блюр AmbientBackdrop + контент), что создаёт эффект «блюр за контейнером
+// в overflow». Без цвета — это чистый mask-фильтр.
+//
+// Composite mask из двух слоёв:
+// 1. linear-gradient: top feather от transparent до opaque за $feather (6rem)
+// 2. SVG wave silhouette: opaque верхняя часть + wave-форма на нижнем крае,
+//    которая «вырезает» секцию волнистым контуром (форма повторяет global
+//    waves из water-backdrop — viewBox 2400×620, амплитуда ~3-6px).
+//
+// mask-composite: intersect — pixel виден только если оба слоя opaque там.
+@mixin section-soft-edges($feather: 6rem) {
+  // SVG wave, который растягивается на всю высоту секции:
+  // 0-92% opaque rect + 92-100% wave-форма с silhouette фалится в transparent.
+  // viewBox proportionally — wave amplitude в нижних 8% = ~3-5% от section h.
+  $wave-svg: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%202400%20620'%20preserveAspectRatio='none'%3E%3Crect%20width='2400'%20height='560'%20fill='%23000'/%3E%3Cpath%20d='M0%20560%20q90%20-40%20180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20t180%200%20L2400%20560%20L2400%20620%20L0%20620%20Z'%20fill='%23000'/%3E%3C/svg%3E";
 
-// ── Section wave divider ──────────────────────────────────────────────────
-// Спокойная декоративная волна на нижнем (или верхнем) крае секции —
-// «секция заканчивается волной». Использует mask-image для формы SVG sine,
-// а сам цвет берёт через background-color = var(--media-hairline) — тогда
-// волна theme-aware (тёмно-серый в light, светло-серый в dark).
-// Применять на `.section` с `position: relative`.
-@mixin section-wave-divider(
-  $edge: bottom,
-  $height: 1.5rem,
-  $color: color-mix(in srgb, var(--color-foreground) 22%, transparent)
-) {
-  $wave-svg: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%2030'%20preserveAspectRatio='none'%3E%3Cpath%20d='M0%2018%20q25%20-8%2050%200%20t50%200%20t50%200%20t50%200%20t50%200%20t50%200%20t50%200%20t50%200%20L400%2030%20L0%2030%20Z'%20fill='%23000'/%3E%3C/svg%3E";
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-
-    @if $edge == bottom {
-      inset-block-end: 0;
-    } @else {
-      inset-block-start: 0;
-      transform: scaleY(-1);
-    }
-
-    block-size: $height;
-    background-color: $color;
-    mask-image: url($wave-svg);
-    -webkit-mask-image: url($wave-svg);
-    mask-repeat: repeat-x;
-    -webkit-mask-repeat: repeat-x;
-    mask-size: 16rem 100%;
-    -webkit-mask-size: 16rem 100%;
-    pointer-events: none;
-    z-index: 2;
-  }
+  mask-image: linear-gradient(180deg, transparent 0, black #{$feather}, black 100%), url($wave-svg);
+  -webkit-mask-image:
+    linear-gradient(180deg, transparent 0, black #{$feather}, black 100%), url($wave-svg);
+  mask-position: top, bottom;
+  -webkit-mask-position: top, bottom;
+  mask-size:
+    100% 100%,
+    100% 100%;
+  -webkit-mask-size:
+    100% 100%,
+    100% 100%;
+  mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
 }
