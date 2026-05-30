@@ -17,7 +17,9 @@ type WaterBackdropProps = {
 };
 
 // A horizontal sine as an SVG path, optionally closed to the bottom to fill.
-function wavePath(y: number, amp: number, seg = 180, width = 2400, bottom = 600): string {
+// bottom = 620 matches the viewBox height — fill идёт до самого низа SVG
+// (раньше было 600, между Y=600 и Y=620 оставалась пустая полоска).
+function wavePath(y: number, amp: number, seg = 180, width = 2400, bottom = 620): string {
   const n = Math.ceil(width / seg) + 6;
   let d = `M${-seg * 2} ${y} q ${seg / 2} ${-amp} ${seg} 0`;
   for (let i = 0; i < n; i += 1) d += ` t ${seg} 0`;
