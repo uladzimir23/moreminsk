@@ -9,7 +9,8 @@ export const SITE = {
   name: "Море Minsk",
   alternateName: "ЯхтыМинска",
   defaultLocale: "ru",
-  locales: ["ru", "en"] as const,
+  // en снят с роутинга (см. i18n/routing.ts) — массив схлопывается до одного ru.
+  locales: ["ru"] as const,
   // Fallback social card until per-page OG images are generated.
   defaultOgImage: "/fleet/eva/Frame_160.jpg",
 } as const;
@@ -63,9 +64,10 @@ export function buildMetadata({
     description,
     alternates: {
       canonical,
+      // en снят с роутинга (см. i18n/routing.ts) → hreflang только ru +
+      // x-default. Когда вернём en — добавить здесь.
       languages: {
         ru: localeUrl("ru", path),
-        en: localeUrl("en", path),
         "x-default": localeUrl(SITE.defaultLocale, path),
       },
     },

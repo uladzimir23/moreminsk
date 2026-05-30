@@ -8,7 +8,6 @@ import styles from "./LocaleToggle.module.scss";
 
 const LABELS: Record<Locale, string> = {
   ru: "RU",
-  en: "EN",
 };
 
 export function LocaleToggle() {

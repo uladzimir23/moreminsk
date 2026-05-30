@@ -5,10 +5,10 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-// One entry per locale-less path, with ru/en hreflang alternates (the i18n
-// sitemap shape Google recommends). URLs are absolute on the canonical origin,
-// so the basePath of the GitHub Pages preview doesn't leak in. Extend the
-// path lists as info pages land.
+// One entry per path under the single ru locale (en снят с роутинга, см.
+// i18n/routing.ts). URLs are absolute on the canonical origin, so the basePath
+// of the GitHub Pages preview doesn't leak in. Когда вернётся en — добавить
+// языковые alternates обратно.
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPaths = [
     "/",
@@ -37,11 +37,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: path === "/" ? "weekly" : "monthly",
     priority: priorityFor(path),
-    alternates: {
-      languages: {
-        ru: localeUrl("ru", path),
-        en: localeUrl("en", path),
-      },
-    },
   }));
 }
