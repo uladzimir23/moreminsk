@@ -435,12 +435,6 @@
   height: 3.25rem;
   margin-top: 0.25rem;
   border: 0;
-
-  // On mobile / tablet the page-level sticky bar carries the submit, so the
-  // in-card button is redundant there. Desktop keeps it (no sticky bar).
-  @media (max-width: 63.999rem) {
-    display: none;
-  }
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: uppercase;

@@ -1,4 +1,3 @@
-import { StickyCtaProvider } from "@/shared/ui/sticky-cta/StickyCtaContext";
 import { CinematicHero } from "./_components/cinematic-hero";
 import shell from "./_components/landing-shell.module.scss";
 import { BookingCTASection } from "./_components/sections/booking-cta-section";
@@ -17,18 +16,16 @@ export function CinematicLanding() {
   return (
     <div className={shell.shell} id="top">
       <CinematicHero pinned />
-      <StickyCtaProvider>
-        <div className={shell.overlap}>
-          <FleetShowcaseSection />
-          <ServicesSection />
-          <GallerySection />
-          <ReviewsStoriesSection />
-          <FaqSection />
-          <CertificateSection />
-          <BookingCTASection />
-          <ContactsSection />
-        </div>
-      </StickyCtaProvider>
+      <div className={shell.overlap}>
+        <FleetShowcaseSection />
+        <ServicesSection />
+        <GallerySection />
+        <ReviewsStoriesSection />
+        <FaqSection />
+        <CertificateSection />
+        <BookingCTASection />
+        <ContactsSection />
+      </div>
     </div>
   );
 }

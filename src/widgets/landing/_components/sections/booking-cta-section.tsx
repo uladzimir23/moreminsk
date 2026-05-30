@@ -5,8 +5,7 @@ import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/s
 import { Checkbox } from "@/shared/ui/checkbox/Checkbox";
 import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
 import { Select } from "@/shared/ui/select/Select";
-import { useStickyCta } from "@/shared/ui/sticky-cta/StickyCtaContext";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import styles from "./booking-cta-section.module.scss";
 
 const YACHT_OPTIONS = [
@@ -34,8 +33,6 @@ const POINTS = [
 export function BookingCTASection() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const formRef = useRef<HTMLFormElement>(null);
-
   const [yacht, setYacht] = useState("any");
   const [time, setTime] = useState("14:00");
   const [date, setDate] = useState(""); // "YYYY-MM-DD"
@@ -44,20 +41,6 @@ export function BookingCTASection() {
   const yachtName =
     yacht === "any" ? "Любая яхта" : (YACHTS.find((y) => y.slug === yacht)?.name ?? yacht);
   const timeName = TIME_OPTIONS.find((t) => t.value === time)?.label ?? time;
-
-  // Page-level CTA — submits the form. Hidden once the form has succeeded.
-  const sectionRef = useStickyCta(
-    "booking",
-    status === "success"
-      ? null
-      : {
-          label: status === "submitting" ? "Отправляем…" : "Отправить заявку",
-          note: "Капитан и топливо в цене",
-          icon: "check",
-          disabled: !consent || status === "submitting",
-          onClick: () => formRef.current?.requestSubmit(),
-        },
-  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -85,7 +68,7 @@ export function BookingCTASection() {
   };
 
   return (
-    <section className={styles.section} id="booking" ref={sectionRef}>
+    <section className={styles.section} id="booking">
       <div className={styles.horizon} aria-hidden="true" />
 
       <div className={styles.grid}>
@@ -156,7 +139,7 @@ export function BookingCTASection() {
                 </button>
               </div>
             ) : (
-              <form className={styles.form} onSubmit={handleSubmit} ref={formRef}>
+              <form className={styles.form} onSubmit={handleSubmit}>
                 <div className={styles.fieldRow}>
                   <div className={styles.field}>
                     <label className={styles.label} htmlFor="bk-yacht">
