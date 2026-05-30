@@ -6,6 +6,7 @@ import { PageHero } from "@/shared/ui/page-hero/PageHero";
 import { PageShell } from "@/shared/ui/page-hero/PageShell";
 import { COVER_BY_YACHT } from "@/widgets/landing/_data/photos";
 import { ArrowUpRight, Star } from "lucide-react";
+import { InstagramStories } from "./InstagramStories";
 import styles from "./ReviewsPage.module.scss";
 
 // Yandex.Карты Reviews widget — лента живых отзывов карточки яхт-клуба (oid).
@@ -74,6 +75,11 @@ export function ReviewsPage() {
               <QuickBooking yacht={{ name: "На выбор" }} />
             </div>
           </aside>
+        </div>
+
+        {/* Истории клиентов из Instagram — full-width под 50/50 блоком. */}
+        <div className={styles.instagramWrap}>
+          <InstagramStories />
         </div>
       </section>
     </PageShell>
