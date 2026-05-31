@@ -3,21 +3,22 @@
 # CI на push в main: `docker build` → push в GHCR → ssh deploy на сервере.
 # basePath НЕ задаём — production-домен new.moreminsk.by без subpath.
 
-# ─── Stage 1: build ─────────────────────────────────────────────────────────
-FROM oven/bun:1.2-alpine AS builder
+# ─── Stage 1a: deps (bun install — uses bun.lock for fidelity) ──────────────
+FROM oven/bun:1.2-alpine AS deps
 WORKDIR /app
-
-# Кэш зависимостей отдельно от source — пересборка при правке кода не
-# инвалидирует bun install layer.
 # --ignore-scripts: prepare (lefthook install) требует git и .git/ — в build-
 # контексте их нет и не нужно, hooks только для dev-машин.
 COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile --ignore-scripts
 
+# ─── Stage 1b: build (Node — Next.js native napi modules не работают на Bun) ─
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Production build → ./out (next.config.ts: output: "export").
-RUN bun run build
+RUN npx next build
 
 # ─── Stage 2: serve ─────────────────────────────────────────────────────────
 FROM nginx:alpine AS runner
