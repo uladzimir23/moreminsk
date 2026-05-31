@@ -23,8 +23,19 @@
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease,
-    backdrop-filter 0.3s ease;
+    backdrop-filter 0.3s ease,
+    opacity 0.2s ease,
+    transform 0.25s ease;
   border-block-end: 1px solid transparent;
+}
+
+// Hide header when any fullscreen overlay is open (booking popup, stories
+// viewer, gallery lightbox). DOM signal: body[data-overlay] (см.
+// shared/lib/overlay/useOverlaySignal).
+:global(body[data-overlay]) .header {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
 }
 
 .scrolled {

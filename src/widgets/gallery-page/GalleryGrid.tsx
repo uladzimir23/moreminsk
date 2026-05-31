@@ -1,6 +1,7 @@
 "use client";
 
 import { YACHTS } from "@/shared/content/yachts";
+import { useOverlaySignal } from "@/shared/lib/overlay/useOverlaySignal";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./GalleryPage.module.scss";
@@ -16,6 +17,8 @@ const FILTERS = [
 export function GalleryGrid({ photos }: { photos: ReadonlyArray<Shot> }) {
   const [filter, setFilter] = useState("all");
   const [active, setActive] = useState<number | null>(null);
+  // Hide global landing-header while gallery lightbox is open.
+  useOverlaySignal("gallery", active !== null);
 
   const shown = useMemo(
     () => (filter === "all" ? photos : photos.filter((p) => p.yacht === filter)),

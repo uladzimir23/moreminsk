@@ -1,5 +1,6 @@
 "use client";
 
+import { useOverlaySignal } from "@/shared/lib/overlay/useOverlaySignal";
 import { SectionHeader } from "@/shared/ui/section-header/SectionHeader";
 import { useCallback, useEffect, useState } from "react";
 import { STORY_GROUPS } from "../../_data/stories";
@@ -8,6 +9,8 @@ import styles from "./reviews-stories-section.module.scss";
 export function ReviewsStoriesSection() {
   // open = index of the active group, or null when closed.
   const [open, setOpen] = useState<number | null>(null);
+  // Hide global landing-header while stories viewer is active.
+  useOverlaySignal("stories", open !== null);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -84,7 +87,7 @@ export function ReviewsStoriesSection() {
   return (
     <section className={styles.section} id="reviews">
       <div className={styles.head}>
-        <SectionHeader eyebrow="04 · Отзывы" title="Истории" accent="с воды." tone="media" />
+        <SectionHeader eyebrow="05 · Отзывы" title="Истории" accent="с воды." tone="media" />
       </div>
 
       <div className={styles.highlights}>

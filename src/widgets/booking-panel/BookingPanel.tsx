@@ -2,6 +2,7 @@
 
 import { QuickBooking } from "@/features/booking/QuickBooking";
 import { YACHTS } from "@/shared/content/yachts";
+import { useOverlaySignal } from "@/shared/lib/overlay/useOverlaySignal";
 import { usePanel } from "@/shared/lib/panel/usePanel";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -20,6 +21,9 @@ export function BookingPanel() {
   const { isOpen, mode, payload, close } = usePanel();
   const isOrder = isOpen && mode === "order";
 
+  // Hide global landing-header while booking modal open (DOM signal).
+  useOverlaySignal("booking", isOrder);
+
   const p = (payload ?? {}) as Payload;
   const yacht = p.yacht ? (YACHTS.find((y) => y.slug === p.yacht) ?? null) : null;
   const yachtName = yacht ? yacht.name : "На выбор";
@@ -29,7 +33,6 @@ export function BookingPanel() {
       <Dialog.Portal>
         <Dialog.Overlay className={styles.overlay} />
         <Dialog.Content className={styles.content} aria-describedby={undefined}>
-          <div className={styles.handle} aria-hidden="true" />
           <header className={styles.header}>
             <Dialog.Title className={styles.title}>
               {yacht ? `Бронирование ${yacht.name}` : "Бронирование"}

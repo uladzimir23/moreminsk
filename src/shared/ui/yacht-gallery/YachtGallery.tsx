@@ -1,5 +1,6 @@
 "use client";
 
+import { useOverlaySignal } from "@/shared/lib/overlay/useOverlaySignal";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./YachtGallery.module.scss";
 
@@ -37,6 +38,8 @@ export function YachtGallery({
 }: Props) {
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  // Hide global landing-header while gallery lightbox is open.
+  useOverlaySignal("gallery", zoomed);
   // Aspect ratio of the active photo (read on load) — drives the adaptive frame.
   const [frameAr, setFrameAr] = useState<number | null>(null);
 
