@@ -34,7 +34,7 @@ export function FaqSection() {
   return (
     <section className={styles.section} id="faq">
       <div className={styles.inner}>
-        <SectionHeader eyebrow="05 · Вопросы" title="Коротко о" accent="главном." tone="media" />
+        <SectionHeader eyebrow="06 · Вопросы" title="Коротко о" accent="главном." tone="media" />
 
         <div className={styles.grid}>
           <ul className={styles.list}>

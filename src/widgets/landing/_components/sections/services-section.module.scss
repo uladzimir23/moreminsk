@@ -24,8 +24,6 @@
   overflow: hidden;
   padding: clamp(5rem, 12vh, 8.75rem) 0;
   color: var(--on-media);
-
-  @include section-soft-edges($feather: 6rem);
 }
 
 // ── Head ─────────────────────────────────────────────────────────────────

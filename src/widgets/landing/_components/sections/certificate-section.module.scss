@@ -10,8 +10,6 @@
   overflow: hidden;
   padding-block: clamp(5rem, 12vh, 8.75rem);
   color: var(--on-media);
-
-  @include section-soft-edges($feather: 6rem);
 }
 
 .bg {

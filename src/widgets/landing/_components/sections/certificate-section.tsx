@@ -18,7 +18,7 @@ export function CertificateSection() {
     <section className={styles.section} id="certificate">
       <AmbientBackdrop images={washPhotos} activeIndex={0} className={styles.bg} />
       <div className={styles.inner}>
-        <SectionHeader eyebrow="06 · Подарок" title="Сертификат" accent="на яхту." tone="media" />
+        <SectionHeader eyebrow="04 · Подарок" title="Сертификат" accent="на яхту." tone="media" />
 
         <div className={styles.grid}>
           <figure className={styles.media}>

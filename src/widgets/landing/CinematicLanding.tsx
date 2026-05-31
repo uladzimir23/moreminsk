@@ -24,9 +24,9 @@ export function CinematicLanding() {
         <FleetShowcaseSection />
         <ServicesSection />
         <GallerySection />
+        <CertificateSection />
         <ReviewsStoriesSection />
         <FaqSection />
-        <CertificateSection />
         <BookingCTASection />
         <ContactsSection />
       </div>
