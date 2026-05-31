@@ -1,0 +1,28 @@
+# Build outputs / lock-affecting noise / IDE state — кратно ускоряет docker build
+# context tar и предотвращает попадание dev-секретов внутрь image.
+
+node_modules
+.next
+out
+
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+.env
+.env.local
+.env.*.local
+
+docs
+# infra/ — НЕ игнорируем целиком: Dockerfile копирует infra/nginx/container.conf
+infra/server
+.claude
+.claude-code
+
+bun-error.log
+npm-debug.log*
+*.log
+
+README.md

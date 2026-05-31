@@ -1,0 +1,27 @@
+# Production compose for new.moreminsk.by. Lives in /opt/moreminsk/ on the
+# sync-agency Hetzner box (89.169.54.11). Image из GHCR — pushed CI'ем при
+# push в main (см. .github/workflows/deploy.yml).
+#
+# Host nginx (/etc/nginx/sites-enabled/new.moreminsk.by.conf) проксирует
+# new.moreminsk.by → 127.0.0.1:3004 → этот контейнер.
+#
+# Порт 3004: 3001 = sync-brand-site, 3002 = flex-glass, 3003 = comforthotel.
+
+services:
+  moreminsk:
+    image: ghcr.io/uladzimir23/moreminsk:latest
+    container_name: moreminsk
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3004:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
