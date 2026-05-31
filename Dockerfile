@@ -9,8 +9,10 @@ WORKDIR /app
 
 # Кэш зависимостей отдельно от source — пересборка при правке кода не
 # инвалидирует bun install layer.
+# --ignore-scripts: prepare (lefthook install) требует git и .git/ — в build-
+# контексте их нет и не нужно, hooks только для dev-машин.
 COPY package.json bun.lock* ./
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --ignore-scripts
 
 COPY . .
 
