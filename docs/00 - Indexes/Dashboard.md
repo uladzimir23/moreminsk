@@ -1,10 +1,14 @@
 ---
 type: dashboard
 tags: [dashboard, index]
-updated: 2026-04-17
+updated: 2026-07-02
 ---
 
 # Море Minsk — Dashboard
+
+> **Проект в production:** прод-домен **more-minsk.by** на shared-хостинге клиента (hoster.by, Unix-хостинг). Деплой — статический экспорт + `lftp mirror` через GitHub Actions (см. `infra/README.md`). MVP собран — фазы 3.0–3.4 и 5 закрыты. Остаётся добить контент услуг (фаза 4) и post-MVP-хвост (availability provider, аналитика).
+>
+> _Ранее (до 2026-07-02) прод жил на агентском Hetzner-боксе `89.169.54.11` как Docker (`new.moreminsk.by`) — переехали на инфраструктуру клиента. Docker/VPS-артефакты в репо помечены legacy._
 
 ## Статус фаз
 
@@ -13,17 +17,36 @@ updated: 2026-04-17
 | 0 | Документация и брифинг | ✅ done |
 | 1 | Анализ рынка и SEO-семантика | ✅ done |
 | 2 | Архитектура Next.js + дизайн-система (ADR-001..008) | ✅ done |
-| 3.0 | Foundation (Next.js init, DS, шрифты, providers) | ⏳ next |
-| 3.1 | Core widgets (Appbar + BottomNav + AppPanel + Theme/Locale toggles) | ⏳ planned |
-| 3.2 | Home page MVP (Hero + FleetGrid + yachts content) | ⏳ planned |
-| 3.3 | Первая страница услуги + PriceTable (sticky col) | ⏳ planned |
-| 3.4 | Booking wizard (главная бизнес-фича) | ⏳ planned |
-| 4 | Тиражирование услуг (15+ страниц) | ⏳ planned |
-| 5 | Галерея + Reviews + FAQ | ⏳ planned |
-| 6 | Online-бронирование — availability provider (post-MVP) | ⏳ planned |
-| 7 | Деплой + Search Console + аналитика | ⏳ planned |
+| 3.0 | Foundation (Next.js init, DS, шрифты, providers) | ✅ done |
+| 3.1 | Core widgets (Appbar + BottomNav + AppPanel + Theme/Locale toggles) | ✅ done |
+| 3.2 | Home page MVP (Hero + FleetGrid + yachts content) | ✅ done |
+| 3.3 | Страница услуги + PriceTable (sticky col) | ✅ done |
+| 3.4 | Booking (главная бизнес-фича — унифицированный popup) | ✅ done |
+| 4 | Тиражирование услуг | 🚧 8 из 15+ услуг |
+| 5 | Галерея + Reviews + FAQ | ✅ done |
+| 6 | Online-бронирование — availability provider | ⏳ post-MVP |
+| 7 | Деплой + Search Console + аналитика | 🚧 деплой ✅, аналитика post-MVP |
+| 8 | CMS — PocketBase + кастомная Admin SPA + monorepo (ADR-012..014) | 📐 ADR done, реализация впереди |
 
 > **Правило коммитов:** каждая фаза закрывается серией из 3–8 коммитов (Conventional Commits). Не переходим к следующей фазе, пока текущая не закоммичена и запушена. Подробнее — `.claude/skills/git-workflow.md` → «Фазовые коммиты».
+
+### Что фактически в проде (по коду `src/`)
+
+- **Роуты** (`app/[locale]/`): `fleet` + `fleet/[slug]`, `services` + `services/[slug]`, `ceny`, `galereya`, `otzyvy`, `faq`, `contacts`, `sertifikaty`, `documents`
+- **Услуги (8):** `progulka-parusnaya`, `progulka-motornaya`, `den-rozhdeniya`, `korporativ`, `svidanie`, `devichnik`, `fotosessiya`, `master-klass` — до плана из 15+ ([[../30 - SEO/Карта страниц]]) не хватает ~7
+- **Флот:** 4 яхты (`src/shared/content/yachts.ts`)
+- **Контент-as-code:** yachts, services, certificates, faq, contacts, documents, instagram-stories
+- **i18n:** ru + en — по факту `messages/*.json` (не `.po`, как в CLAUDE.md)
+- **Booking:** унифицированный popup-форма (не live-календарь) — availability provider отложен в фазу 6
+- **Деплой:** GitHub Actions → build статики → `lftp mirror` на hoster.by; Apache-`.htaccess` (HTTPS, www→apex, кэш) в `public/.htaccess`; yandex webmaster verification
+
+### Ближайшие шаги
+
+- [ ] Дописать оставшиеся услуги до 15+ (фаза 4) — контент от заказчика
+- [ ] Заменить 5 заглушек-отзывов реальными после запуска
+- [ ] Подключить аналитику (инфраструктура заложена) — фаза 7
+- [ ] Availability provider для online-брони — фаза 6 (post-MVP)
+- [ ] Синхронизировать `Project Overview` / `Booking Module` с фактической реализацией popup
 
 ## Открытые вопросы (требуют решения заказчика)
 
@@ -79,6 +102,11 @@ updated: 2026-04-17
 - [[../40 - Architecture/42 - ADR/ADR-006 Color Palette + Theme System + Animation Tokens]]
 - [[../40 - Architecture/42 - ADR/ADR-007 Adaptive Panel — Bottom Sheet on Mobile, Side Drawer on Desktop]]
 - [[../40 - Architecture/42 - ADR/ADR-008 Typography System — Manrope Variable]]
+- [[../40 - Architecture/42 - ADR/ADR-009 Editorial Minimalism + Sky-blue Accent]]
+- [[../40 - Architecture/42 - ADR/ADR-011 Editorial Media Token Layer + Shared Section Primitives]]
+- [[../40 - Architecture/42 - ADR/ADR-012 PocketBase Backend + Static Rebuild]] — CMS Phase 2
+- [[../40 - Architecture/42 - ADR/ADR-013 Custom Admin SPA over PocketBase]]
+- [[../40 - Architecture/42 - ADR/ADR-014 Monorepo Restructure]]
 
 ### Дизайн
 - [[../50 - Design/Design System]]
