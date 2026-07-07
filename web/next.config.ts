@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "node:path";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -17,6 +18,13 @@ const nextConfig: NextConfig = {
   },
   trailingSlash: true,
   reactStrictMode: true,
+
+  // Монорепо (ADR-014): приложение живёт в web/. Пиним turbopack.root на этот
+  // каталог, иначе Next инферит root по lockfile выше (кластер ~/Projects) и
+  // раздувает watch-scope. Всё нужное сайту (src, public, messages) внутри web/.
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
 };
 
 export default withNextIntl(nextConfig);

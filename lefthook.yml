@@ -1,23 +1,26 @@
+# Монорепо (ADR-014): конфиг на уровне репо (рядом с .git), а команды выполняются
+# внутри web/. Глобы матчат web/** — коммиты вне web (docs/infra) хуки пропускают.
+# Когда появится admin/ — добавить сюда его typecheck/lint аналогично.
 pre-commit:
   parallel: true
   commands:
     typecheck:
-      glob: "*.{ts,tsx}"
-      run: /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+      glob: "web/**/*.{ts,tsx}"
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
     lint-ts:
-      glob: "*.{ts,tsx,js,mjs}"
-      run: /Users/vladimirmazyrec/.bun/bin/bun run lint -- {staged_files}
+      glob: "web/**/*.{ts,tsx,js,mjs}"
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run lint
     lint-scss:
-      glob: "*.{scss,css}"
-      run: /Users/vladimirmazyrec/.bun/bin/bun run lint:css -- {staged_files}
+      glob: "web/**/*.{scss,css}"
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run lint:css
     format-check:
-      glob: "*.{ts,tsx,js,mjs,json,scss,css}"
-      run: /Users/vladimirmazyrec/.bun/bin/bun run format:check -- {staged_files}
+      glob: "web/**/*.{ts,tsx,js,mjs,json,scss,css}"
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run format:check
 
 pre-push:
   parallel: false
   commands:
     typecheck:
-      run: /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
     build:
-      run: /Users/vladimirmazyrec/.bun/bin/bun run build
+      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run build

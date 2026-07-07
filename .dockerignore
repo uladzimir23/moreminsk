@@ -1,28 +1,38 @@
-# Build outputs / lock-affecting noise / IDE state — кратно ускоряет docker build
-# context tar и предотвращает попадание dev-секретов внутрь image.
+# Build-context hygiene (ADR-014, монорепо): в образ сайта нужны только web/ +
+# infra/nginx/container.conf. Корень тяжёлый (docs-волт, сырьё, tooling) — режем.
 
-node_modules
+# Зависимости и build-выводы (ставятся/генерятся внутри образа)
+**/node_modules
+web/.next
+web/out
 .next
 out
+admin/dist
+pocketbase/pb_data
+pocketbase/pocketbase
 
+# VCS / CI / редакторы / приватка
 .git
 .github
 .vscode
 .idea
-.DS_Store
-
-.env
-.env.local
-.env.*.local
-
-docs
-# infra/ — НЕ игнорируем целиком: Dockerfile копирует infra/nginx/container.conf
-infra/server
 .claude
 .claude-code
 
-bun-error.log
-npm-debug.log*
+# Docs-волт, корневой tooling, сырьё — не нужны для сборки сайта
+docs
+tools
+raw-media
+# infra/ — НЕ игнорируем целиком: Dockerfile копирует infra/nginx/container.conf
+infra/server
+infra/hosting
+
+# env / логи / ОС-мусор
+**/.env
+**/.env.*
 *.log
+bun-error.log
+.DS_Store
 
 README.md
+CLAUDE.md
