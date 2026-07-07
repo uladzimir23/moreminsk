@@ -1,11 +1,13 @@
-# Production compose for new.moreminsk.by. Lives in /opt/moreminsk/ on the
+# Production compose for more-minsk.by. Lives in /opt/moreminsk/ on the
 # sync-agency Hetzner box (89.169.54.11). Image из GHCR — pushed CI'ем при
 # push в main (см. .github/workflows/deploy.yml).
 #
-# Host nginx (/etc/nginx/sites-enabled/new.moreminsk.by.conf) проксирует
-# new.moreminsk.by → 127.0.0.1:3004 → этот контейнер.
+# Host nginx (/etc/nginx/sites-enabled/more-minsk.by.conf) проксирует
+# more-minsk.by (+www) → 127.0.0.1:3004 → этот контейнер.
 #
 # Порт 3004: 3001 = sync-brand-site, 3002 = flex-glass, 3003 = comforthotel.
+# CMS (ADR-012..014, впереди) добавит сюда сервисы moreminsk-admin + moreminsk-pb
+# и vhost admin.more-minsk.by. Пока всё на этом боксе; переезд на клиентский VPS — позже.
 
 services:
   moreminsk:

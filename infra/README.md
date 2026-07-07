@@ -1,29 +1,53 @@
-# Production infra — new.moreminsk.by
+# Production infra — more-minsk.by
 
-Hetzner box `89.169.54.11`, домен `new.moreminsk.by`. Static export → Docker
-nginx image → host nginx reverse proxy → HTTPS.
+Прод-домен **more-minsk.by**. Сейчас весь стек живёт на **агентском Hetzner-боксе
+`89.169.54.11`** (рядом с `istok-*`, `flex-glass`, `comforthotel`) — так решено
+временно, потому что у клиента пока только shared-хостинг (не VPS), а PocketBase
+требует полноценный сервер. Переезд на клиентскую инфру — позже (см. ADR-012).
+
+Сайт — статический экспорт Next.js (`output: "export"`) в Docker-образе
+`nginx:alpine`, за host-nginx (HTTPS + reverse proxy). Деплой: `push в main` →
+GitHub Actions → GHCR → `ssh + docker compose up` на сервере.
 
 ## Files
 
-| Path | Where it lives in prod |
-| --- | --- |
-| `infra/nginx/container.conf` | Внутри Docker image (`/etc/nginx/conf.d/default.conf`) — копируется Dockerfile'ом |
-| `infra/nginx/new.moreminsk.by.conf` | На сервере: `/etc/nginx/sites-enabled/new.moreminsk.by.conf` |
-| `infra/server/docker-compose.yml` | На сервере: `/opt/moreminsk/docker-compose.yml` |
+| Path                              | Где живёт в проде                                                 |
+| --------------------------------- | ----------------------------------------------------------------- |
+| `Dockerfile`                      | Bun install → Node build (`next build`) → `nginx:alpine` с `out/` |
+| `infra/nginx/container.conf`      | Внутри образа (`/etc/nginx/conf.d/default.conf`)                  |
+| `infra/nginx/more-minsk.by.conf`  | На сервере: `/etc/nginx/sites-enabled/more-minsk.by.conf`         |
+| `infra/server/docker-compose.yml` | На сервере: `/opt/moreminsk/docker-compose.yml`                   |
+| `.github/workflows/deploy.yml`    | CI: build+push образа → ssh compose up                            |
+
+Canonical-домен — `NEXT_PUBLIC_SITE_URL` (дефолт `https://more-minsk.by` в
+`src/shared/lib/seo.ts`); питает sitemap/robots/OG/canonical.
+
+## Целевая раскладка на 89.169.54.11 (с CMS, ADR-012..014)
+
+Порты istok заняты 3008/3009/8093 — moreminsk берёт следующие свободные (уточнить
+на сервере при подъёме):
+
+| Сервис            | Роль                 | Порт (host)      | Домен                          |
+| ----------------- | -------------------- | ---------------- | ------------------------------ |
+| `moreminsk`       | сайт (static export) | `127.0.0.1:3004` | `more-minsk.by` (+www)         |
+| `moreminsk-admin` | admin SPA (Vite)     | `127.0.0.1:30xx` | `admin.more-minsk.by/`         |
+| `moreminsk-pb`    | PocketBase           | `127.0.0.1:80xx` | `admin.more-minsk.by/api/ /_/` |
+
+Сейчас поднят только `moreminsk`; `-admin` и `-pb` добавятся в фазах 8.2–8.4.
 
 ## First-time server setup
 
-Один раз вручную. CI после этого подхватит и будет автоматически обновлять.
+### 1. DNS (зона more-minsk.by на hoster.by)
 
-### 1. DNS
-
-На Beget/hoster.by для `moreminsk.by`:
+Удалить Tilda-записи `45.155.60.8` и указать на бокс:
 
 ```
-new IN A 89.169.54.11
+more-minsk.by.        A  89.169.54.11
+www.more-minsk.by.    A  89.169.54.11
+admin.more-minsk.by.  A  89.169.54.11   # для админки/PB (фаза 8.4)
 ```
 
-Пропагация ~5–30 мин. Проверка: `dig +short new.moreminsk.by`.
+Проверка: `dig +short more-minsk.by` → `89.169.54.11`.
 
 ### 2. Каталог проекта на сервере
 
@@ -32,57 +56,44 @@ ssh deploy@89.169.54.11 'mkdir -p /opt/moreminsk'
 scp infra/server/docker-compose.yml deploy@89.169.54.11:/opt/moreminsk/
 ```
 
-### 3. nginx vhost + Let's Encrypt cert
+### 3. nginx vhost + Let's Encrypt
 
 ```bash
-# Скопировать vhost (как root)
-scp infra/nginx/new.moreminsk.by.conf root@89.169.54.11:/etc/nginx/sites-enabled/
-
+scp infra/nginx/more-minsk.by.conf root@89.169.54.11:/etc/nginx/sites-enabled/
 ssh root@89.169.54.11 '
-  nginx -t &&
-  systemctl reload nginx &&
-  certbot --nginx -d new.moreminsk.by --redirect --non-interactive --agree-tos -m vova9763@gmail.com
+  nginx -t && systemctl reload nginx &&
+  certbot --nginx -d more-minsk.by -d www.more-minsk.by --redirect \
+    --non-interactive --agree-tos -m vova9763@gmail.com
 '
 ```
 
-certbot перепишет `new.moreminsk.by.conf` — добавит 443 server + redirect 80→443.
+### 4. Первый деплой
 
-### 4. Первый запуск контейнера
-
-CI ещё ничего не пушил. Можно либо подождать первый push в main, либо запулить
-существующий образ если он уже есть.
-
-```bash
-ssh deploy@89.169.54.11 '
-  cd /opt/moreminsk &&
-  docker login ghcr.io  # personal access token с read:packages scope
-  docker compose pull &&
-  docker compose up -d
-'
-```
-
-После — push в `main` → CI build → push image → ssh + `docker compose pull && up -d`.
+Push в `main` (или Actions → Run) → CI соберёт образ и поднимет контейнер.
 
 ## CI secrets
 
-Установлены через `gh secret set`:
+| Secret           | Что                                  |
+| ---------------- | ------------------------------------ |
+| `DEPLOY_SSH_KEY` | Приватный ключ `deploy@89.169.54.11` |
 
-| Secret | Что |
-| --- | --- |
-| `DEPLOY_SSH_KEY` | Приватный ключ для `deploy@89.169.54.11`. Pubkey в `/home/deploy/.ssh/authorized_keys`. |
+GHCR — по `GITHUB_TOKEN` (встроенный).
 
-GHCR использует `GITHUB_TOKEN` (автоматический) — отдельный токен не нужен,
-package будет привязан к репо.
+## Запарковано: деплой на shared-хостинг клиента (hoster.by)
 
-## Rollback
+Для **будущего переезда** на клиентскую инфру подготовлено:
 
-```bash
-ssh deploy@89.169.54.11 '
-  cd /opt/moreminsk &&
-  docker pull ghcr.io/uladzimir23/moreminsk:<previous-sha> &&
-  docker tag ghcr.io/uladzimir23/moreminsk:<previous-sha> ghcr.io/uladzimir23/moreminsk:latest &&
-  docker compose up -d
-'
-```
+- `infra/hosting/.htaccess` — Apache-конфиг (HTTPS, www→apex, 404, кэш, gzip) для
+  раздачи статики на shared-хостинге; при переезде копируется в `public/` (или
+  postbuild) → попадает в `out/`.
+- Вариант деплоя через `lftp mirror` по FTP(S) — в git history (ветка была).
 
-CI тегает каждый push двумя тегами: `latest` и `<sha>` — для быстрого rollback.
+Данные клиентского shared-хостинга (услуга hoster.by 128622): FTP `vh122.hoster.by`,
+IPv4 `93.125.99.133`, SSH-порт 22, логин `xn80apgg`. Для PocketBase потребуется
+клиентский **VPS** (hoster.by «Облачные решения»), а не shared — на shared PB не
+запускается.
+
+## Legacy
+
+До 2026-07-02 сайт жил на этом же боксе под доменом `new.moreminsk.by`. Переезд на
+`more-minsk.by` — переименование vhost + DNS, образ/compose те же.

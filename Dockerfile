@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 # Multi-stage build: Bun → Next.js static export → nginx:alpine. Используется
 # CI на push в main: `docker build` → push в GHCR → ssh deploy на сервере.
-# basePath НЕ задаём — production-домен new.moreminsk.by без subpath.
+# basePath НЕ задаём — production-домен more-minsk.by без subpath.
 
 # ─── Stage 1a: deps (bun install — uses bun.lock for fidelity) ──────────────
 FROM oven/bun:1.2-alpine AS deps
