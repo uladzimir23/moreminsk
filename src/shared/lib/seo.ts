@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 // Pages preview (which lives under a /moreminsk basePath we deliberately omit
 // here). No trailing slash.
 export const SITE = {
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://moreminsk.by").replace(/\/+$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://more-minsk.by").replace(/\/+$/, ""),
   name: "Море Minsk",
   alternateName: "ЯхтыМинска",
   defaultLocale: "ru",
