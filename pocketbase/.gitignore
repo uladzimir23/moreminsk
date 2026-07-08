@@ -1,0 +1,5 @@
+# Локальный бинарь PocketBase — не коммитим (ADR-012, качается download-pb.sh).
+pocketbase
+pb.zip
+# Локальные данные (SQLite + загруженные файлы) — только на сервере в volume.
+pb_data/
