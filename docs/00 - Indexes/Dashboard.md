@@ -37,9 +37,10 @@ updated: 2026-07-02
 | 8.2a PB: коллекции + миграции + setup/roles | ✅ done (проверено на локальном PB) |
 | 8.2b seed + build-time export снапшота | ✅ done |
 | 8.4-prep compose/vhost/CI для PB | ✅ done (репо-часть) |
-| 8.4 деплой PB на VPS (DNS admin, certbot, bootstrap) | ⏳ нужны серверные шаги |
+| 8.3 кастомная admin-SPA (`admin/`) | ✅ done (build+E2E правил зелёные; визуальный прогон UI — на стейдже) |
+| 8.4-prep2 admin в compose + CI-образ | ✅ done |
+| 8.4 деплой стека на VPS (DNS admin, certbot, bootstrap) | ⏳ нужны серверные шаги |
 | 8.2b флип лоадеров + формы→leads | ⏳ после деплоя PB |
-| 8.3 кастомная admin-SPA (`admin/`) | ⏳ planned |
 
 > **Правило коммитов:** каждая фаза закрывается серией из 3–8 коммитов (Conventional Commits). Не переходим к следующей фазе, пока текущая не закоммичена и запушена. Подробнее — `.claude/skills/git-workflow.md` → «Фазовые коммиты».
 
