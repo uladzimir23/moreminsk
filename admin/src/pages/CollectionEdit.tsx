@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Field } from "../components/Field";
+import { PhotoUploader } from "../components/PhotoUploader";
 import { collectionByName, type CollectionCfg } from "../lib/collections";
 import { pb } from "../lib/pb";
 
@@ -12,7 +13,11 @@ function toForm(cfg: CollectionCfg, rec: Rec | null): Rec {
   for (const f of cfg.fields) {
     const v = rec?.[f.name];
     if (f.type === "group") out[f.name] = (v ?? {}) as Rec;
-    else if (f.type === "objectList" || f.type === "stringList")
+    else if (
+      f.type === "objectList" ||
+      f.type === "stringList" ||
+      f.type === "photos"
+    )
       out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === "bool") out[f.name] = rec ? Boolean(v) : f.name === "published";
     else if (f.type === "number") out[f.name] = v ?? null;
@@ -26,6 +31,7 @@ function toForm(cfg: CollectionCfg, rec: Rec | null): Rec {
 function toPayload(cfg: CollectionCfg, form: Rec): Rec {
   const out: Rec = {};
   for (const f of cfg.fields) {
+    if (f.type === "photos") continue; // управляется PhotoUploader напрямую
     const v = form[f.name];
     if (f.type === "stringList")
       out[f.name] = (Array.isArray(v) ? v : [])
@@ -117,14 +123,29 @@ export function CollectionEdit() {
         )}
       </div>
       <div className="form">
-        {cfg.fields.map((f) => (
-          <Field
-            key={f.name}
-            spec={f}
-            value={form[f.name]}
-            onChange={(v) => setField(f.name, v)}
-          />
-        ))}
+        {cfg.fields.map((f) =>
+          f.type === "photos" ? (
+            <div className="field" key={f.name}>
+              <span className="lbl">{f.label}</span>
+              {recordId ? (
+                <PhotoUploader
+                  collection={name}
+                  recordId={recordId}
+                  initial={(form[f.name] as string[]) ?? []}
+                />
+              ) : (
+                <p className="note">Сохраните запись — потом появится загрузка фото.</p>
+              )}
+            </div>
+          ) : (
+            <Field
+              key={f.name}
+              spec={f}
+              value={form[f.name]}
+              onChange={(v) => setField(f.name, v)}
+            />
+          ),
+        )}
       </div>
       {error && <p className={error.startsWith("✓") ? "ok" : "error"}>{error}</p>}
       <div className="actions">

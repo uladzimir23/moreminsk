@@ -10,7 +10,8 @@ export type FieldType =
   | "select"
   | "stringList"
   | "group"
-  | "objectList";
+  | "objectList"
+  | "photos";
 
 export type FieldSpec = {
   name: string;
@@ -71,6 +72,7 @@ export const COLLECTIONS: CollectionCfg[] = [
       { name: "pricePerHour", label: "Цена/час, BYN", type: "number", required: true },
       { name: "minHours", label: "Минимум часов", type: "number" },
       { name: "description", label: "Описание", type: "textarea" },
+      { name: "photos", label: "Фотографии", type: "photos" },
       { name: "features", label: "Что входит", type: "stringList" },
       { name: "suitableFor", label: "Подходит для (теги)", type: "stringList" },
       {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { collectionByName } from "../lib/collections";
+import { createDraft } from "../lib/draft";
 import { pb } from "../lib/pb";
 import { CollectionEdit } from "./CollectionEdit";
 
@@ -20,8 +21,21 @@ function cell(col: string, v: unknown) {
 export function CollectionList() {
   const { name = "" } = useParams();
   const cfg = collectionByName(name);
+  const nav = useNavigate();
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+
+  async function onCreate() {
+    if (!cfg) return;
+    setCreating(true);
+    try {
+      const id = await createDraft(cfg);
+      nav(`/c/${name}/${id}`);
+    } finally {
+      setCreating(false);
+    }
+  }
 
   useEffect(() => {
     if (!cfg || cfg.singleton) return;
@@ -40,9 +54,9 @@ export function CollectionList() {
     <div className="list">
       <div className="list-head">
         <h1>{cfg.label}</h1>
-        <Link className="btn" to={`/c/${name}/new`}>
-          + Создать
-        </Link>
+        <button className="btn" onClick={onCreate} disabled={creating}>
+          {creating ? "…" : "+ Создать"}
+        </button>
       </div>
       {loading ? (
         <p>Загрузка…</p>

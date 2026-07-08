@@ -51,6 +51,16 @@ const AUTODATE = [
   { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
 ];
 
+// File-поле для загрузки фото (ADR-013). thumbs — превью для админки.
+const FILE = (name: string, maxSelect = 12) => ({
+  name,
+  type: "file",
+  maxSelect,
+  maxSize: 5_242_880,
+  mimeTypes: ["image/jpeg", "image/png", "image/webp", "image/avif"],
+  thumbs: ["320x320"],
+});
+
 // Контентные коллекции: публичный read (билд читает без авторизации), запись —
 // суперюзер через API (write-правила навешивает roles.ts для editor). leads —
 // особый случай: публичный create (сабмит формы), read — только авторизованным.
@@ -73,6 +83,7 @@ const COLLECTIONS = [
       T("mainImage"),
       T("video"),
       JSON_("specs"),
+      FILE("photos"),
       SELECT("badge", ["flagship", "new"], false),
       NUM("order"),
       BOOL("published"),
