@@ -26,7 +26,20 @@ updated: 2026-07-02
 | 5 | Галерея + Reviews + FAQ | ✅ done |
 | 6 | Online-бронирование — availability provider | ⏳ post-MVP |
 | 7 | Деплой + Search Console + аналитика | 🚧 деплой ✅, аналитика post-MVP |
-| 8 | CMS — PocketBase + кастомная Admin SPA + monorepo (ADR-012..014) | 📐 ADR done, реализация впереди |
+| 8 | CMS — PocketBase + Admin SPA + monorepo (ADR-012..014) | 🚧 backend+monorepo done; admin SPA + деплой PB впереди |
+
+**Фаза 8 — прогресс (ветка `feat/cms-pocketbase`):**
+
+| Подфаза | Статус |
+|---------|--------|
+| 8.0 инфра-развилка (домен, стек на VPS, hoster.by запаркован) | ✅ done |
+| 8.1 монорепо → `web/` | ✅ done (билд зелёный) |
+| 8.2a PB: коллекции + миграции + setup/roles | ✅ done (проверено на локальном PB) |
+| 8.2b seed + build-time export снапшота | ✅ done |
+| 8.4-prep compose/vhost/CI для PB | ✅ done (репо-часть) |
+| 8.4 деплой PB на VPS (DNS admin, certbot, bootstrap) | ⏳ нужны серверные шаги |
+| 8.2b флип лоадеров + формы→leads | ⏳ после деплоя PB |
+| 8.3 кастомная admin-SPA (`admin/`) | ⏳ planned |
 
 > **Правило коммитов:** каждая фаза закрывается серией из 3–8 коммитов (Conventional Commits). Не переходим к следующей фазе, пока текущая не закоммичена и запушена. Подробнее — `.claude/skills/git-workflow.md` → «Фазовые коммиты».
 
