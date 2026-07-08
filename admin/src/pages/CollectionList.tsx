@@ -6,7 +6,11 @@ import { CollectionEdit } from "./CollectionEdit";
 
 type Row = Record<string, unknown> & { id: string };
 
-function cell(v: unknown) {
+function cell(col: string, v: unknown) {
+  if (col === "published")
+    return (
+      <span className={`pill ${v ? "on" : "off"}`}>{v ? "да" : "нет"}</span>
+    );
   if (v === true) return "✓";
   if (v === false) return "—";
   if (Array.isArray(v)) return v.join(", ");
@@ -56,7 +60,7 @@ export function CollectionList() {
             {rows.map((r) => (
               <tr key={r.id}>
                 {cfg.listColumns.map((c) => (
-                  <td key={c}>{cell(r[c])}</td>
+                  <td key={c}>{cell(c, r[c])}</td>
                 ))}
                 <td className="right">
                   <Link to={`/c/${name}/${r.id}`}>Править</Link>

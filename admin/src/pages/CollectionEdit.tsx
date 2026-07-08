@@ -6,13 +6,14 @@ import { pb } from "../lib/pb";
 
 type Rec = Record<string, unknown>;
 
-// Запись PB → значения формы (json → строка, списки → массив, bool → boolean).
+// Запись PB → значения формы (объекты/списки как есть, bool → boolean).
 function toForm(cfg: CollectionCfg, rec: Rec | null): Rec {
   const out: Rec = {};
   for (const f of cfg.fields) {
     const v = rec?.[f.name];
-    if (f.type === "json") out[f.name] = JSON.stringify(v ?? null, null, 2);
-    else if (f.type === "stringList") out[f.name] = Array.isArray(v) ? v : [];
+    if (f.type === "group") out[f.name] = (v ?? {}) as Rec;
+    else if (f.type === "objectList" || f.type === "stringList")
+      out[f.name] = Array.isArray(v) ? v : [];
     else if (f.type === "bool") out[f.name] = rec ? Boolean(v) : f.name === "published";
     else if (f.type === "number") out[f.name] = v ?? null;
     else out[f.name] = v ?? "";
@@ -20,13 +21,13 @@ function toForm(cfg: CollectionCfg, rec: Rec | null): Rec {
   return out;
 }
 
-// Значения формы → payload PB (json парсим, пустые строки списка убираем).
+// Значения формы → payload PB (пустые строки в списках убираем; объекты как есть,
+// неотредактированные ключи сохранены мержем в Field).
 function toPayload(cfg: CollectionCfg, form: Rec): Rec {
   const out: Rec = {};
   for (const f of cfg.fields) {
     const v = form[f.name];
-    if (f.type === "json") out[f.name] = v ? JSON.parse(String(v)) : null;
-    else if (f.type === "stringList")
+    if (f.type === "stringList")
       out[f.name] = (Array.isArray(v) ? v : [])
         .map((s) => String(s).trim())
         .filter(Boolean);

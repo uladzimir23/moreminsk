@@ -7,7 +7,9 @@ export function Layout() {
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand">Море Minsk</div>
+        <div className="brand">
+          Море<b>Minsk</b>
+        </div>
         <nav>
           {COLLECTIONS.map((c) => (
             <NavLink key={c.name} to={`/c/${c.name}`}>
