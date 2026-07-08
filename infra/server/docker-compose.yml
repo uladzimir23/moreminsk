@@ -1,13 +1,20 @@
 # Production compose for more-minsk.by. Lives in /opt/moreminsk/ on the
-# sync-agency Hetzner box (89.169.54.11). Image из GHCR — pushed CI'ем при
+# sync-agency Hetzner box (89.169.54.11). Образы из GHCR — pushed CI'ем при
 # push в main (см. .github/workflows/deploy.yml).
 #
-# Host nginx (/etc/nginx/sites-enabled/more-minsk.by.conf) проксирует
-# more-minsk.by (+www) → 127.0.0.1:3004 → этот контейнер.
+# Host nginx:
+#   more-minsk.by (+www)  → 127.0.0.1:3004 → moreminsk       (сайт, static)
+#   admin.more-minsk.by/  → 127.0.0.1:3005 → moreminsk-admin (SPA, фаза 8.3)
+#   admin.more-minsk.by/api/ /_/ → 127.0.0.1:8094 → moreminsk-pb (PocketBase)
+# vhosts: infra/nginx/more-minsk.by.conf + infra/nginx/admin.more-minsk.by.conf
 #
-# Порт 3004: 3001 = sync-brand-site, 3002 = flex-glass, 3003 = comforthotel.
-# CMS (ADR-012..014, впереди) добавит сюда сервисы moreminsk-admin + moreminsk-pb
-# и vhost admin.more-minsk.by. Пока всё на этом боксе; переезд на клиентский VPS — позже.
+# Порты на боксе: 3001 sync-brand-site, 3002 flex-glass, 3003 comforthotel,
+# 3008/3009 istok(+admin); 8090-8093 заняты PB других стеков. moreminsk: сайт
+# 3004, admin 3005, PB 8094 — уточнить актуальную занятость на сервере.
+#
+# Bootstrap PB после первого up (одноразово, значения — на сервере, не в git):
+#   docker exec -it moreminsk-pb /pb/pocketbase superuser upsert <email> <pass>
+#   # затем editor — из web/: PB_URL=… EDITOR_EMAIL=… EDITOR_PASS=… bun run pb:roles
 
 services:
   moreminsk:
@@ -27,3 +34,40 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  moreminsk-pb:
+    image: ghcr.io/uladzimir23/moreminsk-pb:latest
+    container_name: moreminsk-pb
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8094:8090" # host-nginx: admin.more-minsk.by /api/ /_/ → сюда
+    volumes:
+      - moreminsk_pb_data:/pb/pb_data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8090/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Admin SPA — добавится в фазе 8.3 (образ ghcr.io/uladzimir23/moreminsk-admin).
+  # moreminsk-admin:
+  #   image: ghcr.io/uladzimir23/moreminsk-admin:latest
+  #   container_name: moreminsk-admin
+  #   restart: unless-stopped
+  #   ports:
+  #     - "127.0.0.1:3005:80"
+  #   healthcheck:
+  #     test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     start_period: 15s
+  #     retries: 3
+
+volumes:
+  moreminsk_pb_data:

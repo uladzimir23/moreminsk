@@ -69,7 +69,38 @@ ssh root@89.169.54.11 '
 
 ### 4. Первый деплой
 
-Push в `main` (или Actions → Run) → CI соберёт образ и поднимет контейнер.
+Push в `main` (или Actions → Run) → CI соберёт образы (сайт + PocketBase) и
+поднимет контейнеры.
+
+### 5. PocketBase — vhost admin.more-minsk.by + bootstrap (ADR-012)
+
+DNS `admin.more-minsk.by → 89.169.54.11` (шаг 1). Vhost + сертификат:
+
+```bash
+scp infra/nginx/admin.more-minsk.by.conf root@89.169.54.11:/etc/nginx/sites-enabled/
+ssh root@89.169.54.11 '
+  nginx -t && systemctl reload nginx &&
+  certbot --nginx -d admin.more-minsk.by --redirect \
+    --non-interactive --agree-tos -m vova9763@gmail.com
+'
+```
+
+После того как контейнер `moreminsk-pb` поднят (первый деплой) — bootstrap
+суперюзера и заведение редактора (значения не в git):
+
+```bash
+ssh deploy@89.169.54.11 \
+  'docker exec -it moreminsk-pb /pb/pocketbase superuser upsert <email> <pass>'
+# editor — из web/ против прод-PB:
+#   PB_URL=https://admin.more-minsk.by PB_ADMIN_EMAIL=<email> PB_ADMIN_PASS=<pass> \
+#   EDITOR_EMAIL=<editor> EDITOR_PASS=<pass> bun run pb:roles
+```
+
+Схема применяется миграциями из образа (`pb_migrations`). Наполнение контентом —
+`bun run pb:seed` против прод-PB (один раз) либо правки редактором в `/_/` / SPA.
+
+До появления кастомной admin-SPA (фаза 8.3) `admin.more-minsk.by/` вернёт 502 —
+это ок; редактор пока пользуется сырым PB по `admin.more-minsk.by/_/`.
 
 ## CI secrets
 

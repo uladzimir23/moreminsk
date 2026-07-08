@@ -12,6 +12,7 @@ concurrency:
 
 env:
   IMAGE: ghcr.io/${{ github.repository_owner }}/moreminsk
+  IMAGE_PB: ghcr.io/${{ github.repository_owner }}/moreminsk-pb
 
 jobs:
   build-and-push:
@@ -36,6 +37,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Сайт (static export) — build-контекст = корень, Dockerfile корневой.
       - uses: docker/build-push-action@v6
         with:
           context: .
@@ -47,6 +49,17 @@ jobs:
           # gha cache — ускоряет повторные сборки в ~3 раза за счёт layer-reuse.
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      # PocketBase (ADR-012) — build-контекст = pocketbase/, мигра­ции в образе.
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./pocketbase
+          push: true
+          tags: |
+            ${{ env.IMAGE_PB }}:latest
+            ${{ env.IMAGE_PB }}:${{ steps.meta.outputs.sha }}
+          cache-from: type=gha,scope=pb
+          cache-to: type=gha,mode=max,scope=pb
 
   deploy:
     needs: build-and-push
