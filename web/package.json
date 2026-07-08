@@ -16,7 +16,9 @@
     "format:check": "prettier --check .",
     "clean": "rm -rf .next out",
     "pb:setup": "bun scripts/pb/setup.ts",
-    "pb:roles": "bun scripts/pb/roles.ts"
+    "pb:roles": "bun scripts/pb/roles.ts",
+    "pb:seed": "bun scripts/pb/seed.ts",
+    "pb:export": "bun scripts/pb/export.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

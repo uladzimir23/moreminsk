@@ -5,3 +5,4 @@ public/
 bun.lock
 next-env.d.ts
 docs/
+.pb/

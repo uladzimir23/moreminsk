@@ -16,6 +16,9 @@ build/
 dist/
 .turbo/
 
+# PocketBase build-time snapshot (генерится export.ts из PB на билде)
+.pb/
+
 # Production
 *.tsbuildinfo
 next-env.d.ts
