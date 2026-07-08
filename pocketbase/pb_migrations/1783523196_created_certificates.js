@@ -1,7 +1,7 @@
 /// <reference path="../pb_data/types.d.ts" />
 migrate((app) => {
   const collection = new Collection({
-    "createRule": "",
+    "createRule": null,
     "deleteRule": null,
     "fields": [
       {
@@ -19,81 +19,11 @@ migrate((app) => {
         "type": "text"
       },
       {
-        "autogeneratePattern": "",
         "hidden": false,
-        "id": "text1579384326",
-        "max": 0,
-        "min": 0,
-        "name": "name",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "autogeneratePattern": "",
-        "hidden": false,
-        "id": "text1146066909",
-        "max": 0,
-        "min": 0,
-        "name": "phone",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "autogeneratePattern": "",
-        "hidden": false,
-        "id": "text3785202386",
-        "max": 0,
-        "min": 0,
-        "name": "service",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "autogeneratePattern": "",
-        "hidden": false,
-        "id": "text27771958",
-        "max": 0,
-        "min": 0,
-        "name": "yacht",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "autogeneratePattern": "",
-        "hidden": false,
-        "id": "text2862495610",
-        "max": 0,
-        "min": 0,
-        "name": "date",
-        "pattern": "",
-        "presentable": false,
-        "primaryKey": false,
-        "required": false,
-        "system": false,
-        "type": "text"
-      },
-      {
-        "hidden": false,
-        "id": "number1293008050",
+        "id": "number19864635",
         "max": null,
         "min": null,
-        "name": "guests",
+        "name": "priceFrom",
         "onlyInt": false,
         "presentable": false,
         "required": false,
@@ -103,10 +33,10 @@ migrate((app) => {
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "text2490651244",
+        "id": "text4041497513",
         "max": 0,
         "min": 0,
-        "name": "comment",
+        "name": "season",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
@@ -117,10 +47,10 @@ migrate((app) => {
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "text1602912115",
+        "id": "text680616395",
         "max": 0,
         "min": 0,
-        "name": "source",
+        "name": "lead",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
@@ -130,33 +60,78 @@ migrate((app) => {
       },
       {
         "hidden": false,
-        "id": "select2063623452",
-        "maxSelect": 1,
-        "name": "status",
+        "id": "json701925182",
+        "maxSize": 2000000,
+        "name": "offer",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "select",
-        "values": [
-          "new",
-          "contacted",
-          "closed"
-        ]
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json142008537",
+        "maxSize": 2000000,
+        "name": "photos",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json61959770",
+        "maxSize": 2000000,
+        "name": "photoAlts",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json3909055948",
+        "maxSize": 2000000,
+        "name": "faq",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
       }
     ],
-    "id": "pbc_3705076665",
+    "id": "pbc_3669933913",
     "indexes": [],
-    "listRule": null,
-    "name": "leads",
+    "listRule": "",
+    "name": "certificates",
     "system": false,
     "type": "base",
     "updateRule": null,
-    "viewRule": null
+    "viewRule": ""
   });
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_3705076665");
+  const collection = app.findCollectionByNameOrId("pbc_3669933913");
 
   return app.delete(collection);
 })

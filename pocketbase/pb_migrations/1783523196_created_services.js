@@ -35,10 +35,10 @@ migrate((app) => {
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "text724990059",
+        "id": "text3173249898",
         "max": 0,
         "min": 0,
-        "name": "title",
+        "name": "h1",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
@@ -49,10 +49,38 @@ migrate((app) => {
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "text680616395",
+        "id": "text3608537569",
         "max": 0,
         "min": 0,
-        "name": "lead",
+        "name": "shortTitle",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3056451175",
+        "max": 0,
+        "min": 0,
+        "name": "utp",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1704208859",
+        "max": 0,
+        "min": 0,
+        "name": "icon",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
@@ -62,11 +90,23 @@ migrate((app) => {
       },
       {
         "hidden": false,
-        "id": "json3100581095",
-        "maxSize": 2000000,
-        "name": "paragraphs",
+        "id": "number599433253",
+        "max": null,
+        "min": null,
+        "name": "fromPrice",
+        "onlyInt": false,
         "presentable": false,
-        "required": true,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "json1808735807",
+        "maxSize": 2000000,
+        "name": "suitableYachts",
+        "presentable": false,
+        "required": false,
         "system": false,
         "type": "json"
       },
@@ -90,14 +130,34 @@ migrate((app) => {
         "required": false,
         "system": false,
         "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
       }
     ],
-    "id": "pbc_3332084752",
+    "id": "pbc_863811952",
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_documents_slug` ON `documents` (`slug`)"
+      "CREATE UNIQUE INDEX `idx_services_slug` ON `services` (`slug`)"
     ],
     "listRule": "",
-    "name": "documents",
+    "name": "services",
     "system": false,
     "type": "base",
     "updateRule": null,
@@ -106,7 +166,7 @@ migrate((app) => {
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_3332084752");
+  const collection = app.findCollectionByNameOrId("pbc_863811952");
 
   return app.delete(collection);
 })

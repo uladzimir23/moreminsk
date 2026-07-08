@@ -19,28 +19,30 @@ migrate((app) => {
         "type": "text"
       },
       {
+        "autogeneratePattern": "",
         "hidden": false,
-        "id": "number19864635",
-        "max": null,
-        "min": null,
-        "name": "priceFrom",
-        "onlyInt": false,
+        "id": "text2560465762",
+        "max": 0,
+        "min": 0,
+        "name": "slug",
+        "pattern": "",
         "presentable": false,
-        "required": false,
+        "primaryKey": false,
+        "required": true,
         "system": false,
-        "type": "number"
+        "type": "text"
       },
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "text4041497513",
+        "id": "text724990059",
         "max": 0,
         "min": 0,
-        "name": "season",
+        "name": "title",
         "pattern": "",
         "presentable": false,
         "primaryKey": false,
-        "required": false,
+        "required": true,
         "system": false,
         "type": "text"
       },
@@ -60,49 +62,62 @@ migrate((app) => {
       },
       {
         "hidden": false,
-        "id": "json701925182",
+        "id": "json3100581095",
         "maxSize": 2000000,
-        "name": "offer",
+        "name": "paragraphs",
         "presentable": false,
-        "required": false,
+        "required": true,
         "system": false,
         "type": "json"
       },
       {
         "hidden": false,
-        "id": "json142008537",
-        "maxSize": 2000000,
-        "name": "photos",
+        "id": "number4113142680",
+        "max": null,
+        "min": null,
+        "name": "order",
+        "onlyInt": false,
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "json"
+        "type": "number"
       },
       {
         "hidden": false,
-        "id": "json61959770",
-        "maxSize": 2000000,
-        "name": "photoAlts",
+        "id": "bool1748787223",
+        "name": "published",
         "presentable": false,
         "required": false,
         "system": false,
-        "type": "json"
+        "type": "bool"
       },
       {
         "hidden": false,
-        "id": "json3909055948",
-        "maxSize": 2000000,
-        "name": "faq",
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
         "presentable": false,
-        "required": false,
         "system": false,
-        "type": "json"
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
       }
     ],
-    "id": "pbc_3669933913",
-    "indexes": [],
+    "id": "pbc_3332084752",
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_documents_slug` ON `documents` (`slug`)"
+    ],
     "listRule": "",
-    "name": "certificates",
+    "name": "documents",
     "system": false,
     "type": "base",
     "updateRule": null,
@@ -111,7 +126,7 @@ migrate((app) => {
 
   return app.save(collection);
 }, (app) => {
-  const collection = app.findCollectionByNameOrId("pbc_3669933913");
+  const collection = app.findCollectionByNameOrId("pbc_3332084752");
 
   return app.delete(collection);
 })

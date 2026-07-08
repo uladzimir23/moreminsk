@@ -44,6 +44,13 @@ const SELECT = (name: string, values: string[], required = true) => ({
   values,
 });
 
+// PB 0.23+: created/updated не автоматические — добавляем autodate явно, иначе
+// sort по created/updated падает (напр. инбокс заявок sort "-created").
+const AUTODATE = [
+  { name: "created", type: "autodate", onCreate: true, onUpdate: false },
+  { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
+];
+
 // Контентные коллекции: публичный read (билд читает без авторизации), запись —
 // суперюзер через API (write-правила навешивает roles.ts для editor). leads —
 // особый случай: публичный create (сабмит формы), read — только авторизованным.
@@ -194,6 +201,7 @@ async function main() {
     }
     await pb.collections.create({
       ...col,
+      fields: [...col.fields, ...AUTODATE],
       listRule: "", // публичный read для билда
       viewRule: "",
       createRule: null, // запись — суперюзер/editor (roles.ts)
@@ -210,6 +218,7 @@ async function main() {
   if (leadsExists.totalItems === 0) {
     await pb.collections.create({
       ...LEADS,
+      fields: [...LEADS.fields, ...AUTODATE],
       createRule: "", // любой может оставить заявку
       listRule: null, // читать — только авторизованным (roles.ts откроет editor)
       viewRule: null,
