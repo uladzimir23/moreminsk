@@ -16,6 +16,9 @@ pre-commit:
     format-check:
       glob: "web/**/*.{ts,tsx,js,mjs,json,scss,css}"
       run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run format:check
+    typecheck-admin:
+      glob: "admin/**/*.{ts,tsx}"
+      run: cd admin && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
 
 pre-push:
   parallel: false

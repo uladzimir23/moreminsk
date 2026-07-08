@@ -55,19 +55,23 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # Admin SPA — добавится в фазе 8.3 (образ ghcr.io/uladzimir23/moreminsk-admin).
-  # moreminsk-admin:
-  #   image: ghcr.io/uladzimir23/moreminsk-admin:latest
-  #   container_name: moreminsk-admin
-  #   restart: unless-stopped
-  #   ports:
-  #     - "127.0.0.1:3005:80"
-  #   healthcheck:
-  #     test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
-  #     interval: 30s
-  #     timeout: 5s
-  #     start_period: 15s
-  #     retries: 3
+  moreminsk-admin:
+    image: ghcr.io/uladzimir23/moreminsk-admin:latest
+    container_name: moreminsk-admin
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3005:80" # host-nginx: admin.more-minsk.by/ → сюда
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   moreminsk_pb_data:
