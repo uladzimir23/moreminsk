@@ -24,22 +24,22 @@ jobs:
     outputs:
       sha: ${{ steps.meta.outputs.sha }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - id: meta
         run: echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       # GHCR login via встроенный GITHUB_TOKEN — image привязывается к репо.
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Сайт (static export) — build-контекст = корень, Dockerfile корневой.
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           push: true
@@ -52,7 +52,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       # PocketBase (ADR-012) — build-контекст = pocketbase/, мигра­ции в образе.
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: ./pocketbase
           push: true
@@ -63,7 +63,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=pb
 
       # Admin SPA (ADR-013) — build-контекст = admin/.
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: ./admin
           push: true
@@ -80,7 +80,7 @@ jobs:
       packages: read
     steps:
       - name: SSH + compose pull/up
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GHCR_USER: ${{ github.actor }}
