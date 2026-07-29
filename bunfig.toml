@@ -1,0 +1,5 @@
+[install]
+# Классический hoisted-линкер (npm-стиль): все deps в apps/*/node_modules реально,
+# без symlink через .bun. Нужно для Turbopack (Next 16): его workspace-root детект
+# ломается на isolated-линкере — не находит next из apps/site/src/app.
+linker = "hoisted"

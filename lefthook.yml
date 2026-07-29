@@ -1,28 +1,28 @@
-# Монорепо: конфиг на уровне репо. Команды выполняются в подпапках apps/*
-# через `bun --cwd`. Глобы отсекают коммиты вне apps/** (docs, infra, pocketbase).
+# Монорепо: конфиг на уровне репо. Root-скрипты (bun run typecheck:site и т.п.)
+# делегируют в apps/*. Глобы отсекают коммиты вне apps/** (docs, infra, pocketbase).
 pre-commit:
   parallel: true
   commands:
     typecheck:
       glob: "apps/site/**/*.{ts,tsx}"
-      run: bun --cwd apps/site run typecheck
+      run: bun run typecheck:site
     lint-ts:
       glob: "apps/site/**/*.{ts,tsx,js,mjs}"
-      run: bun --cwd apps/site run lint
+      run: bun run lint
     lint-scss:
       glob: "apps/site/**/*.{scss,css}"
-      run: bun --cwd apps/site run lint:css
+      run: bun run lint:css
     format-check:
       glob: "apps/site/**/*.{ts,tsx,js,mjs,json,scss,css}"
-      run: bun --cwd apps/site run format:check
+      run: bun run format:check
     typecheck-admin:
       glob: "apps/admin/**/*.{ts,tsx}"
-      run: bun --cwd apps/admin run typecheck
+      run: bun run typecheck:admin
 
 pre-push:
   parallel: false
   commands:
     typecheck:
-      run: bun --cwd apps/site run typecheck
+      run: bun run typecheck:site
     build:
-      run: bun --cwd apps/site run build
+      run: bun run build:site

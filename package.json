@@ -1,0 +1,31 @@
+{
+  "name": "moreminsk-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "moreminsk — сайт (Next static export) + админ SPA + PocketBase. Монорепо на bun workspaces.",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "cd apps/site && bun run dev",
+    "dev:site": "cd apps/site && bun run dev",
+    "dev:admin": "cd apps/admin && bun run dev",
+    "build:site": "cd apps/site && bun run build",
+    "build:admin": "cd apps/admin && bun run build",
+    "build": "bun run build:site && bun run build:admin",
+    "typecheck:site": "cd apps/site && bun run typecheck",
+    "typecheck:admin": "cd apps/admin && bun run typecheck",
+    "typecheck": "bun run --filter '*' typecheck",
+    "lint": "cd apps/site && bun run lint",
+    "lint:css": "cd apps/site && bun run lint:css",
+    "format": "cd apps/site && bun run format",
+    "format:check": "cd apps/site && bun run format:check",
+    "clean": "cd apps/site && bun run clean && cd - >/dev/null && rm -rf apps/admin/dist",
+    "pb:setup": "cd apps/site && bun run pb:setup",
+    "pb:roles": "cd apps/site && bun run pb:roles",
+    "pb:seed": "cd apps/site && bun run pb:seed",
+    "pb:export": "cd apps/site && bun run pb:export"
+  },
+  "devDependencies": {
+    "lefthook": "^2.1.6"
+  },
+  "trustedDependencies": ["sharp", "unrs-resolver", "lefthook"]
+}

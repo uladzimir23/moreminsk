@@ -1,5 +1,5 @@
 {
-  "name": "moreminsk-web",
+  "name": "@moreminsk/site",
   "version": "0.1.0",
   "private": true,
   "description": "Аренда яхт на Минском море — more-minsk.by (сайт)",
@@ -52,7 +52,6 @@
     "@typescript-eslint/parser": "^8.58.2",
     "eslint": "9",
     "eslint-config-next": "^16.2.4",
-    "lefthook": "^2.1.6",
     "prettier": "^3.8.3",
     "prettier-plugin-organize-imports": "^4.3.0",
     "sass-embedded": "^1.99.0",
