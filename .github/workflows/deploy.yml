@@ -38,10 +38,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Сайт (static export) — build-контекст = корень, Dockerfile корневой.
+      # Сайт (static export) — workspace-aware: контекст = корень, Dockerfile = apps/site/.
       - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
+          file: ./apps/site/Dockerfile
           push: true
           # Два тега: latest для compose pull, sha для rollback.
           tags: |
@@ -62,10 +63,11 @@ jobs:
           cache-from: type=gha,scope=pb
           cache-to: type=gha,mode=max,scope=pb
 
-      # Admin SPA (ADR-013) — build-контекст = apps/admin/.
+      # Admin SPA (ADR-013) — workspace-aware: контекст = корень, Dockerfile = apps/admin/.
       - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: ./apps/admin
+          context: .
+          file: ./apps/admin/Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE_ADMIN }}:latest
