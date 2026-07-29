@@ -1,10 +1,8 @@
-// Booking form submission for a static-export site (no API routes).
-//
-// The form POSTs to NEXT_PUBLIC_BOOKING_ENDPOINT — a thin relay that forwards
-// the lead to Telegram (see infra/booking-telegram-worker) or any webhook
-// (Formspree etc.). The Telegram bot token lives in the relay, never in this
-// client bundle. If the endpoint isn't configured the caller surfaces a phone
-// fallback instead of pretending the lead was sent.
+// Booking form submission → PocketBase `leads` collection на admin.more-minsk.by.
+// Static export → API routes нет; шлём напрямую с клиента через @moreminsk/pb-client.
+// createRule на коллекции — публичный (см. apps/site/scripts/pb/roles.ts).
+
+import { submitLead } from "@moreminsk/pb-client/leads/submit";
 
 export type BookingPayload = {
   yacht: string;
@@ -12,40 +10,38 @@ export type BookingPayload = {
   time: string;
   name: string;
   phone: string;
-  /** Optional повод when the lead came from a service page (no calculator). */
+  /** Optional повод когда лид пришёл со страницы услуги (без калькулятора). */
   service?: string;
 };
 
+// Оставляем класс — существующие consumers ловят его для fallback-сообщения.
+// Больше не бросается (PB endpoint встроен), но интерфейс сохраняем на случай
+// сетевых ошибок в клиенте.
 export class BookingNotConfiguredError extends Error {
   constructor() {
-    super("Booking endpoint is not configured (NEXT_PUBLIC_BOOKING_ENDPOINT).");
+    super("Booking endpoint is not configured.");
     this.name = "BookingNotConfiguredError";
   }
 }
 
-const ENDPOINT = process.env.NEXT_PUBLIC_BOOKING_ENDPOINT;
-
-function formatMessage(p: BookingPayload): string {
-  return [
-    "🛥 Новая заявка — минское море",
-    "",
-    `Имя: ${p.name}`,
-    `Телефон: ${p.phone}`,
-    `Яхта: ${p.yacht}`,
-    `Дата: ${p.date || "—"}`,
-    `Время: ${p.time || "—"}`,
-    ...(p.service ? [`Повод: ${p.service}`] : []),
-  ].join("\n");
-}
-
 export async function submitBooking(payload: BookingPayload): Promise<void> {
-  if (!ENDPOINT) throw new BookingNotConfiguredError();
+  const message = [
+    `Яхта: ${payload.yacht}`,
+    `Дата: ${payload.date || "—"}`,
+    `Время: ${payload.time || "—"}`,
+    ...(payload.service ? [`Повод: ${payload.service}`] : []),
+  ].join("\n");
 
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ text: formatMessage(payload), ...payload }),
+  await submitLead({
+    source: "booking",
+    name: payload.name,
+    phone: payload.phone,
+    message,
+    date: payload.date || undefined,
+    yachtSlug: payload.yacht,
+    meta: {
+      time: payload.time,
+      ...(payload.service ? { service: payload.service } : {}),
+    },
   });
-
-  if (!res.ok) throw new Error(`Booking submit failed: ${res.status}`);
 }
