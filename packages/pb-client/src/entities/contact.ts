@@ -49,5 +49,14 @@ export const Contacts = z.object({
       registeredAt: "",
       bank: { account: "", currency: "", name: "", bic: "" },
     }),
+  // Yandex Maps POI — карта на /contacts, отзывы-виджет на /otzyvy.
+  yandex: z
+    .object({
+      oid: z.string().default(""),
+      coords: z
+        .object({ lat: z.number(), lon: z.number() })
+        .default({ lat: 0, lon: 0 }),
+    })
+    .default({ oid: "", coords: { lat: 0, lon: 0 } }),
 });
 export type Contacts = z.infer<typeof Contacts>;
