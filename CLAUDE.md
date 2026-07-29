@@ -37,17 +37,27 @@ app → widgets → features → entities → shared
 
 ## Структура репо
 
+Монорепо на **Bun workspaces** (`workspaces: ["apps/*", "packages/*"]`), корневой
+`bun.lock`, `linker="hoisted"` в `bunfig.toml`.
+
 ```
 .
-├── docs/                 # Obsidian vault с документацией (Johnny Decimal)
-├── src/                  # (TBD — инициализируется следующим шагом)
-├── public/               # (TBD)
-├── .claude/
-│   ├── skills/           # Проектные скиллы для Claude Code
-│   └── settings.local.json  # Локальные permissions (gitignored)
-├── CLAUDE.md             # Этот файл
-├── README.md
-└── .gitignore
+├── apps/
+│   ├── site/             # @moreminsk/site — Next.js 16 (static export)
+│   └── admin/            # @moreminsk/admin — Vite SPA (CMS поверх PB, ADR-013)
+├── packages/             # (появится shared/pb-client когда флипнем loaders на PB)
+├── pocketbase/           # PB (ADR-012) — миграции, hooks, Dockerfile
+├── infra/
+│   ├── nginx/            # vhost-ы host-nginx на VPS + container.conf
+│   └── server/           # docker-compose.yml для VPS 89.169.54.11
+├── docs/                 # Obsidian vault (Johnny Decimal)
+├── .github/workflows/    # deploy.yml — GHCR + SSH
+├── .claude/              # skills, settings.local.json (gitignored)
+├── package.json          # Root workspace + proxy-скрипты
+├── bunfig.toml           # linker="hoisted" — для Turbopack
+├── bun.lock              # Единый лок для всех workspaces
+├── lefthook.yml
+└── CLAUDE.md / README.md
 ```
 
 ## Ключевые документы (читать перед работой)
@@ -111,15 +121,29 @@ app → widgets → features → entities → shared
 - Не пушить `.env` или `.claude/settings.local.json`
 - Не создавать документацию по `*.md` вне `docs/` — всё идёт в vault
 
-## Команды (когда будет инициализирован Next.js)
+## Команды (все из корня репо)
 
 ```bash
-bun install            # установка
-bun dev                # разработка на localhost:3000
-bun run build          # prod-билд → ./out/
-bun run lint           # ESLint + Stylelint
-bun run typecheck      # tsc --noEmit
+bun install               # hoisted install для всего workspace
+bun dev                   # = bun dev:site (сайт на :3000)
+bun run dev:site          # Next dev — сайт на :3000
+bun run dev:admin         # Vite dev — админка на :5173
+bun run build:site        # prod-билд сайта → apps/site/out/
+bun run build:admin       # prod-билд админки → apps/admin/dist/
+bun run typecheck         # оба апа параллельно
+bun run typecheck:site    # только сайт
+bun run lint              # ESLint (site)
+bun run lint:css          # Stylelint (site)
+bun run format:check      # Prettier
+bun run pb:setup          # PocketBase collections из apps/site/scripts/pb/
+bun run pb:roles          # PB editor auth
+bun run pb:seed           # PB сид из content/*.ts
+bun run pb:export         # PB → .pb/*.json снапшот на билд
 ```
+
+Проксирующие скрипты в root `package.json` вызывают `cd apps/site && bun run <task>`
+или `cd apps/admin && …`. Прямо в apps/*/ тоже можно (там свой package.json), но
+из корня — canonical way.
 
 ## Git
 

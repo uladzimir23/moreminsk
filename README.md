@@ -5,14 +5,31 @@
 
 ## Стек
 
-Next.js 16 (App Router, static export) · TypeScript · SCSS Modules · next-intl · Radix UI · Bun
+Next.js 16 (App Router, static export) · Vite (админка) · TypeScript · SCSS Modules · next-intl · Radix UI · PocketBase (CMS) · Bun · Docker
 
 ## Структура
 
+Монорепо на **Bun workspaces**:
+
 ```
 .
-├── docs/       # Вся документация проекта (Obsidian vault, Johnny Decimal)
-└── (будет)     # src/, public/, package.json — инициализируется отдельно
+├── apps/
+│   ├── site/       # @moreminsk/site — Next.js сайт
+│   └── admin/      # @moreminsk/admin — Vite SPA (CMS)
+├── pocketbase/     # PB миграции + Dockerfile
+├── infra/          # nginx vhosts + docker-compose для прод-VPS
+├── docs/           # Obsidian vault (Johnny Decimal)
+└── package.json    # root workspace + proxy-скрипты
+```
+
+## Разработка (всё из корня)
+
+```bash
+bun install          # hoisted install для всех workspaces
+bun run dev:site     # сайт на :3000
+bun run dev:admin    # админка на :5173
+bun run typecheck    # оба апа параллельно
+bun run build:site   # prod-билд сайта → apps/site/out/
 ```
 
 ## Документация
