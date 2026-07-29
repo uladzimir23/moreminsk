@@ -4,13 +4,14 @@
 #
 # Host nginx:
 #   more-minsk.by (+www)  → 127.0.0.1:3004 → moreminsk       (сайт, static)
-#   admin.more-minsk.by/  → 127.0.0.1:3005 → moreminsk-admin (SPA, фаза 8.3)
-#   admin.more-minsk.by/api/ /_/ → 127.0.0.1:8094 → moreminsk-pb (PocketBase)
+#   admin.more-minsk.by/  → 127.0.0.1:3010 → moreminsk-admin (SPA, фаза 8.3)
+#   admin.more-minsk.by/api/ /_/ → 127.0.0.1:8095 → moreminsk-pb (PocketBase)
 # vhosts: infra/nginx/more-minsk.by.conf + infra/nginx/admin.more-minsk.by.conf
 #
-# Порты на боксе: 3001 sync-brand-site, 3002 flex-glass, 3003 comforthotel,
-# 3008/3009 istok(+admin); 8090-8093 заняты PB других стеков. moreminsk: сайт
-# 3004, admin 3005, PB 8094 — уточнить актуальную занятость на сервере.
+# Порты на боксе (проверено 2026-07-29): 3001 sync-brand-site, 3002 flex-glass,
+# 3003 comforthotel, 3005 clariva-landing, 3006 sync-dev-site, 3007 topup-by,
+# 3008/3009 istok(+admin); 8090-8094 заняты PB других стеков (auction, prop-finder,
+# flex-glass, istok, clariva). moreminsk: сайт 3004, admin 3010, PB 8095.
 #
 # Bootstrap PB после первого up (одноразово, значения — на сервере, не в git):
 #   docker exec -it moreminsk-pb /pb/pocketbase superuser upsert <email> <pass>
@@ -40,7 +41,7 @@ services:
     container_name: moreminsk-pb
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8094:8090" # host-nginx: admin.more-minsk.by /api/ /_/ → сюда
+      - "127.0.0.1:8095:8090" # host-nginx: admin.more-minsk.by /api/ /_/ → сюда
     volumes:
       - moreminsk_pb_data:/pb/pb_data
     healthcheck:
@@ -60,7 +61,7 @@ services:
     container_name: moreminsk-admin
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3005:80" # host-nginx: admin.more-minsk.by/ → сюда
+      - "127.0.0.1:3010:80" # host-nginx: admin.more-minsk.by/ → сюда
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
       interval: 30s
