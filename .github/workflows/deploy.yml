@@ -39,11 +39,14 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Сайт (static export) — workspace-aware: контекст = корень, Dockerfile = apps/site/.
+      # PB_URL build-arg → prebuild тянет свежий снапшот PB, кодогенерит content/*.ts.
       - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: ./apps/site/Dockerfile
           push: true
+          build-args: |
+            PB_URL=https://admin.more-minsk.by
           # Два тега: latest для compose pull, sha для rollback.
           tags: |
             ${{ env.IMAGE }}:latest
