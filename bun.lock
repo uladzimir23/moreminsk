@@ -74,6 +74,16 @@
       "name": "@moreminsk/design-system",
       "version": "0.0.0",
     },
+    "packages/pb-client": {
+      "name": "@moreminsk/pb-client",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@types/node": "^20",
+      },
+      "peerDependencies": {
+        "zod": "^4.0.0",
+      },
+    },
   },
   "trustedDependencies": [
     "sharp",
@@ -308,6 +318,8 @@
     "@moreminsk/admin": ["@moreminsk/admin@workspace:apps/admin"],
 
     "@moreminsk/design-system": ["@moreminsk/design-system@workspace:packages/design-system"],
+
+    "@moreminsk/pb-client": ["@moreminsk/pb-client@workspace:packages/pb-client"],
 
     "@moreminsk/site": ["@moreminsk/site@workspace:apps/site"],
 
