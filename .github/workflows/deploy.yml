@@ -62,10 +62,10 @@ jobs:
           cache-from: type=gha,scope=pb
           cache-to: type=gha,mode=max,scope=pb
 
-      # Admin SPA (ADR-013) — build-контекст = admin/.
+      # Admin SPA (ADR-013) — build-контекст = apps/admin/.
       - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
-          context: ./admin
+          context: ./apps/admin
           push: true
           tags: |
             ${{ env.IMAGE_ADMIN }}:latest

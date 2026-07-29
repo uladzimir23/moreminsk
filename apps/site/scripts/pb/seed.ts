@@ -1,7 +1,7 @@
 /**
  * Сидинг PocketBase из content-as-code (ADR-012, фаза 8.2) — одноразовый перенос
- * web/src/shared/content/*.ts в PB. Чистый reseed: чистит коллекцию и заливает
- * заново. Фото пока остаются в web/public/ — в PB кладём пути (json/text), file-
+ * apps/site/src/shared/content/*.ts в PB. Чистый reseed: чистит коллекцию и заливает
+ * заново. Фото пока остаются в apps/site/public/ — в PB кладём пути (json/text), file-
  * поля добавим отдельной фазой.
  *
  * Запуск (PB на :8090, коллекции созданы setup.ts):

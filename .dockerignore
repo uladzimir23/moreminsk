@@ -1,13 +1,13 @@
-# Build-context hygiene (ADR-014, монорепо): в образ сайта нужны только web/ +
+# Build-context hygiene (монорепо): в образ сайта нужны только apps/site/ +
 # infra/nginx/container.conf. Корень тяжёлый (docs-волт, сырьё, tooling) — режем.
 
 # Зависимости и build-выводы (ставятся/генерятся внутри образа)
 **/node_modules
-web/.next
-web/out
+apps/site/.next
+apps/site/out
+apps/admin/dist
 .next
 out
-admin/dist
 pocketbase/pb_data
 pocketbase/pocketbase
 

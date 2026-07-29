@@ -1,29 +1,28 @@
-# Монорепо (ADR-014): конфиг на уровне репо (рядом с .git), а команды выполняются
-# внутри web/. Глобы матчат web/** — коммиты вне web (docs/infra) хуки пропускают.
-# Когда появится admin/ — добавить сюда его typecheck/lint аналогично.
+# Монорепо: конфиг на уровне репо. Команды выполняются в подпапках apps/*
+# через `bun --cwd`. Глобы отсекают коммиты вне apps/** (docs, infra, pocketbase).
 pre-commit:
   parallel: true
   commands:
     typecheck:
-      glob: "web/**/*.{ts,tsx}"
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+      glob: "apps/site/**/*.{ts,tsx}"
+      run: bun --cwd apps/site run typecheck
     lint-ts:
-      glob: "web/**/*.{ts,tsx,js,mjs}"
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run lint
+      glob: "apps/site/**/*.{ts,tsx,js,mjs}"
+      run: bun --cwd apps/site run lint
     lint-scss:
-      glob: "web/**/*.{scss,css}"
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run lint:css
+      glob: "apps/site/**/*.{scss,css}"
+      run: bun --cwd apps/site run lint:css
     format-check:
-      glob: "web/**/*.{ts,tsx,js,mjs,json,scss,css}"
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run format:check
+      glob: "apps/site/**/*.{ts,tsx,js,mjs,json,scss,css}"
+      run: bun --cwd apps/site run format:check
     typecheck-admin:
-      glob: "admin/**/*.{ts,tsx}"
-      run: cd admin && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+      glob: "apps/admin/**/*.{ts,tsx}"
+      run: bun --cwd apps/admin run typecheck
 
 pre-push:
   parallel: false
   commands:
     typecheck:
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run typecheck
+      run: bun --cwd apps/site run typecheck
     build:
-      run: cd web && /Users/vladimirmazyrec/.bun/bin/bun run build
+      run: bun --cwd apps/site run build

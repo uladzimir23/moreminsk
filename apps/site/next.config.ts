@@ -19,9 +19,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
 
-  // Монорепо (ADR-014): приложение живёт в web/. Пиним turbopack.root на этот
-  // каталог, иначе Next инферит root по lockfile выше (кластер ~/Projects) и
-  // раздувает watch-scope. Всё нужное сайту (src, public, messages) внутри web/.
+  // Монорепо: приложение живёт в apps/site/. Пиним turbopack.root на этот
+  // каталог, иначе Next инферит root по lockfile выше и раздувает watch-scope.
   turbopack: {
     root: path.resolve(__dirname),
   },

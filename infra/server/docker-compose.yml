@@ -14,7 +14,7 @@
 #
 # Bootstrap PB после первого up (одноразово, значения — на сервере, не в git):
 #   docker exec -it moreminsk-pb /pb/pocketbase superuser upsert <email> <pass>
-#   # затем editor — из web/: PB_URL=… EDITOR_EMAIL=… EDITOR_PASS=… bun run pb:roles
+#   # затем editor — из apps/site/: PB_URL=… EDITOR_EMAIL=… EDITOR_PASS=… bun run pb:roles
 
 services:
   moreminsk:

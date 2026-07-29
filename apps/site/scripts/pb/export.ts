@@ -1,10 +1,10 @@
 /**
  * Prebuild-экспорт PocketBase → JSON-снапшот (ADR-012, static+rebuild). Лоадеры
- * читают снапшот синхронно на билде. Фото остаются в web/public/ (пути хранятся
+ * читают снапшот синхронно на билде. Фото остаются в apps/site/public/ (пути хранятся
  * в записях), поэтому здесь только дамп данных — без скачивания файлов.
  *
  * Запуск (PB на :8090): PB_URL=… bun scripts/pb/export.ts
- * Пишет в web/.pb/<collection>.json (gitignored — генерится на билде).
+ * Пишет в apps/site/.pb/<collection>.json (gitignored — генерится на билде).
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
