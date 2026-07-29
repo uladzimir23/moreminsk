@@ -70,6 +70,10 @@
         "typescript": "^5",
       },
     },
+    "packages/design-system": {
+      "name": "@moreminsk/design-system",
+      "version": "0.0.0",
+    },
   },
   "trustedDependencies": [
     "sharp",
@@ -302,6 +306,8 @@
     "@keyv/serialize": ["@keyv/serialize@1.1.1", "", {}, "sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA=="],
 
     "@moreminsk/admin": ["@moreminsk/admin@workspace:apps/admin"],
+
+    "@moreminsk/design-system": ["@moreminsk/design-system@workspace:packages/design-system"],
 
     "@moreminsk/site": ["@moreminsk/site@workspace:apps/site"],
 
