@@ -1,0 +1,19 @@
+{
+  "name": "@moreminsk/pb-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "PocketBase entities (zod-схемы) + snapshot-readers для сайта + submit-хелпер для форм.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./entities/*": "./src/entities/*.ts",
+    "./readers/*": "./src/readers/*.ts",
+    "./leads/submit": "./src/leads/submit.ts"
+  },
+  "peerDependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  }
+}

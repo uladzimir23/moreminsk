@@ -70,6 +70,20 @@
         "typescript": "^5",
       },
     },
+    "packages/design-system": {
+      "name": "@moreminsk/design-system",
+      "version": "0.0.0",
+    },
+    "packages/pb-client": {
+      "name": "@moreminsk/pb-client",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@types/node": "^20",
+      },
+      "peerDependencies": {
+        "zod": "^4.0.0",
+      },
+    },
   },
   "trustedDependencies": [
     "sharp",
@@ -302,6 +316,10 @@
     "@keyv/serialize": ["@keyv/serialize@1.1.1", "", {}, "sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA=="],
 
     "@moreminsk/admin": ["@moreminsk/admin@workspace:apps/admin"],
+
+    "@moreminsk/design-system": ["@moreminsk/design-system@workspace:packages/design-system"],
+
+    "@moreminsk/pb-client": ["@moreminsk/pb-client@workspace:packages/pb-client"],
 
     "@moreminsk/site": ["@moreminsk/site@workspace:apps/site"],
 

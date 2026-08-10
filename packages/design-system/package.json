@@ -1,0 +1,10 @@
+{
+  "name": "@moreminsk/design-system",
+  "private": true,
+  "version": "0.0.0",
+  "description": "SCSS-токены, миксины, base — общий фундамент стилей для site и admin.",
+  "exports": {
+    ".": "./src/index.scss",
+    "./scss/*": "./src/*"
+  }
+}

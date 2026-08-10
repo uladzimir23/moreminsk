@@ -44,6 +44,12 @@ services:
       - "127.0.0.1:8095:8090" # host-nginx: admin.more-minsk.by /api/ /_/ → сюда
     volumes:
       - moreminsk_pb_data:/pb/pb_data
+    environment:
+      # Telegram-уведомления о новых заявках (см. pocketbase/pb_hooks/leads-telegram.pb.js).
+      # Значения — в /opt/moreminsk/.env на VPS (в git не коммитим).
+      TG_BOT_TOKEN: ${TG_BOT_TOKEN:-}
+      TG_CHAT_IDS: ${TG_CHAT_IDS:-}
+      PB_PUBLIC_URL: ${PB_PUBLIC_URL:-https://admin.more-minsk.by}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8090/api/health"]
       interval: 30s

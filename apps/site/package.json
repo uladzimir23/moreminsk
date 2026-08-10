@@ -18,7 +18,10 @@
     "pb:setup": "bun scripts/pb/setup.ts",
     "pb:roles": "bun scripts/pb/roles.ts",
     "pb:seed": "bun scripts/pb/seed.ts",
-    "pb:export": "bun scripts/pb/export.ts"
+    "pb:export": "bun scripts/pb/export.ts",
+    "pb:codegen": "bun scripts/pb/codegen.ts",
+    "pb:refresh": "bun run pb:export && bun run pb:codegen",
+    "prebuild": "bun scripts/pb/prebuild.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

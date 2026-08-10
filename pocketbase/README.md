@@ -11,7 +11,7 @@
 | --- | --- |
 | `Dockerfile` | Образ PB 0.25.9 (linux/amd64) + `pb_migrations` + `pb_hooks` |
 | `pb_migrations/*.js` | Схема коллекций (авто-сгенерированы PB, коммитим) |
-| `pb_hooks/` | JS-хуки PB (rebuild-webhook — фаза 8.4) |
+| `pb_hooks/*.pb.js` | JS-хуки PB (Telegram-уведомления о заявках, rebuild-webhook) |
 | `scripts/download-pb.sh` | Скачать бинарь под текущую ОС (локально) |
 | `pocketbase` | Бинарь (gitignored) |
 | `pb_data/` | SQLite + файлы (gitignored; на сервере — volume) |
@@ -57,3 +57,26 @@ Docker-сервис `moreminsk-pb` в `/opt/moreminsk/docker-compose.yml`, volum
 ```bash
 docker exec -it moreminsk-pb /pb/pocketbase superuser upsert <email> <pass>
 ```
+
+### Telegram-уведомления о заявках
+
+Хук `pb_hooks/leads-telegram.pb.js` шлёт сообщение в TG-группу на каждую
+успешно созданную запись в `leads` (сайт + ручные вставки из админки). Секреты
+кладём в `/opt/moreminsk/.env` (docker-compose подхватывает через `${...}`,
+в git не коммитим):
+
+```
+TG_BOT_TOKEN=8991754440:AAF...           # токен @BotFather
+TG_CHAT_IDS=-5192654444                  # chat_id группы (несколько — через запятую)
+PB_PUBLIC_URL=https://admin.more-minsk.by
+```
+
+После правки `.env` — `docker compose up -d moreminsk-pb`, контейнер подхватит
+переменные при рестарте. Хук находится в образе (COPY в Dockerfile), поэтому
+после его изменений — `docker compose build moreminsk-pb && docker compose up -d
+moreminsk-pb` (или пуш в main → CI ребилдит).
+
+Проверить локально: `TG_BOT_TOKEN=... TG_CHAT_IDS=... ./pocketbase serve ...`,
+затем `curl -X POST http://127.0.0.1:8090/api/collections/leads/records -H
+'Content-Type: application/json' -d '{"source":"contact","name":"Test",
+"phone":"+375291234567","comment":"тест"}'` — в чате должно упасть сообщение.
