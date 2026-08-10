@@ -15,6 +15,9 @@ onRecordAfterCreateSuccess((e) => {
   try {
     const token = $os.getenv("TG_BOT_TOKEN");
     const chatIdsRaw = $os.getenv("TG_CHAT_IDS");
+    console.log(
+      `[tg] leads create fired · id=${e.record.id} · token=${token ? "yes" : "no"} · chats=${chatIdsRaw ? "yes" : "no"}`,
+    );
     if (!token || !chatIdsRaw) {
       e.next();
       return;
