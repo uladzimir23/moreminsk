@@ -1,16 +1,18 @@
 import { z } from "zod";
 
 // Формы booking / contact шлют в единую коллекцию leads.
+// Ключи схемы совпадают с именами полей PB-коллекции (см. миграцию
+// 1783523196_created_leads.js: name/phone/service/yacht/date/guests/comment/source).
 // PB rule: createRule = "" (public create), read — authed only (см. pb:roles).
 export const LeadPayload = z.object({
   source: z.enum(["booking", "contact"]),
   name: z.string().min(1),
   phone: z.string().min(1),
-  message: z.string().default(""),
+  yacht: z.string().optional(),
+  service: z.string().optional(),
   date: z.string().optional(),
-  hours: z.number().optional(),
-  yachtSlug: z.string().optional(),
-  meta: z.record(z.string(), z.unknown()).optional(),
+  guests: z.number().optional(),
+  comment: z.string().default(""),
 });
 export type LeadPayload = z.infer<typeof LeadPayload>;
 

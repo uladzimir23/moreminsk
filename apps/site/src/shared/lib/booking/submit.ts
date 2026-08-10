@@ -1,6 +1,7 @@
 // Booking form submission → PocketBase `leads` collection на admin.more-minsk.by.
 // Static export → API routes нет; шлём напрямую с клиента через @moreminsk/pb-client.
 // createRule на коллекции — публичный (см. apps/site/scripts/pb/roles.ts).
+// PB-хук `pb_hooks/leads-telegram.pb.js` уведомляет группу в Telegram.
 
 import { submitLead } from "@moreminsk/pb-client/leads/submit";
 
@@ -25,23 +26,15 @@ export class BookingNotConfiguredError extends Error {
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {
-  const message = [
-    `Яхта: ${payload.yacht}`,
-    `Дата: ${payload.date || "—"}`,
-    `Время: ${payload.time || "—"}`,
-    ...(payload.service ? [`Повод: ${payload.service}`] : []),
-  ].join("\n");
+  const comment = payload.time ? `Время: ${payload.time}` : "";
 
   await submitLead({
     source: "booking",
     name: payload.name,
     phone: payload.phone,
-    message,
+    yacht: payload.yacht,
+    service: payload.service,
     date: payload.date || undefined,
-    yachtSlug: payload.yacht,
-    meta: {
-      time: payload.time,
-      ...(payload.service ? { service: payload.service } : {}),
-    },
+    comment,
   });
 }
