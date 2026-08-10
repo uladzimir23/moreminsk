@@ -7,8 +7,13 @@
 FROM oven/bun:1.3-alpine AS deps
 WORKDIR /app
 COPY package.json bun.lock bunfig.toml ./
+# workspace-манифесты apps/*/packages/* нужны resolve'у до install —
+# без них frozen-lockfile валится ("lockfile had changes"), т.к. лок
+# ссылается на workspace-пакеты, которых нет в build-контексте.
 COPY apps/site/package.json ./apps/site/
 COPY apps/admin/package.json ./apps/admin/
+COPY packages/design-system/package.json ./packages/design-system/
+COPY packages/pb-client/package.json ./packages/pb-client/
 RUN bun install --frozen-lockfile
 
 # ─── Stage 2: build (Node — tsc + vite) ─────────────────────────────────────
