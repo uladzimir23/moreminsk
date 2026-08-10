@@ -1,12 +1,6 @@
-// Landing-shell scaffolding — just the back-bar and the page background.
+// Landing-shell scaffolding — just the page background wrapper.
 // All content sits in dedicated section components imported by the shell.
 
-// Plain content wrapper. (Was the "reveal footer" lifting-card: z-index:1 +
-// overflow:clip + border-radius + box-shadow over a position:fixed footer.
-// That made the whole page OVERLAP the fixed footer, so Chrome promoted the
-// entire page-height element to one giant composited layer (~45MB) — and with
-// the other composited layers it blew the GPU texture budget → torn/blank
-// tiles on real GPUs. Reverted to normal flow; footer sits below normally.)
 .page {
   position: relative;
   min-block-size: 100vh;
@@ -15,35 +9,31 @@
   font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
-// Home-only — just the page background swatch (everything else moved to .page).
 .shell {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
-// Pulls the content block up over the pinned hero's 100vh overlap runway
-// so the first section rises over the dissolving hero (see CinematicHero
-// pinned). Higher z-index keeps the opaque section above the sticky hero.
+// Sections wrapper — establishes the positioning context for the wave backdrop
+// so it acts as a real section-stack background (visible through transparent
+// sections, covered by opaque ones) instead of a viewport-fixed layer.
 .overlap {
   position: relative;
-  z-index: 2;
-  margin-top: -100vh;
+  z-index: 1;
 }
 
-// Глобальный фиксированный WaterBackdrop — виден через прозрачные секции
-// (Reviews-Stories, FAQ, BookingCTA, Contacts). Лежит ниже .overlap (z:2)
-// и выше .heroPin (z:0/1) — водный фон уже виден когда контент поднимается
-// над героем. pointer-events:none — не блокирует клики/скролл.
+// Wave backdrop — absolutely positioned inside .overlap, so it scrolls with the
+// content and shows only through sections with transparent backgrounds. z-index
+// -1 inside .overlap's stacking context (z:1) keeps it under all sections while
+// still above the page background.
 .waterBg {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: -1;
   pointer-events: none;
 }
 
-// Floats at bottom-left so it never collides with hero-internal stamps
-// (which all sit top-left) or scene toggles (top-right).
 .backBar {
   position: fixed;
   bottom: 1rem;

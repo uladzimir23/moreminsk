@@ -1,25 +1,17 @@
-// Sticky hero + content that rises over it (home-page pattern, CSS-only).
+// Plain hero + content stack — hero scrolls away naturally, content follows.
 .shell {
   position: relative;
 }
 
-// The hero (100svh inside) pins to the top for one viewport while the content
-// below slides up over it.
 .heroPin {
-  position: sticky;
-  top: 0;
-  z-index: 0;
+  position: relative;
 }
 
-// Opaque container that scrolls up over the pinned hero. The soft top shadow
-// reads as it lifts over the hero.
 .content {
   position: relative;
-  z-index: 1;
   background: var(--color-background);
-  box-shadow: 0 -2rem 4rem rgb(0 0 0 / 0.14);
 }
-// Brand-gradient seam (orange → blue) leading the content as it rises.
+// Brand-gradient seam (orange → blue) between hero and content.
 .content::before {
   content: "";
   position: absolute;

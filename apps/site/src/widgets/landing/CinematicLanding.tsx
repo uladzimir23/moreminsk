@@ -11,16 +11,17 @@ import { ServicesSection } from "./_components/sections/services-section";
 import { WaterBackdrop } from "./_components/water-backdrop";
 
 // Production landing. Header/footer come from the [locale] layout; this composes
-// the pinned video hero + the content stack. The content block is pulled up
-// over the pinned hero (see CinematicHero pinned + .overlap).
+// a static video hero + the content stack. The water backdrop lives inside the
+// content stack — it scrolls with sections and shows only through the ones with
+// transparent backgrounds (Fleet, Reviews, FAQ, BookingCTA, Contacts).
 export function CinematicLanding() {
   return (
     <div className={shell.shell} id="top">
-      <CinematicHero pinned />
-      <div className={shell.waterBg} aria-hidden="true">
-        <WaterBackdrop filterId="globalWater" variant="waves" />
-      </div>
+      <CinematicHero />
       <div className={shell.overlap}>
+        <div className={shell.waterBg} aria-hidden="true">
+          <WaterBackdrop filterId="globalWater" variant="waves" />
+        </div>
         <FleetShowcaseSection />
         <ServicesSection />
         <GallerySection />

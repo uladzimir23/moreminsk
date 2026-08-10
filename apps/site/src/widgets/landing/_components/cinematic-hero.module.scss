@@ -3,17 +3,6 @@
 
 @use "@/shared/design-system/mixins" as *;
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(1.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .hero {
   position: relative;
   overflow: hidden;
@@ -25,34 +14,6 @@
   font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
 }
 
-// Pinned variant — 200vh wrapper with a sticky inner. The sticky hero
-// holds the top of the viewport for 100vh of scroll; meanwhile the next
-// section (pulled up with a negative margin + higher z-index in the
-// landing shell) rises UP over it. The video scales + the hero dissolves
-// and parallaxes up underneath as the next section covers it — no black
-// gap, because the opaque next section is what fills the screen.
-// 260vh = 100vh sticky + 60vh «pure video» pause (after the headline fades,
-// before the next section starts rising) + 100vh overlap runway where the
-// next section rises over the hero.
-.pinnedSection {
-  position: relative;
-  z-index: 0;
-  height: 260vh;
-  background: #000;
-  color: white;
-  font-family: var(--font-manrope), "Inter", system-ui, sans-serif;
-}
-.sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
-  will-change: opacity, transform;
-}
-
 .video {
   position: absolute;
   inset: 0;
@@ -60,8 +21,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform-origin: center center;
-  will-change: transform, filter;
   z-index: 0;
 }
 
@@ -102,26 +61,6 @@
   opacity: 0.6;
 }
 
-// Scroll-driven «lighten» wash — light theme only. Sits above the dark scrim,
-// below the content. The rAF fades it in (opacity set inline) as the next
-// section reveals, so the dark cinematic hero brightens into the light page as
-// you scroll. opacity is 0 at rest, so the hero starts dark like in dark theme;
-// JS holds it at 0 in dark theme (where --media-bg would be dark anyway).
-.lighten {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0;
-  will-change: opacity;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--media-bg) 82%, transparent) 0%,
-    color-mix(in srgb, var(--media-bg) 64%, transparent) 45%,
-    color-mix(in srgb, var(--media-bg) 88%, transparent) 100%
-  );
-}
-
 .content {
   position: relative;
   z-index: 3;
@@ -142,7 +81,6 @@
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
-  animation: fadeUp 0.6s ease 0.2s both;
 }
 
 .headline {
@@ -153,59 +91,13 @@
   letter-spacing: -0.04em;
   color: #fff;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
-  animation: fadeUp 0.7s ease 0.35s both;
 }
 .accent {
   font-family: var(--font-lora), Georgia, serif;
   font-style: italic;
   font-weight: 500;
   letter-spacing: -0.02em;
-  // Bright aurora (scarlet · white · blue — флаг palette). Three soft colour
-  // blobs over a base sweep, each layer drifting on its own path → organic,
-  // never-repeating flow. Fallback colour where background-clip:text is unsupported.
   color: var(--color-accent-2-bright);
-  background: var(--gradient-flag);
-  background-size:
-    200% 200%,
-    220% 200%,
-    180% 220%,
-    200% 100%;
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  will-change: background-position;
-  animation: mm-tishina-aurora 16s ease-in-out infinite;
-}
-@keyframes mm-tishina-aurora {
-  0% {
-    background-position:
-      0% 0%,
-      100% 0%,
-      50% 100%,
-      0% 50%;
-  }
-  33% {
-    background-position:
-      100% 50%,
-      0% 100%,
-      0% 0%,
-      100% 50%;
-  }
-  66% {
-    background-position:
-      50% 100%,
-      50% 0%,
-      100% 50%,
-      0% 50%;
-  }
-  100% {
-    background-position:
-      0% 0%,
-      100% 0%,
-      50% 100%,
-      0% 50%;
-  }
 }
 
 .sub {
@@ -215,7 +107,6 @@
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.78);
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
-  animation: fadeUp 0.7s ease 0.5s both;
 }
 
 .ctas {
@@ -224,7 +115,6 @@
   gap: 0.875rem;
   justify-content: center;
   margin-top: 0.5rem;
-  animation: fadeUp 0.7s ease 0.65s both;
 }
 .btnPrimary {
   display: inline-flex;
@@ -239,7 +129,7 @@
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0 8px 32px color-mix(in srgb, var(--color-accent) 38%, transparent);
-  @include btn-cta; // «Signature · settle» — comet + cursor spot/tilt + icon fly
+  @include btn-cta;
   @include btn-press;
   &:hover {
     box-shadow: 0 12px 40px color-mix(in srgb, var(--color-accent) 50%, transparent);
@@ -261,7 +151,7 @@
   text-decoration: none;
   border-radius: 0;
   cursor: pointer;
-  @include btn-fill; // «заливка» — accent wipes in from the left (no lift)
+  @include btn-fill;
   @include btn-press;
 }
 
@@ -301,14 +191,9 @@
   .video {
     display: none;
   }
-  // Show the poster instead of the moving video. Targets both modes — pinned
-  // (.sticky, used in production) and plain (.hero). --hero-poster-url is set
+  // Show the poster instead of the moving video. --hero-poster-url is set
   // inline so it carries the base path.
-  .hero,
-  .sticky {
+  .hero {
     background: black var(--hero-poster-url) center / cover no-repeat;
-  }
-  .accent {
-    animation: none;
   }
 }
