@@ -492,3 +492,257 @@ td.comment {
     }
   }
 }
+
+// ─── Bookings (календарь занятости) ───────────────────────────────────────
+.bookings {
+  max-width: 1200px;
+  width: 100%;
+  margin-inline: auto;
+}
+.bookings-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-4);
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.bookings-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  .range {
+    color: var(--muted);
+    font-size: var(--t-sm);
+    margin-left: var(--sp-2);
+  }
+}
+.tabs {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  overflow-x: auto;
+}
+.tab {
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-md);
+  padding: 0.55rem 1rem;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+  &:hover {
+    border-color: var(--muted);
+  }
+  &.active {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+}
+.cal-grid {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
+  position: relative;
+}
+.cal-head {
+  display: grid;
+  grid-template-columns: 4rem repeat(7, 1fr);
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--line);
+  .cal-col-day {
+    padding: var(--sp-2);
+    text-align: center;
+    border-left: 1px solid var(--line);
+    .dow {
+      font-size: var(--t-xs);
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .dom {
+      font-size: var(--t-sm);
+      font-weight: 700;
+      color: var(--ink);
+    }
+  }
+}
+.cal-body {
+  display: block;
+}
+.cal-row {
+  display: grid;
+  grid-template-columns: 4rem repeat(7, 1fr);
+  min-height: 1.6rem;
+  &.hour {
+    border-top: 1px solid var(--line);
+  }
+  &.half {
+    border-top: 1px dashed var(--line);
+  }
+  &:first-child {
+    border-top: 0;
+  }
+}
+.cal-time {
+  font-size: var(--t-xs);
+  color: var(--muted);
+  padding: 0.15rem var(--sp-2);
+  border-right: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.cal-cell {
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  min-height: 1.6rem;
+  transition: background 0.1s var(--ease);
+  overflow: hidden;
+  &.empty:hover {
+    background: color-mix(in srgb, var(--navy) 8%, transparent);
+  }
+  &.filled {
+    padding: 3px 5px;
+    color: #fff;
+    font-size: var(--t-xs);
+    line-height: 1.15;
+    &.booked {
+      background: var(--navy);
+    }
+    &.tentative {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--coral),
+        var(--coral) 4px,
+        color-mix(in srgb, var(--coral) 70%, #fff) 4px,
+        color-mix(in srgb, var(--coral) 70%, #fff) 8px
+      );
+    }
+    &.blocked {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--muted),
+        var(--muted) 4px,
+        color-mix(in srgb, var(--muted) 50%, #fff) 4px,
+        color-mix(in srgb, var(--muted) 50%, #fff) 8px
+      );
+    }
+    &.archived {
+      opacity: 0.4;
+      filter: grayscale(0.5);
+    }
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  .cell-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+    align-items: baseline;
+  }
+  .cell-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cell-price {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.85;
+  }
+}
+.cal-loading {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--r-md);
+  color: var(--muted);
+  font-size: var(--t-xs);
+}
+
+// ─── Drawer (сайд-панель для формы) ───────────────────────────────────────
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 35, 55, 0.4);
+  z-index: 100;
+  animation: fade-in 0.15s var(--ease);
+}
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -12px 0 40px rgba(10, 35, 55, 0.2);
+  animation: slide-in 0.2s var(--ease);
+  overflow: hidden;
+}
+.drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--line);
+  h2 {
+    margin: 0;
+    font-size: var(--t-lg);
+  }
+}
+.drawer .form {
+  padding: var(--sp-5);
+  gap: var(--sp-3);
+  overflow-y: auto;
+  flex: 1;
+}
+.drawer .row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+.drawer .row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-3);
+}
+.drawer-foot {
+  display: flex;
+  gap: var(--sp-2);
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--line);
+  background: var(--surface-alt);
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

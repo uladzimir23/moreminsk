@@ -16,9 +16,10 @@ export function Layout() {
               {c.label}
             </NavLink>
           ))}
-          <NavLink to="/leads" className="leads-link">
-            Заявки
+          <NavLink to="/bookings" className="leads-link">
+            Календарь
           </NavLink>
+          <NavLink to="/leads">Заявки</NavLink>
         </nav>
       </aside>
       <div className="main">
