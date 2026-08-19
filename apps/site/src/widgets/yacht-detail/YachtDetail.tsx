@@ -188,7 +188,7 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
 
                 {/* Desktop — booking form inline */}
                 <div className={styles.formInline}>
-                  <QuickBooking yacht={{ name: yacht.name }} />
+                  <QuickBooking yacht={{ name: yacht.name, slug: yacht.slug }} />
                 </div>
 
                 {/* Mobile — minimalist block, opens the form in a popup */}
@@ -299,7 +299,7 @@ export function YachtDetail({ yacht, photos, services, others }: Props) {
                 </button>
               </Dialog.Close>
             </header>
-            <QuickBooking yacht={{ name: yacht.name }} />
+            <QuickBooking yacht={{ name: yacht.name, slug: yacht.slug }} />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

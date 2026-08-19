@@ -3,33 +3,23 @@
 import { BookingNotConfiguredError, submitBooking } from "@/shared/lib/booking/submit";
 import { Checkbox } from "@/shared/ui/checkbox/Checkbox";
 import { DatePicker } from "@/shared/ui/date-picker/DatePicker";
-import { Select } from "@/shared/ui/select/Select";
 import { useId, useState } from "react";
+import { AvailabilityGrid } from "./AvailabilityGrid";
 import styles from "./QuickBooking.module.scss";
 
-// Lightweight booking form for one yacht — same fields as the home page
-// BookingCTASection (date · time · name · phone → submitBooking), but new and
-// scoped to a fixed yacht. Used inline (desktop yacht card) and in the panel
-// popup (mobile). Не путать с мульти-степ wizard BookingForm.
-
-const TIME_OPTIONS = [
-  { value: "10:00", label: "Утро · 10:00" },
-  { value: "14:00", label: "День · 14:00" },
-  { value: "17:00", label: "Вечер · 17:00" },
-  { value: "custom", label: "Обсудим время" },
-];
+// Lightweight booking form for one yacht — date + свободный час из calendar
+// PocketBase → name/phone → submitBooking (lead + tentative booking).
+// Used inline (desktop yacht card) and in the panel popup (mobile).
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-export function QuickBooking({ yacht }: { yacht: { name: string } }) {
+export function QuickBooking({ yacht }: { yacht: { name: string; slug?: string } }) {
   const uid = useId();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
-  const [time, setTime] = useState("14:00");
+  const [time, setTime] = useState("");
   const [date, setDate] = useState("");
   const [consent, setConsent] = useState(false);
-
-  const timeName = TIME_OPTIONS.find((t) => t.value === time)?.label ?? time;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,9 +27,9 @@ export function QuickBooking({ yacht }: { yacht: { name: string } }) {
     setStatus("submitting");
     try {
       await submitBooking({
-        yacht: yacht.name,
+        yacht: yacht.slug ?? yacht.name,
         date,
-        time: timeName,
+        time,
         name: String(fd.get("name") ?? "").trim(),
         phone: String(fd.get("phone") ?? "").trim(),
       });
@@ -84,26 +74,23 @@ export function QuickBooking({ yacht }: { yacht: { name: string } }) {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <div className={styles.fieldRow}>
+      <div className={styles.field}>
+        <label className={styles.label} htmlFor={`${uid}-date`}>
+          Дата
+        </label>
+        <DatePicker id={`${uid}-date`} ariaLabel="Дата" value={date} onChange={setDate} />
+      </div>
+      {date && (
         <div className={styles.field}>
-          <label className={styles.label} htmlFor={`${uid}-date`}>
-            Дата
-          </label>
-          <DatePicker id={`${uid}-date`} ariaLabel="Дата" value={date} onChange={setDate} />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor={`${uid}-time`}>
-            Время
-          </label>
-          <Select
-            id={`${uid}-time`}
-            ariaLabel="Время"
+          <span className={styles.label}>Свободное время</span>
+          <AvailabilityGrid
+            yachtSlug={yacht.slug ?? yacht.name.toLowerCase()}
+            date={date}
             value={time}
-            onValueChange={setTime}
-            options={TIME_OPTIONS}
+            onChange={setTime}
           />
         </div>
-      </div>
+      )}
 
       <div className={styles.field}>
         <label className={styles.label} htmlFor={`${uid}-name`}>
@@ -149,7 +136,7 @@ export function QuickBooking({ yacht }: { yacht: { name: string } }) {
       <button
         type="submit"
         className={styles.submit}
-        disabled={status === "submitting" || !consent}
+        disabled={status === "submitting" || !consent || !date || !time}
       >
         {status === "submitting" ? "Отправляем…" : "Забронировать"}
       </button>

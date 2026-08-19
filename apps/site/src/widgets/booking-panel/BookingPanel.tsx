@@ -43,7 +43,7 @@ export function BookingPanel() {
               </button>
             </Dialog.Close>
           </header>
-          <QuickBooking yacht={{ name: yachtName }} />
+          <QuickBooking yacht={{ name: yachtName, slug: yacht?.slug }} />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
