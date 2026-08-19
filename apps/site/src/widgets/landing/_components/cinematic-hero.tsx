@@ -1,3 +1,4 @@
+import { Link } from "@/i18n/navigation";
 import { withBase } from "@/shared/lib/base-path";
 import type { CSSProperties } from "react";
 import styles from "./cinematic-hero.module.scss";
@@ -42,8 +43,8 @@ export function CinematicHero() {
         </p>
 
         <div className={styles.ctas}>
-          <a href="#fleet" className={styles.btnPrimary}>
-            Посмотреть флот
+          <Link href="/zabronirovat" className={styles.btnPrimary}>
+            Забронировать
             <svg
               width="14"
               height="14"
@@ -57,7 +58,7 @@ export function CinematicHero() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
           <a href="#contact" className={styles.btnGlass}>
             <svg
               width="14"

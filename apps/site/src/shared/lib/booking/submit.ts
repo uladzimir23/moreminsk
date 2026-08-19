@@ -13,6 +13,14 @@ export type BookingPayload = {
   phone: string;
   /** Optional повод когда лид пришёл со страницы услуги (без калькулятора). */
   service?: string;
+  /** Wizard: длительность в часах (для расчёта end и total). */
+  durationHours?: number;
+  /** Wizard: кол-во гостей. */
+  guests?: number;
+  /** Wizard: рассчитанная итоговая цена BYN. */
+  priceTotal?: number;
+  /** Wizard: клиентский комментарий (особые пожелания). */
+  comment?: string;
 };
 
 // Оставляем класс — существующие consumers ловят его для fallback-сообщения.
@@ -26,7 +34,14 @@ export class BookingNotConfiguredError extends Error {
 }
 
 export async function submitBooking(payload: BookingPayload): Promise<void> {
-  const comment = payload.time ? `Время: ${payload.time}` : "";
+  // Собираем структурированный comment: время, длительность, цена и
+  // клиентские заметки. PB-хук leads-to-booking.pb.js парсит эти поля
+  // (Время / Длительность), TG-хук вставляет всё в сообщение как есть.
+  const lines: string[] = [];
+  if (payload.time) lines.push(`Время: ${payload.time}`);
+  if (payload.durationHours) lines.push(`Длительность: ${payload.durationHours}ч`);
+  if (payload.priceTotal) lines.push(`Итого: ${payload.priceTotal} BYN`);
+  if (payload.comment?.trim()) lines.push(`Комментарий: ${payload.comment.trim()}`);
 
   await submitLead({
     source: "booking",
@@ -35,6 +50,7 @@ export async function submitBooking(payload: BookingPayload): Promise<void> {
     yacht: payload.yacht,
     service: payload.service,
     date: payload.date || undefined,
-    comment,
+    guests: payload.guests,
+    comment: lines.join("\n"),
   });
 }

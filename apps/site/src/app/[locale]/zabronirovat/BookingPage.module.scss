@@ -1,0 +1,164 @@
+@use "@/shared/design-system/mixins" as *;
+
+// Full-viewport layout как у Clariva: видео фон + safe-area 2-col grid.
+// Aside слева (лого/tagline/reassurance), frame справа (BookingWizard в frosted-glass).
+// Mobile — одна колонка, aside компактно в шапке.
+
+.page {
+  position: relative;
+  min-block-size: 100svh;
+  isolation: isolate;
+  background: #061a2a;
+  color: #fff;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.videoWash {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      120deg,
+      rgba(6, 26, 42, 0.85) 0%,
+      rgba(6, 26, 42, 0.55) 45%,
+      rgba(6, 26, 42, 0.35) 75%,
+      rgba(6, 26, 42, 0.65) 100%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 30% 40%,
+      color-mix(in srgb, var(--color-accent) 18%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+.safe {
+  min-block-size: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 4vw, 3rem) clamp(2rem, 5vh, 4rem);
+  gap: clamp(1.5rem, 4vh, 3rem);
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) minmax(28rem, 32rem);
+    align-items: center;
+    max-inline-size: 96rem;
+    margin-inline: auto;
+    padding-inline: clamp(2rem, 6vw, 5rem);
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.leftInner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-inline-size: 34rem;
+}
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+}
+.accent {
+  font-family: var(--font-lora), Georgia, serif;
+  font-style: italic;
+  color: var(--color-accent-2-bright);
+}
+.tagline {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+  max-inline-size: 30rem;
+}
+.reassure {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.4rem;
+
+  li {
+    position: relative;
+    padding-inline-start: 1.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+
+    &::before {
+      content: "✓";
+      position: absolute;
+      inset-inline-start: 0;
+      color: var(--color-accent);
+      font-weight: 700;
+    }
+  }
+}
+.contacts {
+  margin-block-start: 0.75rem;
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.contactLink {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-block-end: 1px solid rgba(255, 255, 255, 0.35);
+  padding-block-end: 0.15rem;
+  transition: border-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    border-block-end-color: var(--color-accent);
+  }
+}
+
+.rightWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.frame {
+  position: relative;
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  min-block-size: min(38rem, 72vh);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, #061a2a 55%, transparent);
+  backdrop-filter: blur(1.5rem) saturate(1.2);
+  -webkit-backdrop-filter: blur(1.5rem) saturate(1.2);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}

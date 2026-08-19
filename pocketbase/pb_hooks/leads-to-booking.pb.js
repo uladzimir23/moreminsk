@@ -30,8 +30,14 @@ onRecordAfterCreateSuccess((e) => {
     }
     const start = `${timeMatch[1]}:${timeMatch[2]}`;
     const startMinutes = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
-    const endMinutes = startMinutes + 60;
+    // Длительность из comment ("Длительность: Nч"); дефолт — 1 час.
+    const durMatch = comment.match(/Длительность:\s*(\d{1,2})\s*ч/i);
+    const durHours = durMatch ? parseInt(durMatch[1]) : 1;
+    const endMinutes = startMinutes + durHours * 60;
     const end = `${String(Math.floor(endMinutes / 60)).padStart(2, "0")}:${String(endMinutes % 60).padStart(2, "0")}`;
+    // Итоговая цена (для будущей отчётности)
+    const priceMatch = comment.match(/Итого:\s*(\d+)/);
+    const priceTotal = priceMatch ? parseInt(priceMatch[1]) : 0;
 
     // Резолвим yacht slug → PB record id
     let yachtId = "";
@@ -56,8 +62,10 @@ onRecordAfterCreateSuccess((e) => {
       status: "tentative",
       client_name: lead.getString("name"),
       client_phone: lead.getString("phone"),
+      guests: lead.getInt("guests") || 0,
+      price_total: priceTotal,
       source: "site",
-      comment: `Заявка #${lead.id} — ждёт подтверждения`,
+      comment: `Заявка #${lead.id} — ждёт подтверждения. ${comment}`,
       lead: lead.id,
       archived: false,
     });
