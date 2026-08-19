@@ -21,6 +21,7 @@
     "pb:export": "bun scripts/pb/export.ts",
     "pb:codegen": "bun scripts/pb/codegen.ts",
     "pb:refresh": "bun run pb:export && bun run pb:codegen",
+    "pb:import-bookings": "bun scripts/pb/import-bookings.ts",
     "prebuild": "bun scripts/pb/prebuild.ts"
   },
   "dependencies": {

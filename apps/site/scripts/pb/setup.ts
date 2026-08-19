@@ -197,6 +197,60 @@ const LEADS = {
   indexes: [],
 } as const;
 
+// bookings: занятость слотов (yacht × date × start-end). PII (телефон, имя)
+// защищены: read/list закрыт для публики (только editor), сайт читает view
+// `availability` без PII. Импорт xlsx-архива → source: "excel-2026", archived:
+// true для прошедших дат.
+const BOOKINGS = {
+  name: "bookings",
+  type: "base",
+  fields: [
+    {
+      name: "yacht",
+      type: "relation",
+      required: true,
+      maxSelect: 1,
+      collectionId: "" /* заполним ниже — id коллекции yachts */,
+      cascadeDelete: false,
+    },
+    T("date", { required: true }), // YYYY-MM-DD
+    T("start", { required: true }), // HH:MM (30-min гранулярность)
+    T("end", { required: true }),
+    SELECT("status", ["booked", "blocked", "tentative"]),
+    T("client_name"),
+    T("client_phone"),
+    NUM("guests"),
+    NUM("price_total"),
+    NUM("prepaid"),
+    T("pay_note"),
+    T("source"), // site / manual / import / referral
+    T("source_agent"), // юность / сливки / рцоп / робинсон / …
+    T("comment"),
+    {
+      name: "lead",
+      type: "relation",
+      required: false,
+      maxSelect: 1,
+      collectionId: "" /* заполним ниже — id коллекции leads */,
+      cascadeDelete: false,
+    },
+    BOOL("archived"),
+  ],
+  indexes: [
+    "CREATE INDEX `idx_bookings_yacht_date` ON `bookings` (`yacht`, `date`)",
+    "CREATE INDEX `idx_bookings_date` ON `bookings` (`date`)",
+  ],
+} as const;
+
+// availability: view (SQL SELECT) — публичный read БЕЗ PII. Сайт использует
+// для отображения свободных слотов в форме бронирования.
+const AVAILABILITY = {
+  name: "availability",
+  type: "view",
+  viewQuery:
+    "SELECT id, yacht, date, start, end, status, archived FROM bookings WHERE archived = false",
+} as const;
+
 async function main() {
   if (!PASS) throw new Error("PB_ADMIN_PASS не задан");
   await pb.collection("_superusers").authWithPassword(EMAIL, PASS);
@@ -239,6 +293,52 @@ async function main() {
     console.log("✓ создана коллекция leads");
   } else {
     console.log("• leads уже есть — пропускаю");
+  }
+
+  // bookings — read закрыт (PII), write — editor через roles.ts. Нужны
+  // id-коллекции yachts + leads для relation-полей.
+  const bookingsExists = await pb.collections.getList(1, 1, {
+    filter: `name="bookings"`,
+  });
+  if (bookingsExists.totalItems === 0) {
+    const yachtsCol = await pb.collections.getFirstListItem(`name="yachts"`);
+    const leadsCol = await pb.collections.getFirstListItem(`name="leads"`);
+    const fields = BOOKINGS.fields.map((f) => {
+      if (f.name === "yacht") return { ...f, collectionId: yachtsCol.id };
+      if (f.name === "lead") return { ...f, collectionId: leadsCol.id };
+      return f;
+    });
+    await pb.collections.create({
+      name: BOOKINGS.name,
+      type: BOOKINGS.type,
+      fields: [...fields, ...AUTODATE],
+      indexes: [...BOOKINGS.indexes],
+      listRule: null, // публично не читаем — PII; сайт читает view `availability`
+      viewRule: null,
+      createRule: null,
+      updateRule: null,
+      deleteRule: null,
+    });
+    console.log("✓ создана коллекция bookings");
+  } else {
+    console.log("• bookings уже есть — пропускаю");
+  }
+
+  // availability — view collection: публичный read без PII.
+  const availExists = await pb.collections.getList(1, 1, {
+    filter: `name="availability"`,
+  });
+  if (availExists.totalItems === 0) {
+    await pb.collections.create({
+      name: AVAILABILITY.name,
+      type: AVAILABILITY.type,
+      viewQuery: AVAILABILITY.viewQuery,
+      listRule: "", // публично
+      viewRule: "",
+    });
+    console.log("✓ создана view-коллекция availability");
+  } else {
+    console.log("• availability уже есть — пропускаю");
   }
 
   console.log("done");

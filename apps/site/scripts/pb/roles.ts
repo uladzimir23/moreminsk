@@ -33,6 +33,15 @@ const CONTENT = [
   "contacts",
 ];
 
+// bookings — read закрыт (PII), write — editor. Сайт читает view `availability`.
+const BOOKINGS_RULES = {
+  listRule: WRITE,
+  viewRule: WRITE,
+  createRule: WRITE,
+  updateRule: WRITE,
+  deleteRule: WRITE,
+};
+
 async function main() {
   if (!PASS) throw new Error("PB_ADMIN_PASS не задан");
   await pb.collection("_superusers").authWithPassword(EMAIL, PASS);
@@ -80,6 +89,14 @@ async function main() {
     deleteRule: WRITE,
   });
   console.log("✓ leads: create public, read/update — авторизованным");
+
+  // 3a. bookings — read закрыт (PII), CRUD — editor. Сайт читает view.
+  try {
+    await pb.collections.update("bookings", BOOKINGS_RULES);
+    console.log("✓ bookings: CRUD — авторизованным");
+  } catch (err) {
+    console.log(`• bookings коллекции ещё нет (запусти setup.ts): ${(err as Error).message}`);
+  }
 
   // 4. Опциональный editor-пользователь.
   if (EDITOR_EMAIL && EDITOR_PASS) {
